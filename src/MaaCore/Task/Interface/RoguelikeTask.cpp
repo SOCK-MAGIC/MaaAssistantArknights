@@ -2,7 +2,6 @@
 
 #include "Common/AsstBattleDef.h"
 #include "Config/TaskData.h"
-#include "Status.h"
 #include "Task/ProcessTask.h"
 
 // ------------------ 通用配置及插件 ------------------
@@ -15,7 +14,11 @@
 #include "Task/Roguelike/RoguelikeDifficultySelectionTaskPlugin.h"
 #include "Task/Roguelike/RoguelikeFormationTaskPlugin.h"
 #include "Task/Roguelike/RoguelikeInvestTaskPlugin.h"
+#include "Task/Roguelike/RoguelikeIterateDeepExplorationPlugin.h"
+#include "Task/Roguelike/RoguelikeIterateMonthlySquadPlugin.h"
+#include "Task/Roguelike/RoguelikeLastRewardSelectTaskPlugin.h"
 #include "Task/Roguelike/RoguelikeLastRewardTaskPlugin.h"
+#include "Task/Roguelike/RoguelikeLevelTaskPlugin.h"
 #include "Task/Roguelike/RoguelikeRecruitTaskPlugin.h"
 #include "Task/Roguelike/RoguelikeResetTaskPlugin.h"
 #include "Task/Roguelike/RoguelikeSettlementTaskPlugin.h"
@@ -31,8 +34,9 @@
 #include "Task/Roguelike/Sami/RoguelikeFoldartalStartTaskPlugin.h"
 #include "Task/Roguelike/Sami/RoguelikeFoldartalUseTaskPlugin.h"
 
-// –––––––– 萨卡兹主题专用配置及插件 –––––––––––––––––––
+// ------------------ 萨卡兹主题专用配置及插件 ------------------
 #include "Task/Roguelike/Map/RoguelikeRoutingTaskPlugin.h"
+#include "Task/Roguelike/RoguelikeInputSeedTaskPlugin.h"
 
 #include "Utils/Logger.hpp"
 
@@ -72,12 +76,19 @@ asst::RoguelikeTask::RoguelikeTask(const AsstCallback& callback, Assistant* inst
         ->set_retry_times(0);
 
     m_roguelike_task_ptr->register_plugin<RoguelikeLastRewardTaskPlugin>(m_config_ptr, m_control_ptr);
+    m_roguelike_task_ptr->register_plugin<RoguelikeLastRewardSelectTaskPlugin>(m_config_ptr, m_control_ptr);
 
     m_roguelike_task_ptr->register_plugin<RoguelikeDifficultySelectionTaskPlugin>(m_config_ptr, m_control_ptr);
     m_roguelike_task_ptr->register_plugin<RoguelikeStrategyChangeTaskPlugin>(m_config_ptr, m_control_ptr);
 
-    // ------------------ 萨米主题专用插件 ------------------
+    m_roguelike_task_ptr->register_plugin<RoguelikeIterateMonthlySquadPlugin>(m_config_ptr, m_control_ptr)
+        ->set_retry_times(3);
+    m_roguelike_task_ptr->register_plugin<RoguelikeIterateDeepExplorationPlugin>(m_config_ptr, m_control_ptr)
+        ->set_retry_times(3);
 
+    m_roguelike_task_ptr->register_plugin<RoguelikeLevelTaskPlugin>(m_config_ptr, m_control_ptr);
+
+    // ------------------ 萨米主题专用插件 ------------------
     m_roguelike_task_ptr->register_plugin<RoguelikeFoldartalGainTaskPlugin>(m_config_ptr, m_control_ptr);
     m_foldartal_use_ptr =
         m_roguelike_task_ptr->register_plugin<RoguelikeFoldartalUseTaskPlugin>(m_config_ptr, m_control_ptr);
@@ -86,8 +97,8 @@ asst::RoguelikeTask::RoguelikeTask(const AsstCallback& callback, Assistant* inst
     m_roguelike_task_ptr->register_plugin<RoguelikeCollapsalParadigmTaskPlugin>(m_config_ptr, m_control_ptr);
 
     // ------------------ 萨卡兹主题专用插件 ------------------
-
     m_roguelike_task_ptr->register_plugin<RoguelikeRoutingTaskPlugin>(m_config_ptr, m_control_ptr);
+    m_roguelike_task_ptr->register_plugin<RoguelikeInputSeedTaskPlugin>(m_config_ptr, m_control_ptr);
 
     // 这个任务如果卡住会放弃当前的肉鸽并重新开始，所以多添加亿点。先这样凑合用
     for (int i = 0; i != 999; ++i) {
@@ -129,7 +140,7 @@ bool asst::RoguelikeTask::set_params(const json::value& params)
         m_roguelike_task_ptr->set_times_limit("StageTraderInvestCancel", INT_MAX);
         m_roguelike_task_ptr->set_times_limit("StageTraderLeaveConfirm", INT_MAX);
     }
-        
+
     bool stop_at_final_boss = params.get("stop_at_final_boss", false);
     // 傀影肉鸽3层和5层boss图标一样,禁用
     if (stop_at_final_boss && theme != RoguelikeTheme::Phantom) {

@@ -5,6 +5,11 @@
     "Mizuki@Roguelike@ChooseDifficultyConfirm": {
         "text": ["Select"]
     },
+    "OD-Open": {
+        "baseTask": "SS-Open",
+        "next": ["ODChapterToOD"],
+        "template": "StageSideStory.png"
+    },
     "ClickChapter1": {
         "text": ["Hour of An Awakening", "Hour of An"]
     },
@@ -26,6 +31,41 @@
     "SideStoryReopen": {
         "text": ["Rerun", "Retrospection"],
         "roi": [0, 500, 500, 150]
+    },
+    "BP-OpenOcr": {
+        "text": ["Path", "Life", "event", "open", "Fortify", "Defense"]
+    },
+    "BPChapterToBP": {
+        "text": ["Deploy", "DEPLOY", "Beacons", "BEACONS"]
+    },
+    "BB-OpenOcr": {
+        "text": ["Babel", "open", "event", "Past", "Ward", "Constant", "stages"]
+    },
+    "BBChapterToBB": {
+        "text": ["Future", "FUTURE", "Gifts", "Gifts"],
+        "roi": [1000, 589, 209, 131]
+    },
+    "AS-OpenOcr": {
+        "text": ["Adventure", "Cannot", "Wait", "Sun", "Harvest", "Gathering", "Treasure", "House"],
+        "roi": [0, 500, 500, 150]
+    },
+    "ASChapterToAS": {
+        "text": ["Citizen", "CITIZEN", "Garden", "GARDEN"]
+    },
+    "OD-8": {
+        "sub": ["OD-Open"]
+    },
+    "OD-7": {
+        "sub": ["OD-Open"]
+    },
+    "OD-6": {
+        "sub": ["OD-Open"]
+    },
+    "CR-OpenOcr": {
+        "text": ["Skydiving", "stages", "opened"]
+    },
+    "CRChapterToCR": {
+        "text": ["Roam", "Exhibition", "ROAM", "EXHIBITION"]
     },
     "HS-9": {
         "sub": ["HS-Open", "HSChapterToHS"]
@@ -75,7 +115,7 @@
     },
     "SLChapterToSL": {
         "text": ["A HOLIDAY", "AT THE HOT SPRINGS"],
-        "roi": [998, 461, 210, 62]
+        "roi": [1046, 465, 198, 61]
     },
     "HE-Open": {
         "text": ["Hortus", "Escapismo", "Sacrarium", "Derelictum"]
@@ -119,7 +159,7 @@
         "roi": [856, 511, 247, 159]
     },
     "FC-OpenOcr": {
-        "text": ["Event <What the Firelight Casts> is now", "open"]
+        "text": ["What the Firelight Casts", "open"]
     },
     "FCChapterToFC": {
         "text": ["SWAMP", "MISTS"]
@@ -284,7 +324,7 @@
             ["Courier", "讯使"],
             ["Plume", "翎羽"],
             ["Vanilla", "香草"],
-            ["Fang", "芬"],
+            ["^Fang$", "芬"],
             ["^Yato$", "夜刀"],
             ["'?Justice Knight'?", "正义骑士号"],
             ["Fartooth", "远牙"],
@@ -444,7 +484,7 @@
             ["L-44 'Gramophone'", "L-44\"留声机\""],
             ["Offspring", "子代"],
             ["Enforcer", "见行者"],
-            ["Reinforcement Device", "加固装置"],
+            ["^Reinforcement Device$", "加固装置"],
             ["Temporary Rhodes Island Empl[oyee]*", "罗德岛临时雇员"],
             ["Goldenglow", "澄闪"],
             ["Unowned Treasure", "无主的财富"],
@@ -532,7 +572,7 @@
             ["Reserve Operator *-* *D[efender]*", "预备干员-重装"],
             ["R-31a Heavy Power Armor", "R-31a重型动力装甲"],
             ["Astgenne", "星源"],
-            ["L *ith *t* *nrey *thne", "承曦格雷伊"],
+            ["L? *ight *t* *n?[ifGg]?re?v?y *th?n?er?", "承曦格雷伊"],
             ["Greyy the Lightningbe[arer]*", "承曦格雷伊"],
             ["Dorothy", "多萝西"],
             ["Resonator", "共振装置"],
@@ -738,8 +778,8 @@
             ["Degenbrecher", "锏"],
             ["Harold", "哈洛德"],
             ["Emergency Heater", "紧急供暖器"],
-            ["Flint", "点火石"],
             ["Flint", "燧石"],
+            ["Flint", "点火石"],
             ["Warmy", "温米"],
             ["Ray", "莱伊"],
             ["Sandbeast", "沙地兽"],
@@ -753,7 +793,7 @@
             ["Energizing Oil", "焕能精油"],
             ["Vitalizing Oil", "复苏精油"],
             ["'Long Live Mead!'", "“蜜酿万岁！”"],
-            ["Shu", "黍"],
+            [".?Shu", "黍"],
             ["Wanqing", "万顷"],
             ["Zuo Le", "左乐"],
             ["Grain Buds", "小满"],
@@ -795,12 +835,108 @@
             ["Command Point", "号令点"],
             ["High Priest", "大祭司"],
             ["Pepe", "佩佩"],
-            ["Kestrel", "红隼"],
             ["Rhodes Island Staff Worker", "罗德岛工作人员"],
             ["Mail Box", "信使邮筒"],
             ["Message Casket", "讯息匣"],
             ["Overspeed Spice", "失衡异香"],
-            ["Billboard", "告示牌"]
+            ["Billboard", "告示牌"],
+            ["Doc", "医生"],
+            ["Ela", "艾拉"],
+            ["[Iil]ana", "双月"],
+            ["Fuze", "导火索"],
+            ["Grzmot Mine", "雷鸣地雷"],
+            ["Checkpoint", "检查点"],
+            ["Lutonada", "露托"],
+            ["'Heart of a Slug'", "“源石虫之心”"],
+            ["Slug Lure", "源石虫引诱器"],
+            ["Sound Recording Amplifier", "声波记录扩音器"],
+            ["Odda", "奥达"],
+            ["Ascalon", "阿斯卡纶"],
+            ["Aroma", "阿罗玛"],
+            ["'Sticky Prize'", "“黏黏的赠品”"],
+            ["Witchcraft Ballista", "巫术弩炮"],
+            ["Umbral Door", "幽影门扉"],
+            ["Arts Resonant Energy Field", "法术调和能量场"],
+            ["Random Item Box", "随机道具盒"],
+            ["Accelerator Tile", "加速块"],
+            ["Pinnacle Insights Port", "尖端研究成果共享终端"],
+            ["Squeaking Sound", "啸叫音响"],
+            ["EP14 Mechanics Controller", "十四章机制控制器"],
+            ["Fang the Fire-?Sharpened", "历阵锐枪芬"],
+            ["Withered Altar", "枯朽祭坛"],
+            ["Wi.'adel", "维什戴尔"],
+            ["Civilight Eterna", "魔王"],
+            ["Logos", "逻各斯"],
+            ["Revenant's Shadow", "魂灵之影"],
+            ["Torrent Beam Activator", "洪流束激发器"],
+            ["Charles Lynch", "查尔斯·林奇"],
+            ["Core Amplifier", "核心增幅器"],
+            ["Light of Glory", "振奋荣光"],
+            ["Positional Barrier", "阵地屏障"],
+            ["Football", "足球"],
+            ["Icebreaker Games Control", "促融共竞控制"],
+            ["Foldable Bastion", "折叠式堡垒模块"],
+            ["Foldable Auxiliary Apparatus", "折叠式辅助器械"],
+            ["Foldable Facility Maintainer", "折叠设施维护员"],
+            ["Foldable Maintenance Vehicle", "折叠式维护车"],
+            ["Foldable Logistics Hub", "折叠式后勤站"],
+            ["Pinnacle Insight Port", "尖端研究成果共享终端"],
+            ["Mass Resource[ Storage]*", "海量资源存储"],
+            ["Confidential Comms[ Storage]*", "机密联络存储"],
+            ["Sound Absorb[ Boost]*", "声能吸收增幅"],
+            ["Sound Release[ Boost]*", "声能释放增幅"],
+            ["Resonance[ Casing]*", "共振外装"],
+            ["Hardened[ Casing]*", "险固外装"],
+            ["'Little Handy'", "小帮手"],
+            ["Ulpianus", "乌尔比安"],
+            ["Lucilla", "海霓"],
+            ["Underflow", "深巡"],
+            ["Long-Expansion Modification", "长距增运改装"],
+            ["Reinforcement Expansion Modification", "加固扩存改装"],
+            ["Undeviating Course", "从不混淆的方向"],
+            ["Waterway Beacon", "航道信标"],
+            ["Indisputable Evidence", "无可置疑的罪证"],
+            ["Excrescent Carapace", "赘生甲壳"],
+            ["Cloudstepper", "攀云机"],
+            ["Combat Special Barricade", "作战专用掩体"],
+            ["Security Talent Agreement", "保全人才合作协议"],
+            ["Expedited Licensing Terms", "加急许可条款"],
+            ["Interim Appointment Terms", "临时任命条款"],
+            ["Royal Academy of Sciences Telescope", "皇家科学院望远镜"],
+            ["Professional Display Module", "专业显示模块"],
+            ["Agile Installation Module", "灵活架设模块"],
+            ["Discovery Casket", "狩闻匣"],
+            ["Barreled Perfume", "桶装液香"],
+            ["Deluxe Mining Harvester Hub", "铁矿采集站·采购"],
+            ["Rock Hammer", "岩锤"],
+            ["Thale Calyx", "拟南盏"],
+            ["Operation Kit", "行动套装"],
+            ["Ice Blaster", "冰瀑喷射罐"],
+            ["Auto Mining Hub", "全自动采铁站"],
+            ["Omni Umbrella", "庇护制造器"],
+            ["Rare Thale Calyx", "稀有·拟南盏"],
+            ["Deluxe Crabbie Pumpie", "蟹蟹抽水泵·采购"],
+            ["Deluxe Quarrying Harvester Hub", "石材采集站·采购"],
+            ["Exoskeleton", "外骨骼"],
+            ["Hunting Rations", "驯兽口粮"],
+            ["Auto Quarry Hub", "全自动掘石站"],
+            ["Neural Chain", "感知链接器"],
+            ["Large Corral", "大型兽栏"],
+            ["Auto Sawing Hub", "全自动切木站"],
+            ["Phantomic Barrier", "虚影壁障"],
+            ["Hunting Net Launcher", "追猎发射台"],
+            ["Spicy Pollen", "草香粉"],
+            ["Rare Spicy Pollen", "稀有·草香粉"],
+            ["Rare Rock Hammer", "稀有·岩锤"],
+            ["Glow Stick Launcher", "荧光棒弹射装置"],
+            ["Necrosis Transmitter", "凋亡发射器"],
+            ["Deluxe Sawing Harvester Hub", "木材采集站·采购"],
+            ["Papyrus", "莎草"],
+            ["Clockwork Fowlbeast", "发条羽兽"],
+            ["Sand Reckoner", "衡沙"],
+            ["Narantuya", "娜仁图亚"],
+            ["Decrystallizing Totem", "结晶消除桩"],
+            ["Pure Crystal", "纯净结晶"]
         ]
     },
     "StartToWakeUpOCR": {
@@ -861,16 +997,20 @@
         "text": ["Recruit Now"]
     },
     "RecruitFlag": {
+        "fullMatch": true,
         "text": ["Recruit"]
     },
     "RecruitNow": {
         "text": ["Expedite"]
     },
+    "MiningActivities": {
+        "text": ["Provisional", "Mining", "Permit"]
+    },
     "OrundumActivities": {
-        "text": ["Lucky Strips", "Login Event"]
+        "text": ["Lucky Strips", "Wishing Wall", "Bazaar"]
     },
     "OrundumActivitiesChoose": {
-        "text": ["Choose", "spot"]
+        "text": ["Choose", "spot", "Please select", "Wishing", "Tickets"]
     },
     "OrundumActivitiesConfirm": {
         "text": ["Confirm"]
@@ -887,14 +1027,20 @@
     "RecruitingActivitiesRecruitEnd": {
         "text": ["Headhunt x1", "Headhunt"]
     },
+    "SpecialAccessActivities": {
+        "doc_preDelay": "Sometimes a loading will appear after entering the home.",
+        "preDelay": 500,
+        "text": ["Exclusive"],
+        "roi": [66, 79, 103, 151]
+    },
+    "SpecialAccessActivitiesConfirm": {
+        "text": ["CLAIM", "NOW"]
+    },
     "NoFriends": {
         "text": ["No friends"]
     },
     "VisitNextOcr": {
         "text": ["Visit Next"]
-    },
-    "Mall": {
-        "text": ["Store", "STORE"]
     },
     "CreditStoreOcr": {
         "text": ["Credit Store"]
@@ -937,8 +1083,12 @@
             ["Summon", "召唤"],
             ["Fast-Redeploy", "快速复活"],
             ["DP-Recovery", "费用回复"],
-            ["Robot", "支援机械"]
+            ["Robot", "支援机械"],
+            ["Elemental", "元素"]
         ]
+    },
+    "RecruitContinue": {
+        "text": ["Continue", "Recruitment"]
     },
     "InfrastReward": {
         "fullMatch": true,
@@ -953,15 +1103,42 @@
     "ShamareThumbnail3": {
         "maskRange": [1, 255]
     },
+    "InfrastDormMini": {
+        "roi": [620, 240, 360, 480]
+    },
+    "InfrastOffice": {
+        "roi": [880, 330, 400, 160]
+    },
+    "InfrastOfficeMini": {
+        "roi": [980, 320, 300, 160]
+    },
+    "InfrastProcessing": {
+        "roi": [880, 200, 400, 200]
+    },
+    "InfrastProcessingMini": {
+        "roi": [980, 240, 300, 160]
+    },
+    "InfrastReception": {
+        "roi": [880, 120, 400, 160]
+    },
+    "InfrastReceptionMini": {
+        "roi": [980, 180, 300, 140]
+    },
+    "InfrastTraining": {
+        "roi": [880, 420, 400, 160]
+    },
+    "InfrastTrainingMini": {
+        "roi": [980, 400, 300, 140]
+    },
+    "InfrastControlMini": {
+        "roi": [620, 80, 360, 230]
+    },
     "InfrastStationedInfo": {
-        "text": ["Operator"]
+        "text": ["Operator", "Operato"]
     },
     "InfrastEnterOperList": {
         "fullMatch": true,
         "text": ["Morale", "Resting", "In Use", "Working", "Assign"]
-    },
-    "InfrastFilterMenuNotStationedButton": {
-        "templThreshold": 0.75
     },
     "InfrastConfirmButtonWait": {
         "text": ["Submitting feedback", "to the neural network"],
@@ -1200,7 +1377,7 @@
     },
     "BattleQuickFormationOCR": {
         "roi": [0, 231, 116, 22],
-        "specialParams": [160, 2, 7, 0]
+        "specialParams": [105, 2, 7, 0]
     },
     "BattleStartPre": {
         "text": ["Start", "Start Challenge"]
@@ -1213,7 +1390,10 @@
         "roi": [1000, 404, 210, 220]
     },
     "BattleStartSimulation": {
-        "roi": [400, 566, 481, 154]
+        "Doc": "Delete the template and remove this modified roi task when paradox update comes PR#10439",
+        "roi": [400, 566, 481, 154],
+        "method": "Ccoeff",
+        "colorScales": []
     },
     "BattleOperName": {
         "roi": [5, 177, 280, 37]
@@ -1276,7 +1456,12 @@
             ["Field Support Drone", "战地援护无人机"],
             ["Chargeable Supervisory Speaker", "可充能督战音响"],
             ["Smart Airspace Controller", "智能空域控制机"],
-            ["Quick-*freezing Sprayer Platform", "速冷喷雾发射台"]
+            ["Quick-*freezing Sprayer Platform", "速冷喷雾发射台"],
+            ["Pinnacle Insight Port", "尖端研究成果共享终端"],
+            ["Sound Recording Amplifier", "声波记录扩音器"],
+            ["Arts Resonant Energy Field", "法术调和能量场"],
+            ["Security Talent Agreement", "保全人才合作协议"],
+            ["Royal Academy of Sciences Telescope", "皇家科学院望远镜"]
         ]
     },
     "SSSBuffChooseConfirm": {
@@ -1300,7 +1485,7 @@
         "roi": [992, 576, 288, 144]
     },
     "SSSDropRecruitmentFlag": {
-        "text": ["Choose an Operator", "Select", "Conductive", "Unit"]
+        "text": ["Choose", "Operator", "Select", "Conductive", "Unit"]
     },
     "SSSDropRecruitmentConfirm": {
         "text": ["Confirm assignment", "Confirm Selection", "Abandon Assignment"],
@@ -1315,6 +1500,15 @@
     },
     "GachaTenTimesPrefix@DoGacha": {
         "text": ["Headhunt x10"]
+    },
+    "RA@Navigation-RecogniseTheme": {
+        "text": ["Commence", "Resume"]
+    },
+    "RA@Navigation-EnterCurrentTheme": {
+        "text": ["Reclamation", "Algorithm"]
+    },
+    "RecruitSupportConfirm": {
+        "text": ["Recruit support"]
     },
     "RoguelikeChooseSupportBtnOcr": {
         "text": ["Select Support"]
@@ -1512,12 +1706,12 @@
             ["'?Focus'?", "“聚焦”"],
             ["Iron Guard[- ]*Impenetrable", "铁卫-无锋"],
             ["Rhodes Island Tactical Transceiver", "罗德岛战术电台"],
-            ["Fortification Contract[- ]*Phalanx", "堡垒协议-方阵"],
-            ["Fortification Contract[- ]*Resolution", "堡垒协议-固守"],
-            ["Long-Range Contract[- ]*Remote Strike", "远程协议-遥击"],
-            ["Long-Range Contract[- ]*Assassination", "远程协议-克敌"],
-            ["Sabotage Co-op[- ]*Elimination", "破坏协议-消除"],
-            ["Sabotage Co-op[- ]*Suppression", "破坏协议-压制"],
+            ["(?:Fortification Contract[- ]*)?Phalanx", "堡垒协议-方阵"],
+            ["(?:Fortification Contract[- ]*)?Resolution", "堡垒协议-固守"],
+            ["(?:Long-Range Contract[- ]*)?Remote Strike", "远程协议-遥击"],
+            ["(?:Long-Range Contract[- ]*)?Assassination", "远程协议-克敌"],
+            ["(?:Sabotage Co-op[- ]*)?Elimination", "破坏协议-消除"],
+            ["(?:Sabotage Co-op[- ]*)?Suppression", "破坏协议-压制"],
             ["Blunt Claws[- ]*Advancement", "钝爪-突破"],
             ["Blunt Claws[- ]*Burst", "钝爪-爆发"],
             ["Specialist Promotion Voucher", "特种进阶券"],
@@ -1716,7 +1910,7 @@
             ["Seaweed Salad", "凉拌海草"],
             ["Orange Storm", "橙味风暴"],
             ["Coffee Plains Coffee Candy", "咖啡平原咖啡糖"],
-            ["Acahuallan Bowl", "阿卡胡拉饭碗"],
+            ["Acahuallan Bowl?", "阿卡胡拉饭碗"],
             ["Three-Dimensional Art[ Display]*", "立体艺术装置"],
             ["'?Multipurpose' Hair Clip", "“多功能”发夹"],
             ["Pitt's Assorted Fruits", "皮特水果什锦"],
@@ -1918,7 +2112,12 @@
             ["Dimensional Fluid", "维度流质"],
             ["Collapsal Seed", "坍缩之种"],
             ["Fragment of Space", "空间碎片"],
-            ["Profound Scorchmarks", "深度灼痕"]
+            ["Profound Scorchmarks", "深度灼痕"],
+            ["Respite", "歇息"],
+            ["Cry", "呼救"],
+            ["Satisfy", "满足"],
+            ["Advent", "到来"],
+            ["Departure", "离去"]
         ]
     },
     "Roguelike@ChooseDifficultyConfirm": {
@@ -1931,8 +2130,10 @@
         "text": ["View all Themes", "Themes", "TODO: image of //INTEGRATED STRATEGIES"],
         "roi": [450, 480, 160, 45]
     },
-    "Roguelike@RecruitSupportConfirm": {
-        "text": ["Recruit support"]
+    "Roguelike@SpecialValRecognition": {
+        "algorithm": "OcrDetect",
+        "text": [],
+        "roi": [641, 3, 35, 39]
     },
     "Roguelike@StageEncounterOcr": {
         "fullMatch": true,
@@ -2105,6 +2306,13 @@
     "Roguelike@StageTraderSpecialShoppingAfterRefresh": {
         "text": ["Pathfinder Fins"]
     },
+    "Phantom@Roguelike@CheckLevel": {
+        "text": ["Castle", "Notes"]
+    },
+    "Phantom@Roguelike@GetDropSelectRecruit": {
+        "templThreshold": 0.8,
+        "template": "Phantom@Roguelike@GetDropSelectRecruit.png"
+    },
     "Phantom@Roguelike@NextLevel": {
         "text": [
             "Mist-stricken Missteps",
@@ -2144,6 +2352,9 @@
             ["Blood-soaked Corridor", "_exit"],
             ["Hall of Desires", "_exit"]
         ]
+    },
+    "Mizuki@Roguelike@CheckLevel": {
+        "text": ["ECOSEQUENCE", "SEQUENCE"]
     },
     "Mizuki@Roguelike@GetDropBoxOpen": {
         "templThreshold": 0.95
@@ -2236,6 +2447,10 @@
         "text": ["正在提交反馈至神经"],
         "ocrReplace": [["Submitting feedback to the neural network", "正在提交反馈至神经"]],
         "roi": [720, 645, 355, 45]
+    },
+    "Sami@Roguelike@CheckLevel": {
+        "roi": [1108, 26, 126, 52],
+        "text": ["EXPEDITION", "RECORDS"]
     },
     "Sami@Roguelike@ContinueClick": {
         "text": [
@@ -2360,6 +2575,9 @@
     "Sami@Roguelike@SelectTheme": {
         "text": ["Expedition Record"]
     },
+    "Sami@Roguelike@SpecialValRecognition": {
+        "text": []
+    },
     "Sami@Roguelike@StageSafeHouseReuse": {
         "text": ["Use the Safe House again", "Use the Safe"]
     },
@@ -2410,6 +2628,9 @@
             [".*Secluded ?Passage", "_SKIP_"]
         ]
     },
+    "Sarkaz@Roguelike@CheckLevel": {
+        "text": ["TODO", "TODO"]
+    },
     "Reclamation2Begin": {
         "text": ["Commence"]
     },
@@ -2459,14 +2680,7 @@
         "text": ["Confirm"]
     },
     "Reclamation2ExReadArchiveEnter": {
-        "doc": "Needs to be edited if confirmation window is removed later",
-        "docRef": "https://github.com/MaaAssistantArknights/MaaAssistantArknights/commit/bed66f2c7b8b3f6bd195659121a3d9a0acff8f8b",
-        "text": ["Load Save"],
-        "sub": [
-            "Reclamation2ExReadArchiveConfirm*2",
-            "Reclamation2ExReadArchiveSelectDay",
-            "Reclamation2ExReadArchiveSelectDayConfirm"
-        ]
+        "text": ["Load Save"]
     },
     "Reclamation2ExReadArchiveSelectDay": {
         "text": ["Days"]
@@ -2495,14 +2709,8 @@
     "Reclamation2ProsperityMaxDeleteArchiveLastConfirm2": {
         "text": ["Confirm Wipe"]
     },
-    "Reclamation2ProsperityMaxSkipDayBeginNewDay": {
-        "text": ["Start Today"]
-    },
     "Reclamation2ProsperityMaxSkipDayClickContinue": {
         "text": ["Tap anywhere to continue"]
-    },
-    "Reclamation2SkipDayBeginNewDay": {
-        "text": ["Start Today"]
     },
     "Reclamation2SkipDayClickContinue": {
         "text": ["Tap anywhere to continue"]
@@ -2520,10 +2728,13 @@
         "text": ["Start"]
     },
     "Reclamation2StageFightConfirm": {
-        "text": ["Confirm"]
+        "text": ["Confirm", "Proceed"]
     },
     "Reclamation2StageLeaveConfirm": {
         "text": ["Are you sure you"]
+    },
+    "Reclamation2StageSquadClearConfirm": {
+        "text": ["Confirm"]
     },
     "Fire@Reclamation@BuyWaterProcedure": {
         "text": ["Skip", "Building materials", "Fresh Water", "Skip"]
@@ -2605,5 +2816,38 @@
     },
     "Fire@Reclamation@TodoEnter": {
         "text": ["FIRE", "WITHIN", "THE", "SAND"]
+    },
+    "Tales@RA@CancelEnterBuildMode": {
+        "text": ["Enter Build Mode"]
+    },
+    "Tales@RA@ClickGatheringOfFeathers": {
+        "text": ["Gathering of Feathers", "Hunting Zone"]
+    },
+    "Tales@RA@ClickShrubberyGalore": {
+        "text": ["Shrubbery Galore", "Resource", "Zone"]
+    },
+    "Tales@RA@ConfirmSquad": {
+        "text": ["Start"]
+    },
+    "Tales@RA@ConfirmToLoadSave": {
+        "text": ["Confirm"]
+    },
+    "Tales@RA@EnterNode": {
+        "text": ["Start"]
+    },
+    "Tales@RA@FinishCalc": {
+        "text": ["Tap anywhere to continue"]
+    },
+    "Tales@RA@PIS-Resume": {
+        "text": ["Resume"]
+    },
+    "Tales@RA@PNS-ClickBaseCamp": {
+        "text": ["Gathering Grounds", "Base Camp"]
+    },
+    "Tales@RA@PNS-Commence": {
+        "text": ["Commence"]
+    },
+    "Tales@RA@ResourceGained": {
+        "text": ["Tap anywhere to continue"]
     }
 }

@@ -9,15 +9,13 @@ icon: ri:guide-fill
 
 1. Confirm system version
 
-    MAA only supports Windows 10 / 11. For earlier versions of Windows, please refer to [FAQ](./faq.md) at the top.
+    MAA only supports Windows 10 / 11. For earlier versions of Windows, please refer to [FAQ](./faq.md#SystemIssues).
+
+    Non-Windows users, please refer to [Emulator and Device Supports](./device/).
 
 2. Install the runtime library
 
-    MAA requires VCRedist x64 and .NET 8. Right-click the start button to open the terminal, paste the following command in it and Enter to install.
-
-    ```sh
-    winget install Microsoft.VCRedist.2015+.x64 Microsoft.DotNet.DesktopRuntime.8
-    ```
+    MAA requires VCRedist x64 and .NET 8. Please run `DependencySetup_依赖库安装.bat` in the MAA directory to install.
 
     Refer to [FAQ](faq.md#missing-runtime-libraries) for more information
 
@@ -35,13 +33,13 @@ icon: ri:guide-fill
 
 6. Correctly set the emulator resolution
 
-    The emulator resolution should be `16:9` ratio, with a minimum of `1280x720`; for YostarEN, the only supported resolution is `1920x1080`.
+    The emulator resolution should be `1280x720` or `1920x1080` in landscape mode; for YostarEN, the only supported resolution is `1920x1080`.
 
 ## Initial
 
 0. If you'd like to use automatic detection, run **one** emulator and make sure no other Android devices are connected to the computer.
 
-1. Follow the setup guide to configure, and MAA will automatically detect the running emulator. If you'd like to run multiple emulators or customize your connection, please check [Connection](./connection.md).
+1. Follow the setup guide to configure, and MAA will automatically detect the running emulator. If the detection fails or you'd like to run multiple emulators, please check [Connection](./connection.md).
 
 2. ~~A hot update will be performed when MAA is run for the first time. Please close MAA and restart after prompting in the log on the right.~~
 

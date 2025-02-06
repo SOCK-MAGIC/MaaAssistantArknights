@@ -9,7 +9,7 @@ dir:
 
 ::: center
 
-![MAA Logo](/image/maa-logo_512x512.png =256x256)
+![MAA Logo](/images/maa-logo_512x512.png =256x256)
 
 <!-- markdownlint-restore -->
 # MaaAssistantArknights
@@ -18,8 +18,6 @@ dir:
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-blueviolet)
 ![license](https://img.shields.io/github/license/MaaAssistantArknights/MaaAssistantArknights) ![commit](https://img.shields.io/github/commit-activity/m/MaaAssistantArknights/MaaAssistantArknights?color=%23ff69b4)
 ![stars](https://img.shields.io/github/stars/MaaAssistantArknights/MaaAssistantArknights?style=social) ![GitHub all releases](https://img.shields.io/github/downloads/MaaAssistantArknights/MaaAssistantArknights/total?style=social)
-
-[简体中文](../zh-cn/readme.md) | [繁體中文](../zh-tw/readme.md) | English | [日本語](../ja-jp/readme.md) | [한국어](../ko-kr/readme.md)
 
 MAA means MAA Assistant Arknights
 
@@ -30,6 +28,10 @@ Based on image recognition, helps you to complete daily quests efficiently!
 Development in progress  ✿✿ヽ(°▽°)ノ✿
 
 :::
+
+## Download and Install
+
+Please read the [documentation](./manual/newbie.md) and then go to the [official website](https://maa.plus) or [Releases](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases) to download. Refer to [Getting Started](./manual/newbie.md) for installation instructions.
 
 ## Features
 
@@ -50,28 +52,24 @@ Talk is cheap. Show me the pictures!
 {
   "imageList": [
     {
-      "light": "image/en-us/readme/1-light.png",
-      "dark": "image/en-us/readme/1-dark.png"
+      "light": "images/en-us/readme/1-light.png",
+      "dark": "images/en-us/readme/1-dark.png"
     },
     {
-      "light": "image/en-us/readme/2-light.png",
-      "dark": "image/en-us/readme/2-dark.png"
+      "light": "images/en-us/readme/2-light.png",
+      "dark": "images/en-us/readme/2-dark.png"
     },
     {
-      "light": "image/en-us/readme/3-light.png",
-      "dark": "image/en-us/readme/3-dark.png"
+      "light": "images/en-us/readme/3-light.png",
+      "dark": "images/en-us/readme/3-dark.png"
     },
     {
-      "light": "image/en-us/readme/4-light.png",
-      "dark": "image/en-us/readme/4-dark.png"
+      "light": "images/en-us/readme/4-light.png",
+      "dark": "images/en-us/readme/4-dark.png"
     }
   ]
 }
 ```
-
-## Download
-
-[Stable/Beta](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases/latest)
 
 ## How to Use
 
@@ -82,19 +80,11 @@ Check [Beginner's Guide](./manual/newbie.md) and [User Manual](./manual/introduc
 For YostarEN, due to interface layout issues, the only supported resolution is `1920x1080`
 :::
 
-## FAQ
+### Features
 
-- The program crashes immediately when I try to run it.
-- Connection error/not knowing how to fill in ADB path.
-- Connected successfully, then it got stuck.
-- Custom connection settings.
-- Download speed is too slow, or the mirror site is not accessible.
-- Download halfway and prompt "login"/"authentication"
-- The connection is fine and the task starts, but nothing happens.
+Please refer to the [User Manual](./manual/).
 
-Check [FAQ](./manual/faq.md).
-
-## Supports for overseas clients
+### Supports for overseas clients
 
 At present, most of the functions of the International client (US client), Japanese client, Korean client, and traditional Chinese client have been supported. However, due to the small number of overseas users and the shortage of project personnel, many functions have not been fully tested, so please experience it yourself.  
 If you encounter a bug or have a strong demand for a certain function, welcome to [Issues](https://github.com/MaaAssistantArknights/MaaAssistantArknights/issues) and [Discussions](https://github.com/MaaAssistantArknights/MaaAssistantArknights/discussions) to ask questions. And feel free to join us in building the MAA! Please refer to [Overseas Clients Adaptation](#overseas-clients-adaptation)
@@ -110,10 +100,9 @@ MAA supports command line interface (CLI) operation, supports Linux, macOS and W
 **Currently, the project team is very short of front-end experts. If you have relevant experience, you are welcome to join us!**
 
 - New Framework: [MaaFramework](https://github.com/MaaXYZ/MaaFramework)
-- New GUI: [MaaAsstElectronUI](https://github.com/MaaAssistantArknights/MaaX)
 - [Co-pilot (auto-battle) site](https://prts.plus) Frontend: [maa-copilot-frontend](https://github.com/MaaAssistantArknights/maa-copilot-frontend)
 - [Co-pilot (auto-battle) site](https://prts.plus) Backend: [MaaBackendCenter](https://github.com/MaaAssistantArknights/MaaBackendCenter)
-- [Website](https://www.maa.plus): [Frontend](https://github.com/MaaAssistantArknights/maa-website)
+- [Website](https://www.maa.plus): [Frontend](https://github.com/MaaAssistantArknights/MaaAssistantArknights/tree/dev/website)
 - Deep Learning: [MaaAI](https://github.com/MaaAssistantArknights/MaaAI)
 
 ### i18n
@@ -198,7 +187,7 @@ Check [Issue Bot Usage](./develop/issue-bot-usage.md).
 
 Thanks to all friends who contribute to development/testing for making MAA better! (\*´▽｀)ノノ
 
-[![Contributors](https://contributors-img.web.app/image?repo=MaaAssistantArknights/MaaAssistantArknights&max=114514&columns=15)](https://github.com/MaaAssistantArknights/MaaAssistantArknights/graphs/contributors)
+[![Contributors](https://contributors-img.web.app/image?repo=MaaAssistantArknights/MaaAssistantArknights&max=105&columns=15)](https://github.com/MaaAssistantArknights/MaaAssistantArknights/graphs/contributors)
 
 ## Disclaimer
 
@@ -206,11 +195,26 @@ Thanks to all friends who contribute to development/testing for making MAA bette
 - The logo of this software is NOT granted rights under AGPL 3.0 License. [耗毛](https://weibo.com/u/3251357314) and Vie, the two artists and all developers of the software reserves all rights. The logo of the software shall not be used without authorization even if the project has an AGPL 3.0 License. Nor shall the logo be used for commercial purposes without authorization.
 - The software is an open-source, free of charge software only for studying and communication purposes. There is no agreement or understanding between the developers of the software and the 3rd party person who uses this software as an assistant and charges you. In that case, the developers of the software are not responsible for the problems and consequences caused.
 
+### DirectML Support Information
+
+This software supports GPU acceleration, which relies on Microsoft's DirectML (Microsoft.AI.DirectML). For user convenience, an unmodified DirectML.dll file is included with the installation package.
+
+#### About DirectML.dll
+
+- Source: Official Microsoft
+- License: Please refer to Microsoft's DirectML terms of use  
+  [DirectML Official Documentation](https://learn.microsoft.com/en-us/windows/ai/directml/)
+
+DirectML.dll is a standalone component provided by Microsoft. It is not part of this software's open-source section and is not subject to the AGPL-3.0 license.
+
+If you do not require GPU support, you can safely delete the DLL file, and the core functionality of the software will remain unaffected.
+
 ## Advertisement
 
+Discord Server: [Discord Invite](https://discord.gg/23DfZ9uA4V)  
 User Group: [Telegram](https://t.me/+Mgc2Zngr-hs3ZjU1), [QQ Group](https://ota.maa.plus/MaaAssistantArknights/api/qqgroup/index.html)  
-[Copilot JSON Sharing](https://prts.plus)  
-[Bilibili Live](https://live.bilibili.com/2808861): live coding on this program  
+Copilot JSON Sharing: [prts.plus](https://prts.plus)  
+Bilibili Livestreams: [MrEO Livestream](https://live.bilibili.com/2808861) Coding Sessions & [MAA-Official Livestream](https://live.bilibili.com/27548877) Gaming/Chats  
 [Technical Discussion (QQ Group)](https://jq.qq.com/?_wv=1027&k=ypbzXcA2)  
 [Dev Group(QQ Group)](https://jq.qq.com/?_wv=1027&k=JM9oCk3C)
 

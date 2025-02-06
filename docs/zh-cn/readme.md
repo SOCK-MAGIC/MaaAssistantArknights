@@ -9,7 +9,7 @@ dir:
 
 ::: center
 
-![MAA Logo](/image/maa-logo_512x512.png =256x256)
+![MAA Logo](/images/maa-logo_512x512.png =256x256)
 
 <!-- markdownlint-restore -->
 
@@ -20,8 +20,6 @@ dir:
 ![license](https://img.shields.io/github/license/MaaAssistantArknights/MaaAssistantArknights) ![commit](https://img.shields.io/github/commit-activity/m/MaaAssistantArknights/MaaAssistantArknights?color=%23ff69b4)
 ![stars](https://img.shields.io/github/stars/MaaAssistantArknights/MaaAssistantArknights?style=social) ![GitHub all releases](https://img.shields.io/github/downloads/MaaAssistantArknights/MaaAssistantArknights/total?style=social)
 
-简体中文 | [繁體中文](../zh-tw/readme.md) | [English](../en-us/readme.md) | [日本語](../ja-jp/readme.md) | [한국어](../ko-kr/readme.md)
-
 MAA 的意思是 MAA Assistant Arknights
 
 一款明日方舟游戏小助手
@@ -31,6 +29,10 @@ MAA 的意思是 MAA Assistant Arknights
 绝赞更新中  ✿✿ヽ(°▽°)ノ✿
 
 :::
+
+## 下载与安装
+
+请阅读[文档](./manual/newbie.md)后前往 [官网](https://maa.plus) 或 [Releases](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases) 下载，并参考[新手上路](./manual/newbie.md)进行安装。
 
 ## 亮点功能
 
@@ -51,48 +53,30 @@ MAA 的意思是 MAA Assistant Arknights
 {
   "imageList": [
     {
-      "light": "image/zh-cn/readme/1-light.png",
-      "dark": "image/zh-cn/readme/1-dark.png"
+      "light": "images/zh-cn/readme/1-light.png",
+      "dark": "images/zh-cn/readme/1-dark.png"
     },
     {
-      "light": "image/zh-cn/readme/2-light.png",
-      "dark": "image/zh-cn/readme/2-dark.png"
+      "light": "images/zh-cn/readme/2-light.png",
+      "dark": "images/zh-cn/readme/2-dark.png"
     },
     {
-      "light": "image/zh-cn/readme/3-light.png",
-      "dark": "image/zh-cn/readme/3-dark.png"
+      "light": "images/zh-cn/readme/3-light.png",
+      "dark": "images/zh-cn/readme/3-dark.png"
     },
     {
-      "light": "image/zh-cn/readme/4-light.png",
-      "dark": "image/zh-cn/readme/4-dark.png"
+      "light": "images/zh-cn/readme/4-light.png",
+      "dark": "images/zh-cn/readme/4-dark.png"
     }
   ]
 }
 ```
 
-## 下载地址
-
-前往[官网](https://maa.plus)自动匹配镜像源并下载稳定版，或：
-
-- [稳定版/公测版](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases)
-
 ## 使用说明
 
-### 基本说明
+### 功能介绍
 
-请参阅 [新手上路](./manual/newbie.md) 与 [功能介绍](./manual/introduction/)。
-
-### 常见问题
-
-- 软件一打开就闪退；
-- 连接错误、不知道 ADB 路径怎么填写；
-- 连接成功了，但没反应；
-- 如何连接自定义端口；
-- 下载速度慢，且镜像站无法打开网页；
-- 下载到一半提示“登陆”/“鉴权”；
-- 连接正常，任务开始了，但是没反应。
-
-请参阅 [常见问题](./manual/faq.md)。
+请参阅 [用户手册](./manual/)。
 
 ### 外服支持
 
@@ -110,10 +94,9 @@ MAA 支持命令行界面（CLI）操作，支持 Linux，macOS 和 Windows，�
 **目前项目组非常缺前端大佬，若您有相关经验，欢迎加入我们！**
 
 - 全新框架：[MaaFramework](https://github.com/MaaXYZ/MaaFramework)
-- 全新 GUI：[MaaX](https://github.com/MaaAssistantArknights/MaaX)
 - [作业站](https://prts.plus) 前端：[maa-copilot-frontend](https://github.com/MaaAssistantArknights/maa-copilot-frontend)
 - [作业站](https://prts.plus) 后端：[MaaBackendCenter](https://github.com/MaaAssistantArknights/MaaBackendCenter)
-- [官网](https://maa.plus)：[前端](https://github.com/MaaAssistantArknights/maa-website)
+- [官网](https://maa.plus)：[前端](https://github.com/MaaAssistantArknights/MaaAssistantArknights/tree/dev/website)
 - 深度学习：[MaaAI](https://github.com/MaaAssistantArknights/MaaAI)
 
 ### 多语言 (i18n)
@@ -198,7 +181,7 @@ MAA 以中文（简体）为第一语言，翻译词条均以中文（简体）�
 
 感谢所有参与到开发/测试中的朋友们，是大家的帮助让 MAA 越来越好！ (\*´▽｀)ノノ
 
-[![Contributors](https://contributors-img.web.app/image?repo=MaaAssistantArknights/MaaAssistantArknights&max=114514&columns=15)](https://github.com/MaaAssistantArknights/MaaAssistantArknights/graphs/contributors)
+[![Contributors](https://contributors-img.web.app/image?repo=MaaAssistantArknights/MaaAssistantArknights&max=105&columns=15)](https://github.com/MaaAssistantArknights/MaaAssistantArknights/graphs/contributors)
 
 ## 声明
 
@@ -206,12 +189,27 @@ MAA 以中文（简体）为第一语言，翻译词条均以中文（简体）�
 - 本软件 logo 并非使用 AGPL 3.0 协议开源，[耗毛](https://weibo.com/u/3251357314)、vie 两位画师及软件全体开发者保留所有权利。不得以 AGPL 3.0 协议已授权为由在未经授权的情况下使用本软件 logo，不得在未经授权的情况下将本软件 logo 用于任何用途。
 - 本软件开源、免费，仅供学习交流使用。若您遇到商家使用本软件进行代练并收费，可能由于设备或时间等原因，产生的任何问题及后果与本软件无关。
 
+### DirectML 支持说明
+
+本软件支持 GPU 加速功能，但 GPU 加速依赖于 Microsoft 提供的 DirectML（Microsoft.AI.DirectML）。为了方便用户，我们随安装包附带了一个未修改的 DirectML.dll 文件。
+
+#### 关于 DirectML.dll
+
+- 来源：Microsoft 官方
+- 许可证：请参考 Microsoft 的 DirectML 使用条款
+  [DirectML 官方文档](https://learn.microsoft.com/en-us/windows/ai/directml/)
+
+DirectML.dll 是 Microsoft 提供的独立组件，不属于本软件的开源部分，也不受 AGPL-3.0 的约束。
+
+如果您不需要 GPU 支持，可以安全地删除该 DLL 文件，软件核心功能仍然可以正常运行。
+
 ## 广告
 
 用户交流 QQ 群：[MAA 使用 & 粥游交流 QQ 群](https://ota.maa.plus/MaaAssistantArknights/api/qqgroup/index.html)  
+Discord 服务器: [邀请链接](https://discord.gg/23DfZ9uA4V)  
 用户交流 TG 群：[Telegram 群](https://t.me/+Mgc2Zngr-hs3ZjU1)  
 自动战斗 JSON 作业分享：[prts.plus](https://prts.plus)  
-Bilibili 直播间：[直播间](https://live.bilibili.com/2808861) 每晚直播敲代码，近期很长一段时间应该都是在写本软件~  
+Bilibili 直播间：[MrEO 直播间](https://live.bilibili.com/2808861) 直播敲代码 & [MAA-Official 直播间](https://live.bilibili.com/27548877) 游戏/杂谈  
 
 技术群（舟无关、禁水）：[内卷地狱！(QQ 群)](https://jq.qq.com/?_wv=1027&k=ypbzXcA2)  
 开发者群：[QQ 群](https://jq.qq.com/?_wv=1027&k=JM9oCk3C)  

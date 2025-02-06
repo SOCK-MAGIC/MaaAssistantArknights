@@ -32,7 +32,7 @@ BattlefieldMatcher::ResultOpt BattlefieldMatcher::analyze() const
 
     if (m_object_of_interest.flag) {
         result.pause_button = pause_button_analyze();
-        if (!result.pause_button && !hp_flag_analyze() && !kills_flag_analyze()) {
+        if (!result.pause_button && !hp_flag_analyze() && !kills_flag_analyze() && !cost_symbol_analyze()) {
             // flag 表明当前画面是在战斗场景的，不在的就没必要识别了
             return std::nullopt;
         }
@@ -131,8 +131,13 @@ std::vector<battle::DeploymentOper> BattlefieldMatcher::deployment_analyze() con
 
 #ifdef ASST_DEBUG
         if (oper.cooling) {
-            cv::putText(m_image_draw, "cooling", cv::Point(oper.rect.x, oper.rect.y - 20), 1, 1.2,
-                        cv::Scalar(0, 0, 255));
+            cv::putText(
+                m_image_draw,
+                "cooling",
+                cv::Point(oper.rect.x, oper.rect.y - 20),
+                1,
+                1.2,
+                cv::Scalar(0, 0, 255));
         }
 #endif
 
@@ -320,6 +325,13 @@ std::optional<std::pair<int, int>> BattlefieldMatcher::kills_analyze() const
     return std::make_pair(kills, total_kills);
 }
 
+bool BattlefieldMatcher::cost_symbol_analyze() const
+{
+    Matcher flag_analyzer(m_image);
+    flag_analyzer.set_task_info("BattleCostFlag");
+    return flag_analyzer.analyze().has_value();
+}
+
 std::optional<int> BattlefieldMatcher::costs_analyze() const
 {
     RegionOCRer cost_analyzer(m_image);
@@ -353,9 +365,14 @@ bool BattlefieldMatcher::pause_button_analyze() const
 
 #ifdef ASST_DEBUG
     cv::rectangle(m_image_draw, make_rect<cv::Rect>(task_ptr->roi), cv::Scalar(0, 0, 255), 2);
-    cv::putText(m_image_draw, std::to_string(count) + "/" + std::to_string(count_threshold),
-                cv::Point(task_ptr->roi.x, task_ptr->roi.y + task_ptr->roi.height + 10), cv::FONT_HERSHEY_PLAIN, 1.2,
-                cv::Scalar(255, 255, 255), 2);
+    cv::putText(
+        m_image_draw,
+        std::to_string(count) + "/" + std::to_string(count_threshold),
+        cv::Point(task_ptr->roi.x, task_ptr->roi.y + task_ptr->roi.height + 10),
+        cv::FONT_HERSHEY_PLAIN,
+        1.2,
+        cv::Scalar(255, 255, 255),
+        2);
 #endif
 
     return count > count_threshold;
@@ -403,9 +420,14 @@ bool asst::BattlefieldMatcher::speed_button_analyze() const
 
 #ifdef ASST_DEBUG
     cv::rectangle(m_image_draw, make_rect<cv::Rect>(task_ptr->roi), cv::Scalar(0, 0, 255), 2);
-    cv::putText(m_image_draw, std::to_string(count) + "/" + std::to_string(count_threshold),
-                cv::Point(task_ptr->roi.x, task_ptr->roi.y + task_ptr->roi.height + 20), cv::FONT_HERSHEY_PLAIN, 1.2,
-                cv::Scalar(255, 255, 255), 2);
+    cv::putText(
+        m_image_draw,
+        std::to_string(count) + "/" + std::to_string(count_threshold),
+        cv::Point(task_ptr->roi.x, task_ptr->roi.y + task_ptr->roi.height + 20),
+        cv::FONT_HERSHEY_PLAIN,
+        1.2,
+        cv::Scalar(255, 255, 255),
+        2);
 #endif
 
     return count > count_threshold;

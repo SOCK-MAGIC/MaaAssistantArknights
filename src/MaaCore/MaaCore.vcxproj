@@ -69,6 +69,7 @@
     <ClInclude Include="Controller\Platform\PlatformIO.h" />
     <ClInclude Include="Controller\Platform\PlatformFactory.h" />
     <ClInclude Include="InstHelper.h" />
+    <ClInclude Include="LDExtras.h" />
     <ClInclude Include="Task\Experiment\CombatRecordRecognitionTask.h" />
     <ClInclude Include="Task\Experiment\SingleStepBattleProcessTask.h" />
     <ClInclude Include="Task\Fight\FightTimesTaskPlugin.h" />
@@ -85,10 +86,12 @@
     <ClInclude Include="Task\Miscellaneous\OperBoxRecognitionTask.h" />
     <ClInclude Include="Task\Miscellaneous\AccountSwitchTask.h" />
     <ClInclude Include="Task\Miscellaneous\TaskFileReloadTask.h" />
-    <ClInclude Include="Task\Reclamation\ReclamationControlTask.h" />
-    <ClInclude Include="Task\Reclamation\ReclamationConclusionReportPlugin.h" />
-    <ClInclude Include="Task\Reclamation\ReclamationBattlePlugin.h" />
+    <!-- 生息演算 .h Begin -->
     <ClInclude Include="Task\Interface\ReclamationTask.h" />
+    <ClInclude Include="Task\Reclamation\ReclamationConfig.h" />
+    <ClInclude Include="Task\Reclamation\AbstractReclamationTaskPlugin.h" />
+    <ClInclude Include="Task\Reclamation\ReclamationCraftTaskPlugin.h" />
+    <!-- 生息演算 .h End -->
     <ClInclude Include="Task\BattleHelper.h" />
     <ClInclude Include="Task\Interface\SingleStepTask.h" />
     <ClInclude Include="Task\Interface\SSSCopilotTask.h" />
@@ -96,7 +99,12 @@
     <ClInclude Include="Task\Roguelike\RoguelikeConfig.h" />
     <ClInclude Include="Task\Roguelike\RoguelikeDifficultySelectionTaskPlugin.h" />
     <ClInclude Include="Task\Roguelike\RoguelikeInvestTaskPlugin.h" />
+    <ClInclude Include="Task\Roguelike\RoguelikeIterateDeepExplorationPlugin.h" />
+    <ClInclude Include="Task\Roguelike\RoguelikeIterateMonthlySquadPlugin.h" />
+    <ClInclude Include="Task\Roguelike\RoguelikeLastRewardSelectTaskPlugin.h" />
     <ClInclude Include="Task\Roguelike\RoguelikeLastRewardTaskPlugin.h" />
+    <ClInclude Include="Task\Roguelike\RoguelikeLevelTaskPlugin.h" />
+    <ClInclude Include="Task\Roguelike\RoguelikeInputSeedTaskPlugin.h" />
     <ClInclude Include="Task\Roguelike\RoguelikeSettlementTaskPlugin.h" />
     <ClInclude Include="Task\Roguelike\RoguelikeStrategyChangeTaskPlugin.h" />
     <ClInclude Include="Task\Roguelike\Sami\RoguelikeFoldartalGainTaskPlugin.h" />
@@ -111,6 +119,7 @@
     <ClInclude Include="Utils\Algorithm.hpp" />
     <ClInclude Include="Utils\File.hpp" />
     <ClInclude Include="Utils\LibraryHolder.hpp" />
+    <ClInclude Include="Vision\Battle\SupportListAnalyzer.h" />
     <ClInclude Include="Vision\Roguelike\RoguelikeParameterAnalyzer.h" />
     <ClInclude Include="Vision\VisionHelper.h" />
     <ClInclude Include="Vision\Battle\BattleFormationAnalyzer.h" />
@@ -196,6 +205,7 @@
     <ClInclude Include="Task\Interface\StartUpTask.h" />
     <ClInclude Include="Task\Miscellaneous\AutoRecruitTask.h" />
     <ClInclude Include="Task\Miscellaneous\BattleFormationTask.h" />
+    <ClInclude Include="Task\Miscellaneous\UseSupportUnitTaskPlugin.h" />
     <ClInclude Include="Task\Miscellaneous\BattleProcessTask.h" />
     <ClInclude Include="Task\Miscellaneous\CreditFightTask.h" />
     <ClInclude Include="Task\Miscellaneous\CreditShoppingTask.h" />
@@ -258,6 +268,7 @@
     <ClCompile Include="Controller\Platform\PosixIO.cpp" />
     <ClCompile Include="Controller\Platform\Win32IO.cpp" />
     <ClCompile Include="InstHelper.cpp" />
+    <ClCompile Include="LDExtras.cpp" />
     <ClCompile Include="Task\Experiment\CombatRecordRecognitionTask.cpp" />
     <ClCompile Include="Task\Experiment\SingleStepBattleProcessTask.cpp" />
     <ClCompile Include="Task\Fight\FightTimesTaskPlugin.cpp" />
@@ -273,14 +284,21 @@
     <ClCompile Include="Task\Miscellaneous\OperBoxRecognitionTask.cpp" />
     <ClCompile Include="Task\Miscellaneous\AccountSwitchTask.cpp" />
     <ClCompile Include="Task\Miscellaneous\TaskFileReloadTask.cpp" />
-    <ClCompile Include="Task\Reclamation\ReclamationControlTask.cpp" />
-    <ClCompile Include="Task\Reclamation\ReclamationConclusionReportPlugin.cpp" />
-    <ClCompile Include="Task\Reclamation\ReclamationBattlePlugin.cpp" />
+    <!-- 生息演算 .cpp Begin -->
     <ClCompile Include="Task\Interface\ReclamationTask.cpp" />
+    <ClCompile Include="Task\Reclamation\ReclamationConfig.cpp" />
+    <ClCompile Include="Task\Reclamation\AbstractReclamationTaskPlugin.cpp" />
+    <ClCompile Include="Task\Reclamation\ReclamationCraftTaskPlugin.cpp" />
+    <!-- 生息演算 .cpp End -->
     <ClCompile Include="Task\BattleHelper.cpp" />
     <ClCompile Include="Task\Interface\SingleStepTask.cpp" />
     <ClCompile Include="Task\Interface\SSSCopilotTask.cpp" />
     <ClCompile Include="Task\Roguelike\AbstractRoguelikeTaskPlugin.cpp" />
+    <ClCompile Include="Task\Roguelike\RoguelikeIterateDeepExplorationPlugin.cpp" />
+    <ClCompile Include="Task\Roguelike\RoguelikeIterateMonthlySquadPlugin.cpp" />
+    <ClCompile Include="Task\Roguelike\RoguelikeLastRewardSelectTaskPlugin.cpp" />
+    <ClCompile Include="Task\Roguelike\RoguelikeLevelTaskPlugin.cpp" />
+    <ClCompile Include="Task\Roguelike\RoguelikeInputSeedTaskPlugin.cpp" />
     <ClCompile Include="Task\Roguelike\Sami\RoguelikeFoldartalGainTaskPlugin.cpp" />
     <ClCompile Include="Task\Roguelike\Sami\RoguelikeFoldartalStartTaskPlugin.cpp" />
     <ClCompile Include="Task\Roguelike\Sami\RoguelikeFoldartalUseTaskPlugin.cpp" />
@@ -296,6 +314,7 @@
     <ClCompile Include="Task\SSS\SSSBattleProcessTask.cpp" />
     <ClCompile Include="Task\SSS\SSSDropRewardsTaskPlugin.cpp" />
     <ClCompile Include="Task\SSS\SSSStageManagerTask.cpp" />
+    <ClCompile Include="Vision\Battle\SupportListAnalyzer.cpp" />
     <ClCompile Include="Vision\Roguelike\RoguelikeParameterAnalyzer.cpp" />
     <ClCompile Include="Vision\VisionHelper.cpp" />
     <ClCompile Include="Vision\Battle\BattleFormationAnalyzer.cpp" />
@@ -378,6 +397,7 @@
     <ClCompile Include="Task\Interface\StartUpTask.cpp" />
     <ClCompile Include="Task\Miscellaneous\AutoRecruitTask.cpp" />
     <ClCompile Include="Task\Miscellaneous\BattleFormationTask.cpp" />
+    <ClCompile Include="Task\Miscellaneous\UseSupportUnitTaskPlugin.cpp" />
     <ClCompile Include="Task\Miscellaneous\BattleProcessTask.cpp" />
     <ClCompile Include="Task\Miscellaneous\CreditFightTask.cpp" />
     <ClCompile Include="Task\Miscellaneous\CreditShoppingTask.cpp" />
@@ -823,7 +843,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties _1_1_4_1_1_4resource_4config_1json__JsonSchema="" />
+      <UserProperties _1_1_4_1_1_4resource_4config_1json__JsonSchema="" _1_1_4_1_1_4resource_4tasks_1json__JsonSchema="..\docs\maa_tasks_schema.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -1,13 +1,10 @@
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:system="clr-namespace:System;assembly=mscorlib">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!--  설정  -->
     <system:String x:Key="Settings">설정</system:String>
     <system:String x:Key="GeneralSettings">일반 설정</system:String>
     <system:String x:Key="AdvancedSettings">고급 설정</system:String>
     <system:String x:Key="PerformanceSettings">성능 설정</system:String>
-    <system:String x:Key="GameSettings">클라이언트</system:String>
+    <system:String x:Key="GameSettings">실행 설정</system:String>
     <system:String x:Key="BaseSettings">기반시설</system:String>
     <system:String x:Key="RoguelikeSettings">통합 전략</system:String>
     <system:String x:Key="RecruitingSettings">공개모집</system:String>
@@ -21,9 +18,12 @@
     <system:String x:Key="HotKeySettings">단축키 설정</system:String>
     <system:String x:Key="UpdateSettings">업데이트</system:String>
     <system:String x:Key="AboutUs">정보</system:String>
+    <system:String x:Key="MaaVersion">MAA 버전</system:String>
+    <system:String x:Key="BuildDateTime">빌드 날짜</system:String>
     <system:String x:Key="CoreVersion">Core 버전</system:String>
     <system:String x:Key="UiVersion">UI 버전</system:String>
     <system:String x:Key="ResourceVersion">Resource 버전</system:String>
+    <system:String x:Key="ResourceDateTime">자원 날짜</system:String>
     <system:String x:Key="Off">끄기</system:String>
     <system:String x:Key="ExternalNotificationTips">팁: 외부 알림 기능은 현재 「모든 작업 완료」 알림만 보냅니다.</system:String>
     <system:String x:Key="ExternalNotificationSettings">외부 알림</system:String>
@@ -46,11 +46,18 @@
     <system:String x:Key="ExternalNotificationSmtpTo">받는 사람</system:String>
     <system:String x:Key="ExternalNotificationDiscordBotToken">봇 토큰</system:String>
     <system:String x:Key="ExternalNotificationDiscordUserId">사용자 ID</system:String>
+    <system:String x:Key="ExternalNotificationDiscordWebhookUrl">웹후크 URL</system:String>
     <system:String x:Key="ExternalNotificationTelegramBotToken">봇 토큰</system:String>
     <system:String x:Key="ExternalNotificationTelegramChatId">채팅 ID</system:String>
+    <system:String x:Key="ExternalNotificationQmsgServer">섬기는 사람</system:String>
+    <system:String x:Key="ExternalNotificationQmsgKey">Qmsg Key</system:String>
+    <system:String x:Key="ExternalNotificationQmsgUser">사용자 QQ</system:String>
+    <system:String x:Key="ExternalNotificationQmsgBot">봇 보내기 QQ</system:String>
     <system:String x:Key="UseGpuForInference">추론 가속화를 위해 GPU 사용</system:String>
     <system:String x:Key="GpuOptionDisable">사용안함</system:String>
     <system:String x:Key="GpuOptionSystemDefault">시스템 기본 GPU</system:String>
+    <system:String x:Key="GpuDeprecatedMessage">추론 가속을 위해 현재 선택된 GPU({0})의 사용이 권장되지 않습니다\n\n「설정 - 성능 설정」에서 다른 GPU를 선택하거나 이 메시지를 비활성화할 수 있습니다</system:String>
+    <system:String x:Key="GpuAllowDeprecated">권장되지 않는 GPU 사용 허용</system:String>
     <!--  설정 가이드  -->
     <system:String x:Key="TaskSettings">작업 설정</system:String>
     <system:String x:Key="SettingsGuide">설정 가이드</system:String>
@@ -92,9 +99,9 @@
     <system:String x:Key="DefaultInfrast">기본 구성</system:String>
     <system:String x:Key="UserDefined">사용자 설정</system:String>
     <system:String x:Key="153Time3">153 1일 3회 교체</system:String>
+    <system:String x:Key="153Time4">153 1일 4회 교체</system:String>
     <system:String x:Key="243Time3">243 1일 3회 교체</system:String>
     <system:String x:Key="243Time4">243 1일 4회 교체</system:String>
-    <system:String x:Key="252Time3">252 1일 3회 교체</system:String>
     <system:String x:Key="333Time3">333 1일 3회 교체</system:String>
     <system:String x:Key="CustomInfrastFile">기반시설 구성</system:String>
     <system:String x:Key="CustomInfrastFileParseFailed">기반시설 구성 인식 실패!</system:String>
@@ -119,6 +126,9 @@
     <system:String x:Key="RoguelikeStrategyGold">오리지늄 각뿔 우선, 2번째 구역 도달 시 탐험 중도 포기</system:String>
     <system:String x:Key="RoguelikeStrategyLastReward">전기주전자 획득까지 반복, 3번째 구역 도달 시 탐험 중도 포기</system:String>
     <system:String x:Key="RoguelikeStrategyCollapse">희귀 붕괴 패러다임 파밍, 일반 붕괴 패러다임이 나올 시 재시작</system:String>
+    <system:String x:Key="RoguelikeCollectibleModeSquad">작전 지원 선택 분대</system:String>
+    <system:String x:Key="RoguelikeStrategyMonthlySquad">월간 소대를 그라인드하고, 5층에 도달하면 바로 종료</system:String>
+    <system:String x:Key="RoguelikeStrategyDeepExploration">심층 탐사를 그라인드하고 가능한 한 많은 층을 클리어</system:String>
     <system:String x:Key="StartingSquad">시작 분대</system:String>
     <system:String x:Key="StartingRoles">모집 조합</system:String>
     <system:String x:Key="StartingCoreChar">시작 오퍼레이터 (1명)</system:String>
@@ -126,13 +136,18 @@
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">오퍼레이터 는 battle_data에 없습니다.</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">시작 오퍼레이터 2정예화까지 반복</system:String>
     <system:String x:Key="RoguelikeOnlyStartWithEliteTwo">시작 오퍼레이터 2정예화까지 반복(전투 X)</system:String>
+    <system:String x:Key="RoguelikeStartWithTwoIdeas">Repeat for a start with 2 ideas</system:String>
     <system:String x:Key="Roguelike3FirstFloorFoldartal">1층 암호판 획득 반복(전투 X)</system:String>
     <system:String x:Key="Roguelike3NewSquad2StartingFoldartal">생존지상 분대 목표 암호판 설정</system:String>
     <system:String x:Key="Roguelike3NewSquad2StartingFoldartalTip">최대 3개까지 지원하며「;」로 구분합니다</system:String>
+    <system:String x:Key="RoguelikeCollapseList">붕괴 패러다임 목록</system:String>
+    <system:String x:Key="RoguelikeCollapseListTip">영어 세미콜론 「;」으로 구분, 비워 두면 기본 목록이 사용됩니다.</system:String>
     <system:String x:Key="RoguelikeUseSupportUnit">시작 오퍼레이터로 지원 유닛 사용</system:String>
     <system:String x:Key="RoguelikeUseNonFriendSupport">친구가 아니어도 지원 유닛 사용</system:String>
-    <system:String x:Key="RoguelikeDelayAbortUntilCombatComplete">중지 시 전투 클리어 후 작업 종료</system:String>
+    <system:String x:Key="RoguelikeDelayAbortUntilCombatComplete">통합전략 중지 시 전투 클리어 후 작업 종료</system:String>
     <system:String x:Key="RoguelikeStopAtFinalBoss">5스테이지 보스 앞에서 일시정지</system:String>
+    <system:String x:Key="RoguelikeStopAtMaxLevel">최대 레벨 달성 시 중지</system:String>
+    <system:String x:Key="RoguelikeStartWithSeed">启用刷钱种子</system:String>
     <system:String x:Key="DeploymentWithPause" xml:space="preserve">일시정지 상태로 배치하기 - 통합전략, 자동 작전, 보안 파견에 적용 (비권장)</system:String>
     <system:String x:Key="AdbLiteEnabled">ADB Lite 사용 (실험적)</system:String>
     <system:String x:Key="KillAdbOnExit">종료 시 ADB도 종료</system:String>
@@ -148,6 +163,9 @@
     <system:String x:Key="IS4NewSquad2">박학다식 분대 (博闻广记分队)</system:String>
     <system:String x:Key="IS4NewSquad3">설계도 제작 분대 (蓝图测绘分队)</system:String>
     <system:String x:Key="IS4NewSquad4">인지제의 분대 (因地制宜分队)</system:String>
+    <system:String x:Key="IS4NewSquad5">异想天开分队（占位）</system:String>
+    <system:String x:Key="IS4NewSquad6">点刺成锭分队（占位）</system:String>
+    <system:String x:Key="IS4NewSquad7">拟态学者分队（占位）</system:String>
     <system:String x:Key="LeaderSquad">지휘 분대</system:String>
     <system:String x:Key="GatheringSquad">집합 분대</system:String>
     <system:String x:Key="SupportSquad">지원 분대</system:String>
@@ -182,7 +200,7 @@
     <system:String x:Key="EmulatorNotFound">에뮬레이터를 찾을 수 없습니다.\n관리자 권한으로 실행하거나\n수동으로 연결을 설정해 주세요</system:String>
     <system:String x:Key="EmulatorTooMany">다수의 에뮬레이터가 실행 중입니다.\n사용하지 않는 에뮬레이터를 종료하거나\n수동으로 연결을 설정해 주세요</system:String>
     <system:String x:Key="EmulatorStartFailed">에뮬레이터를 시작하지 못했습니다.\n사용하지 않는 에뮬레이터를 종료하거나\n또는 에뮬레이터를 수동으로 시작하세요.</system:String>
-    <system:String x:Key="SwitchLanguage">언어 전환</system:String>
+    <system:String x:Key="SwitchLanguage">언어 전환 🌐</system:String>
     <system:String x:Key="Language">언어</system:String>
     <system:String x:Key="LanguageChangedTip">언어가 변경되었습니다. 지금 MAA를 재실행하여 새 설정을 적용하시겠습니까?</system:String>
     <system:String x:Key="ManualRestart">나중에</system:String>
@@ -221,6 +239,10 @@
     <system:String x:Key="DownloadWithAria2">aria2로 다운로드</system:String>
     <system:String x:Key="UpdateCheckNow">지금 업데이트</system:String>
     <system:String x:Key="ShowChangelog">변경 내역</system:String>
+    <system:String x:Key="ResourceUpdate">리소스 업데이트</system:String>
+    <system:String x:Key="ResourceUpdateSource">리소스 업데이트 소스</system:String>
+    <system:String x:Key="MirrorChyan">미러짱</system:String>
+    <system:String x:Key="MirrorChyanResourceUpdateTip">Mirror-chan 리소스 버전 업데이트 확인. '설정-소프트웨어 업데이트'로 이동하여 CDK를 구성하거나 GitHub 소스를 사용하여 리소스 버전을 업데이트하세요.</system:String>
     <system:String x:Key="NewVersionFoundTitle">새로운 버전 확인</system:String>
     <system:String x:Key="NewVersionFoundDescDownloading">백그라운드에서 다운로드 중……</system:String>
     <system:String x:Key="NewVersionFoundDescId" xml:space="preserve">버전: </system:String>
@@ -257,13 +279,15 @@
     <system:String x:Key="AddConfigSuccess">구성 &lt; {0}&gt;가 성공적으로 추가되었습니다</system:String>
     <system:String x:Key="ConfigExists">구성 &lt; {0}&gt;가 이미 있습니다</system:String>
     <system:String x:Key="LaunchOnSystemStartup">시스템 시작 시 MAA 실행</system:String>
+    <system:String x:Key="LaunchOnSystemStartupAdminPrompt">
+        관리자 권한으로 실행 시 부팅 시 자동 실행이 지원되지 않습니다. MAA를 관리자 권한으로 장시간 실행하는 것은 권장하지 않습니다.\n필요할 경우 제어판 &gt; Windows 도구 &gt; 작업 스케줄러에서 사용자 지정 작업을 생성하세요. 트리거를 설정할 때 "가장 높은 권한으로 실행"을 반드시 선택하십시오.
+    </system:String>
     <system:String x:Key="RunTaskAfterLaunch">MAA 실행 후 작업 자동 시작</system:String>
     <system:String x:Key="MinimizeAfterLaunch">MAA 실행 후 최소화</system:String>
     <system:String x:Key="ClientType">클라이언트 종류</system:String>
     <system:String x:Key="AutoRestartOption">게임 연결이 끊어지면 자동으로 다시 연결</system:String>
     <system:String x:Key="HelpUsWithOverseasServersTip">해외 서버의 현지화는 어려운 작업입니다! 저희를 도와주세요! 전문 지식이 없어도 됩니다.</system:String>
     <system:String x:Key="OpenEmulatorAfterLaunch">MAA 실행 후 에뮬레이터를 실행</system:String>
-    <system:String x:Key="MinimizingStartup">시작 시 에뮬레이터 최소화</system:String>
     <system:String x:Key="WaitForEmulator">에뮬레이터 실행 대기 (초)</system:String>
     <system:String x:Key="WaitForEmulatorFinish">대기 시간 종료</system:String>
     <system:String x:Key="EmulatorPath">에뮬레이터 경로</system:String>
@@ -289,12 +313,23 @@
     <system:String x:Key="RoguelikeThemeMizuki">미즈키</system:String>
     <system:String x:Key="RoguelikeThemeSami">사미</system:String>
     <system:String x:Key="RoguelikeThemeSarkaz">살카즈</system:String>
+    <system:String x:Key="RoguelikeDifficulty">난이도</system:String>
     <system:String x:Key="Strategy">전략</system:String>
     <system:String x:Key="StartTimesLimit">N번 시작한 후 작업 중지</system:String>
     <system:String x:Key="GoldTimesLimit">N번 투자 후 작업 중지</system:String>
     <system:String x:Key="StopOnGoldLimit">오리지늄 각뿔이 한계 도달 시 중지</system:String>
     <system:String x:Key="InvestmentEnabled">오리지늄 각뿔 투자</system:String>
     <system:String x:Key="InvestmentWithMoreScore">투자 시 쇼핑, 모집, 2스테이지 진입</system:String>
+    <system:String x:Key="RoguelikeCollectibleModeShopping">작전 지원 선택 모드 쇼핑 활성화</system:String>
+    <system:String x:Key="RoguelikeStartWithSelectList">작전 지원 보상 선택</system:String>
+    <system:String x:Key="RoguelikeStartWithKettle">전기주전자</system:String>
+    <system:String x:Key="RoguelikeStartWithShield">실드</system:String>
+    <system:String x:Key="RoguelikeStartWithIngot">각뿔</system:String>
+    <system:String x:Key="RoguelikeStartWithHope">희망</system:String>
+    <system:String x:Key="RoguelikeStartWithRandomReward">랜덤 보상</system:String>
+    <system:String x:Key="RoguelikeStartWithKey">열쇠</system:String>
+    <system:String x:Key="RoguelikeStartWithDice">주사위</system:String>
+    <system:String x:Key="RoguelikeStartWithIdea">구상</system:String>
     <system:String x:Key="RefreshTraderWithDice">상점 새로고침</system:String>
     <system:String x:Key="PenguinId">Penguin-Stats 보고 ID (숫자만)</system:String>
     <system:String x:Key="EnablePenguin">Penguin-Stats 보고</system:String>
@@ -334,12 +369,15 @@ OF-1을 해금하지 않았다면 선택하지 말아 주세요.</system:String>
     <system:String x:Key="SystemNotification">중요 알림 팝업</system:String>
     <system:String x:Key="HideCloseButton">닫기 버튼 숨기기</system:String>
     <system:String x:Key="WindowTitleScrollable">윈도우 제목 스크롤</system:String>
+    <system:String x:Key="NullFunctionality">오른쪽 클릭 체크박스 기능 반전</system:String>
     <system:String x:Key="TitleBarDisplayContent">타이틀 바 표시 내용</system:String>
     <system:String x:Key="UseLogItemDateFormat">사용자 정의 로그 날짜 형식</system:String>
     <system:String x:Key="LogItemDateFormatString">날짜 형식 문자열</system:String>
     <system:String x:Key="PromptRestartForSettingsChange">변경 사항을 적용을 위해 즉시 다시 시작하시겠습니까?</system:String>
     <system:String x:Key="SwitchResolutionTip">에뮬레이터 해상도를 1920x1080으로 변경!</system:String>
     <system:String x:Key="ResolutionInfoYoStarEN">에뮬레이터가 1920x1080으로 설정되어 있는지 확인하세요</system:String>
+    <system:String x:Key="AllowUseStoneSave">순오리지늄 사용 상태 저장 허용</system:String>
+    <system:String x:Key="AllowUseStoneSaveWarning">이 기능은 위험할 수 있습니다. "확인" 버튼을 누르면 잠재적인 위험을 이해하고 감수하는 것으로 간주됩니다.</system:String>
     <system:String x:Key="UseAlternateStage">대체 스테이지 사용</system:String>
     <system:String x:Key="UseRemainingSanityStage">남은 이성 활용</system:String>
     <system:String x:Key="UseRemainingSanityStageTip">주 작업을 완료한 후 지정된 스테이지를 실행하며, 이성 회복제/오리지늄을 사용하지 않습니다</system:String>
@@ -369,26 +407,41 @@ OF-1을 해금하지 않았다면 선택하지 말아 주세요.</system:String>
     <system:String x:Key="ConnectionAddressTip">문제 발생 시 직접 수정해 주세요</system:String>
     <system:String x:Key="ConnectionPreset">연결 프리셋</system:String>
     <system:String x:Key="ScreenshotTest">스크린샷 테스트</system:String>
-    <system:String x:Key="MuMu12ExtrasEnabled">MuMu의 스크린샷 향상 모드를 활성화하세요</system:String>
-    <system:String x:Key="MuMu12ExtrasEnabledTip">
-        MuMu 12 V4.0.0 이상은 필요하며, MuMu 12 Global 에서는 지원되지 않습니다.\n
-        이 기능을 활성화한 후 처음으로 사용하기 전에 스크린샷 테스트를 수행하는 것이 좋습니다.\n\n
-        다음 정보를 기입하세요: \n\n
-        1. 에뮬레이터 경로: (예: C:\\Program Files\\Netease\\MuMuPlayer-12.0) \n
-        에뮬레이터 경로는 에뮬레이터 응용 프로그램의 상위 폴더 경로를 입력해야 합니다. 예를 들어, 응용 프로그램 경로가\n
-        「C:\\Program Files\\Netease\\MuMuPlayer-12.0\\shell\\MuMuPlayer.exe」\n
-        인 경우,\n
-        「C:\\Program Files\\Netease\\MuMuPlayer-12.0」\n
-        을 입력하세요. \n\n
-        2. 인스턴스 번호: (예: 0) \n
-        인스턴스 번호는 MuMu 다중 인스턴스 관리자에서 확인할 수 있습니다. 기본값은 0입니다. 다중 인스턴스가 있는 경우 번호는 인스턴스 앞에 표시됩니다. \n\n
-        3. 창 번호: (예: 0) \n
-        팁: MuMu의 백그라운드 유지를 끈 후 0을 입력하세요. 백그라운드 유지를 시작하려면 직접 방법을 찾으세요.
+    <system:String x:Key="MuMu12ExtrasEnabled">MuMu 스크린샷 향상 모드 활성화</system:String>
+    <system:String x:Key="MuMu12ExtrasEnabledTip" xml:space="preserve">
+MuMu 12 V4.0.0 이상은 필요하며, MuMu 12 Global 에서는 지원되지 않습니다.
+이 기능을 활성화한 후 즉시 스크린샷 테스트를 실행하는 것을 강력히 권장합니다.
+MAA는 레지스트리를 통해 설치 경로를 자동으로 가져옵니다. 가져오지 못한 경우 수동으로 입력해 주세요.\n
+설치 경로는 에뮬레이터 설치 디렉토리의 루트 디렉토리를 입력해야 합니다. 예를 들어, 에뮬레이터 프로세스 파일 경로가
+C:\\Program Files\\Netease\\MuMuPlayer-12.0\\shell\\MuMuPlayer.exe
+라면
+C:\\Program Files\\Netease\\MuMuPlayer-12.0으로 입력해야 합니다.\n
+주의:
+1. 연결 주소의 포트 번호가 7555일 경우, 포트 번호를 16384로 변경해야 합니다.
+2. 네트워크 브리징을 사용 중인 경우 MuMu 네트워크 브리징 모드를 선택하고 일련 번호를 수동으로 입력해야 합니다.
     </system:String>
     <system:String x:Key="MuMu12EmulatorPath">MuMu12 에뮬레이터 경로</system:String>
+    <system:String x:Key="MuMuBridgeConnection">MuMu 네트워크 브리지 모드</system:String>
+    <system:String x:Key="MuMuBridgeConnectionTip">무엇을 하고 있는지 모른다면 이 옵션을 활성화하지 마십시오</system:String>
     <system:String x:Key="MuMu12Index">인스턴스 번호</system:String>
     <system:String x:Key="MuMu12Display">표시 번호</system:String>
-    <system:String x:Key="MuMuExtrasNotEnabledMessage">MuMuExtras가 활성화되지 않았습니다. 관련 설정을 확인하세요</system:String>
+    <system:String x:Key="MuMuExtrasNotEnabledMessage">MuMu의 스크린샷 향상가 활성화되지 않았습니다. 관련 설정을 확인하세요</system:String>
+    <system:String x:Key="LdExtrasEnabled">LD 스크린샷 향상 모드 활성화</system:String>
+    <system:String x:Key="LdExtrasEnabledTip" xml:space="preserve">
+LDPlayer 9 V9.1.32 이상이 필요합니다.
+이 기능을 활성화한 후 즉시 스크린샷 테스트를 실행하는 것을 강력히 권장합니다.
+MAA는 레지스트리에서 자동으로 설치 경로를 가져옵니다. 실패하면 수동으로 입력하십시오.\n
+설치 경로는 에뮬레이터 설치 디렉터리의 루트 디렉터리를 입력해야 합니다. 예를 들어, 에뮬레이터 프로세스 파일 경로가
+C:\\leidian\\LDPlayer9\\dnplayer.exe
+인 경우
+C:\\leidian\\LDPlayer9
+을 입력해야 합니다。\n
+인스턴스 번호는 LD플레이어 멀티 인스턴스 매니저에서 확인할 수 있습니다.
+메인 인스턴스는 0이고, 다른 인스턴스는 버전/ID 뒤에 오는 숫자입니다。\n
+    </system:String>
+    <system:String x:Key="LdEmulatorPath">LD 에뮬레이터 경로</system:String>
+    <system:String x:Key="LdIndex">인스턴스 번호</system:String>
+    <system:String x:Key="LdExtrasNotEnabledMessage">LD 의 스크린샷 향상가 활성화되지 않았습니다. 관련 설정을 확인하세요</system:String>
     <system:String x:Key="RetryOnDisconnected">ADB 연결이 실패하면 에뮬레이터를 다시 시도합니다</system:String>
     <system:String x:Key="RetryOnDisconnectedTip">재연결을 20회 시도해도 실패하면 에뮬레이터를 다시 시작합니다. 백그라운드 예약을 사용하고 작업이 완료되면 에뮬레이터가 종료되도록 설정하려면 반드시 선택해야 합니다</system:String>
     <system:String x:Key="RetryOnDisconnectedEmulatorPathEmptyError">에뮬레이터 경로가 비어 있습니다!「연결 설정/에뮬레이터 경로」를 입력한 후 다시 선택하세요.</system:String>
@@ -405,11 +458,20 @@ OF-1을 해금하지 않았다면 선택하지 말아 주세요.</system:String>
     <system:String x:Key="Mall">크레딧 수급 및 상점</system:String>
     <system:String x:Key="Mission">보상 수령</system:String>
     <system:String x:Key="AutoRoguelike">통합전략</system:String>
-    <system:String x:Key="ReclamationAlgorithm">생존연산·모래 속의 불</system:String>
-    <system:String x:Key="ReclamationAlgorithm2">생존연산·사막 이야기</system:String>
+    <system:String x:Key="Reclamation">생존연산</system:String>
+    <system:String x:Key="ReclamationTheme">생존연산 테마</system:String>
+    <system:String x:Key="ReclamationThemeFire">모래 속의 불</system:String>
+    <system:String x:Key="ReclamationThemeTales">사막 이야기</system:String>
+    <system:String x:Key="ReclamationModeProsperityNoSave">세이브 X, 스테이지 반복으로 번영의 선물 획득</system:String>
+    <system:String x:Key="ReclamationModeProsperityInSave">세이브 O, 도구 조립으로 번영의 선물 획득</system:String>
+    <system:String x:Key="ReclamationIncrementMode">증가 방식</system:String>
+    <system:String x:Key="ReclamationIncrementModeClick">연타</system:String>
+    <system:String x:Key="ReclamationIncrementModeHold">길게 누르기</system:String>
+    <system:String x:Key="ReclamationMaxCraftCountPerRound">한 번의 최대 제작 횟수</system:String>
     <system:String x:Key="OperNameLanguage">간부 이름 표시 언어</system:String>
     <system:String x:Key="OperNameLanguageMAA">MAA 따라가기</system:String>
     <system:String x:Key="OperNameLanguageClient">게임 클라이언트 따라가기</system:String>
+    <system:String x:Key="OperNameLanguageForce">지정된 언어를 강제로 사용</system:String>
     <system:String x:Key="Light">라이트</system:String>
     <system:String x:Key="Dark">다크</system:String>
     <system:String x:Key="SyncWithOs">시스템 연동</system:String>
@@ -421,20 +483,22 @@ OF-1을 해금하지 않았다면 선택하지 말아 주세요.</system:String>
     <system:String x:Key="ExitArknights">명일방주를 종료</system:String>
     <system:String x:Key="ExitSelf">MAA를 종료</system:String>
     <system:String x:Key="ExitEmulator">에뮬레이터를 종료</system:String>
-    <system:String x:Key="Hibernate">절전 모드</system:String>
+    <system:String x:Key="Hibernate">최대 절전 모드</system:String>
+    <system:String x:Key="HibernateTip">Windows의 전원 옵션에서 최대 절전 모드를 활성화해야 합니다. 그렇지 않으면 이 기능이 비활성화됩니다.</system:String>
+    <system:String x:Key="Sleep">절전 모드</system:String>
     <system:String x:Key="Shutdown">시스템 종료</system:String>
     <system:String x:Key="Once">한 번만*</system:String>
-    <system:String x:Key="PostActionOnceTip" xml:space="preserve">한 번만 실행하려면 먼저 Only once를 체크하세요.
-Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작업이 복원됩니다.
-아래 작업을 마우스 오른쪽 버튼으로 클릭하면 선택한 Only once 상태가 동기적으로 활성화/취소됩니다.</system:String>
+    <system:String x:Key="PostActionOnceTip" xml:space="preserve">한 번만 실행하려면 「한 번만*」를 먼저 체크하세요.
+「한 번만*」이 체크되면 실행 후 「한 번만*」가 체크되기 전 상태로 작업이 복원됩니다.
+아래 작업을 마우스 오른쪽 버튼으로 클릭하면 선택한 「한 번만*」상태가 동기적으로 활성화/취소됩니다.</system:String>
     <system:String x:Key="IfNoOtherMaa">다른 MAA가 없는 경우</system:String>
-    <system:String x:Key="BackToAndroidHome">에뮬레이터가 홈 화면으로 돌아갑니다</system:String>
+    <system:String x:Key="BackToAndroidHome">에뮬레이터 홈 화면으로 이동</system:String>
     <system:String x:Key="LinkStart">Link Start!</system:String>
     <system:String x:Key="Stop">중지</system:String>
     <system:String x:Key="WaitAndStop">대기 &amp; 중지</system:String>
     <!--  작전 설정  -->
     <system:String x:Key="UseSanityPotion">이성 회복제 사용</system:String>
-    <system:String x:Key="UseOriginitePrime">순오리지늄 사용*</system:String>
+    <system:String x:Key="UseOriginitePrime">순오리지늄 사용</system:String>
     <system:String x:Key="PerformBattles">횟수 제한</system:String>
     <system:String x:Key="AssignedMaterial">드롭 제한</system:String>
     <system:String x:Key="Quantity">드롭 수</system:String>
@@ -482,7 +546,7 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="Pormpt2">일요일입니다. 섬멸 작전을 잊지 마세요~</system:String>
     <!--  !작전 설정  -->
     <!--  로그  -->
-    <system:String x:Key="VersionMismatch">UI 및 Core 버전 불일치: {0} 및 {1}로 인해 문제가 발생할 수 있습니다. 파일을 수동으로 교체하지 마세요</system:String>
+    <system:String x:Key="VersionMismatch">UI와 Core 버전이 일치하지 않습니다: {0} 및 {1}, 예측할 수 없는 동작을 유발할 수 있습니다. 파일을 수동으로 교체하거나 업데이트 중에 파일을 점유하지 마십시오.\n\n전체 패키지를 다운로드하여 현재 폴더의 내용을 덮어쓰십시오.</system:String>
     <system:String x:Key="ConnectingToEmulator">에뮬레이터에 연결 중……</system:String>
     <system:String x:Key="UnselectedTask">선택된 작업이 없습니다</system:String>
     <system:String x:Key="Running">실행 중……</system:String>
@@ -497,7 +561,8 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="ExitEmulatorFailed">에뮬레이터 종료 실패</system:String>
     <system:String x:Key="AboutToShutdown">작업을 완료했습니다. 시스템이 곧 종료됩니다. 취소하시겠습니까?</system:String>
     <system:String x:Key="ShutdownPrompt">알림</system:String>
-    <system:String x:Key="HibernatePrompt">작업을 완료했습니다. 곧 절전 모드에 진입합니다</system:String>
+    <system:String x:Key="HibernatePrompt">작업이 완료되었으며, 곧 최대 절전 모드로 전환됩니다</system:String>
+    <system:String x:Key="SleepPrompt">작업이 완료되었으며, 곧 절전 모드로 전환됩니다</system:String>
     <system:String x:Key="UnknownActionAfterCompleted">알 수 없는 종료 동작</system:String>
     <system:String x:Key="AnnihilationTaskTip">선택한 스테이지는 섬멸 임무입니다. 임무 완료 후 남은 대체 스테이지가 시도됩니다. 일부 전투 설정은 적용되지 않습니다.</system:String>
     <system:String x:Key="AnnihilationTaskFailed">섬멸 작전에 실패하여 대체 스테이지를 진행합니다. 일부 전투 설정이 무시될 수 있습니다</system:String>
@@ -527,7 +592,8 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <!--  오퍼레이터 인식  -->
     <system:String x:Key="OperBoxRecognition">오퍼레이터 인식</system:String>
     <system:String x:Key="OperBoxRecognitionTip">시작하기 전에 등록된 「선호」오퍼레이터를 등록 해제하세요.\n이 기능은 현재 테스트 중입니다. 만약 오류가 있다면 MAA 경로 내 debug 폴더 안의 oper 폴더 전체를 압축해서 Github의 issue로 올려주세요~</system:String>
-    <system:String x:Key="OperBoxRecognitionResult">미보유: {0}\n목록:\n\n{1}\n보유: {2}\n목록:\n\n{3}</system:String>
+    <system:String x:Key="OperBoxHaveList">보유: {0}</system:String>
+    <system:String x:Key="OperBoxNotHaveList">미보유: {0}</system:String>
     <system:String x:Key="StartToOperBoxRecognition">인식 시작</system:String>
     <system:String x:Key="OperBoxCopyToClipboard">클립보드에 복사</system:String>
     <!--  !오퍼레이터 인식  -->
@@ -565,6 +631,10 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="GachaAgreeDisclaimer">확인</system:String>
     <system:String x:Key="ShowDisclaimerNoMore">다시 보지 않기</system:String>
     <!--  !헤드헌팅  -->
+    <!--  Peep  -->
+    <system:String x:Key="Peep">Peep</system:String>
+    <system:String x:Key="PeepTargetFps">목표 프레임 속도</system:String>
+    <!--  !Peep  -->
     <!--  로그  -->
     <system:String x:Key="Identifying">인식 중……</system:String>
     <system:String x:Key="IdentificationCompleted">인식 완료</system:String>
@@ -608,15 +678,14 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
         3. 보안파견의 Copilot 파일의 경우 MAA 내의 「resource/copilot」 폴더에 있습니다 \n
         수동 편성 후 「작전 개시」 버튼이 있는 화면에서 시작하세요. (「반복횟수」와 함께 사용 가능)\n\n
         4. 지원 유닛을 사용할 때에는 반드시 「자동 편성」을 끄고, 지원 유닛을 선택한 후에 시작해야 합니다\n\n
-        5. 현재 비디오 인식이 지원되며, 전략 비디오를 사용하려면 끌어와 사용하세요\n
-        동영상의 해상도는 16:9여야 하며, 검은색 테두리, 에뮬레이터 테두리, 특수한 모양의 화면 보정 등의 방해 요소가 없어야 합니다\n\n
-        6. 전투 목록:\n
+        5. 「선호」 기능을 활성화하면 「자동 편성」의 오퍼레이터 선택에 영향을 미칠 수 있습니다. 「자동 편성」을 사용할 때 「선호」을 끄거나, 누락된 오퍼레이터를 수동으로 추가하여 편성을 완료하는 것을 권장합니다.\n\n
+        6. Copilot 작업 스테이션에서 입력란 오른쪽의 붙여넣기 버튼을 클릭하여 신비한 코드를 붙여넣을 수 있습니다. 왼쪽 클릭으로 단일 작업을 붙여넣고, 오른쪽 클릭으로 작업 세트 전체를 붙여넣습니다.\n\n
+        7. 전투 목록:\n
         작업을 선택한 후 목록 아래의 스테이지 이름이 올바른지 확인하세요(예: CV-EX-1).\n
         추가: 왼쪽 클릭으로 일반 난이도를 추가하고, 오른쪽 클릭으로 하드모드 난이도를 추가하세요.\n
         지우기: 목록을 지우려면 왼쪽 클릭, 비활성화된 작업만 제거하려면 오른쪽 클릭을 하세요.\n
         시작하기 전에 스테이지 선택 화면으로 진입해야 합니다. 목표 지점으로의 이동은 지원되지 않습니다.\n
-        이성이 부족하거나, 전투가 실패하거나, 3성 클리어를 해결할 수 없는 경우 동작이 종료됩니다. \n
-        일괄 가져오기로 인위적인 스테이지를 추가하려면, 파일명을 수정해야 합니다(예: '1-7(하드).json').\n\n
+        이성이 부족하거나, 전투가 실패하거나, 3성 클리어를 해결할 수 없는 경우 동작이 종료됩니다.
     </system:String>
     <system:String x:Key="CopilotFileReadError">파일을 읽지 못했습니다!</system:String>
     <system:String x:Key="CopilotNoFound">해당 파일을 찾을 수 없습니다!</system:String>
@@ -628,9 +697,11 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <!--  !Copilot  -->
     <!--  ErrorView  -->
     <system:String x:Key="Error">오류</system:String>
+    <system:String x:Key="ErrorCongratulations">축하합니다</system:String>
     <system:String x:Key="ErrorProlog">MAA에서 오류가 발생했습니다</system:String>
     <system:String x:Key="ErrorDetails">세부 정보</system:String>
     <system:String x:Key="ErrorSolution">해결 방법</system:String>
+    <system:String x:Key="ErrorSolutionMoveMaaExeOutOfFolder">MAA.exe 파일을 단독으로 옮기지 마세요. 소프트웨어 위치를 변경해야 하는 경우 전체 폴더를 이동하거나, MAA.exe의 바로 가기를 만든 다음 바로 가기를 옮기세요.</system:String>
     <system:String x:Key="ErrorSolutionCrash">FAQ 문서의 크래시 관련 문단을 참고하세요.</system:String>
     <system:String x:Key="ErrorSolutionUpdatePackageExtractionFailed">업데이트 패키지 압축 해제에 실패했습니다. 루트 디렉토리에 있는 업데이트 패키지를 수동으로 압축 해제해 보십시오.</system:String>
     <system:String x:Key="ErrorSolutionReplaceAdb">에뮬레이터와 ADB를 종료하거나 컴퓨터를 재시작하고 관리자 권한으로 MAA를 실행해 주세요.</system:String>
@@ -669,9 +740,9 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="CompleteTask" xml:space="preserve">작업 완료: </system:String>
     <system:String x:Key="StartCombat" xml:space="preserve">작전 시작: </system:String>
     <system:String x:Key="CompleteCombat">작전 완료</system:String>
-    <system:String x:Key="AllTasksComplete">모든 작업이 완료되었습니다!</system:String>
+    <system:String x:Key="AllTasksComplete">모든 작업이 완료되었습니다!\n({0} 이후)</system:String>
     <system:String x:Key="SanityReport">{DateTime}에 이성이 전부 회복됩니다.({TimeDiff} 이후)</system:String>
-    <system:String x:Key="AllTaskCompleteContent">MAA가 {DateTime}의 {Preset} 구성에서 모든 사전 설정 작업을 완료했습니다.</system:String>
+    <system:String x:Key="AllTaskCompleteContent">MAA가 {DateTime}의 {Preset} 구성에서 모든 사전 설정 작업을 완료했습니다.({TimeDiff} 이후)</system:String>
     <system:String x:Key="BackgroundLinkStarted">작업 시작됨</system:String>
     <system:String x:Key="BackgroundLinkStopped">작업 중지됨</system:String>
     <system:String x:Key="FailedToOpenClient">클라이언트를 시작하지 못했습니다. 설정 파일을 확인하세요</system:String>
@@ -681,6 +752,7 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="GiveUpUploadingPenguins">펭귄 물류에 업로드 불가</system:String>
     <system:String x:Key="TheEx">EX 스테이지가 없어 중단되었습니다</system:String>
     <system:String x:Key="MissingOperators">다음 오퍼레이터들이 누락되었습니다:</system:String>
+    <system:String x:Key="RecruitSuppportOperator">지원 유닛 추가: {0}</system:String>
     <system:String x:Key="StageQueue">스테이지 대기열:</system:String>
     <system:String x:Key="UnableToAgent">프록시 명령을 사용할 수 없습니다</system:String>
     <system:String x:Key="MissionStart">행동 개시</system:String>
@@ -706,6 +778,9 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="GameDropNoRestart">게임 중단, 다시 연결되지 않음, 퀘스트 중지</system:String>
     <system:String x:Key="RoguelikeGamePass">통합전략을 클리어했습니다!</system:String>
     <system:String x:Key="RoguelikeSpecialItemBought">특별한 유물을 구매했습니다!</system:String>
+    <system:String x:Key="MonthlySquadCompleted">월간 팀 모두 완료! 축하합니다!</system:String>
+    <system:String x:Key="DeepExplorationCompleted">심층 탐험 모두 완료! 축하합니다!</system:String>
+    <system:String x:Key="DeepExplorationNotUnlockedComplain">심층 탐험이 아직 잠금 해제되지 않았습니다</system:String>
     <system:String x:Key="SSSGamePass">보안 파견을 클리어했습니다!</system:String>
     <system:String x:Key="Trader">노드: 교활한 상인</system:String>
     <system:String x:Key="SafeHouse">노드: 안전가옥</system:String>
@@ -745,8 +820,8 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="DefaultNoExtraTags">기본값: 추가 태그 없음</system:String>
     <system:String x:Key="SelectExtraTags">항상 3개의 태그를 선택</system:String>
     <system:String x:Key="SelectExtraOnlyRareTags">가능한 한 많은 태그를 선택하고 높은 등급의 태그만 선택</system:String>
-    <system:String x:Key="AutoRecruitHighPriority">선호 태그 (「;」로 구분)</system:String>
-    <system:String x:Key="AutoRecruitHighPriorityTooltip">하위 문자열이면 충분하며 가능한 한 많은 태그 기본 설정을 선택합니다</system:String>
+    <system:String x:Key="AutoRecruitHighPriority">선호 태그</system:String>
+    <system:String x:Key="AutoRecruitHighPriorityTooltip">가능한 한 많은 태그 기본 설정을 선택합니다</system:String>
     <system:String x:Key="NotEnoughStaff">오퍼레이터 부족</system:String>
     <system:String x:Key="StageInfoError">스테이지 인식 오류</system:String>
     <system:String x:Key="UseFormation">편성 사용</system:String>
@@ -754,8 +829,7 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="BattleFormation">편성 시작</system:String>
     <system:String x:Key="BattleFormationSelected" xml:space="preserve">오퍼레이터를 선택: </system:String>
     <system:String x:Key="CurrentSteps">현재 단계: {0} {1}</system:String>
-    <system:String x:Key="UnsupportedLevel">지원되지 않는 스테이지입니다. 스테이지 이름을 확인하거나 설정으로 이동하여 소프트웨어 업데이트를 확인하고 리소스 버전을 업데이트해보세요!</system:String>
-    <system:String x:Key="ResourceUpdatePaused">서버 리소스 제약으로 인해 리소스 버전 업데이트가 일시 중지되었습니다. 리소스 파일을 수동으로 설치하거나 새 버전 출시를 기다려 주세요</system:String>
+    <system:String x:Key="UnsupportedLevel">지원되지 않는 스테이지입니다. 스테이지 이름을 확인하거나 「설정 - 소프트웨어 업데이트 - 리소스 업데이트」로 이동하여 리소스 버전을 업데이트해 보세요!</system:String>
     <system:String x:Key="RecruitTagsDetected" xml:space="preserve">인식 결과: </system:String>
     <system:String x:Key="ConnectFailed">연결 실패</system:String>
     <system:String x:Key="TryToReconnectByAdb">재접속을 시도하고 있습니다</system:String>
@@ -778,6 +852,7 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="QqGroup">QQ 그룹</system:String>
     <system:String x:Key="QqChannel">QQ 채널</system:String>
     <system:String x:Key="Telegram">Telegram</system:String>
+    <system:String x:Key="Discord">Discord</system:String>
     <system:String x:Key="Help">자주 묻는 질문</system:String>
     <system:String x:Key="Issue">이슈 제보</system:String>
     <!--  !About  -->
@@ -852,23 +927,28 @@ Only once가 체크되면 실행 후 Only once가 체크되기 전 상태로 작
     <system:String x:Key="DoNotRemindThisAnnouncementAgain">이 공지사항을 더 이상 표시하지 않음</system:String>
     <!--  !Announcement  -->
     <!--  Reclamation  -->
-    <system:String x:Key="ReclamationEarlyTip" xml:space="preserve">고급 설정에서 모드를 전환할 수 있습니다.
-
+    <system:String x:Key="ReclamationEarlyTip" xml:space="preserve">
 현재 생존연산 기능은 초기 단계이며, 다음 사항을 주의하세요:
 
- 저장 데이터 있음: 초회 상태에서 포인트를 모으기
+생존연산 메인 화면에서 작업을 시작해야 합니다
+
+ 세이브 O: 도구 제작으로 번영의 선물 획득
+  1. 결산 후 첫 번째 날이어야 하며, 이후 3일 이내에 적의 침입이 없어야 합니다
+  2. 제조 가능한 수량이 99의 배수일 경우 멈출 수 있습니다. 저장하기 전에 재료를 약간 사용한 후에 다시 시도하세요
+
+ 세이브 X: 스테이지 반복으로 번영의 선물 획득
   1. 기존 데이터가 있는 경우 사용할 수 없습니다 (현재 데이터를 지우세요)
   2. 편성창이 비워있지 않으면 사용할 수 없습니다 (편성창을 비우세요)
-  3. 생존연산 메인 화면에서 작업을 시작해야 합니다
-
- 저장 데이터 없음: 제작을 통해 포인트를 모으기 (고급 설정)
-  1. 결산 후 첫 번째 날이어야 하며, 이후 3일 이내에 적의 침입이 없어야 합니다
-  2. 반드시 지도 화면에서 실행해야 합니다 (주둔지가 보여야합니다)
-  3. 제조 가능한 수량이 99의 배수일 경우 멈출 수 있습니다. 저장하기 전에 재료를 약간 사용한 후에 다시 시도하세요
     </system:String>
     <system:String x:Key="ReclamationBePatient">빨리 발전하고 싶어요! 또 급해져버렸네요</system:String>
     <system:String x:Key="Reclamation2ExEnable">제작 점수 획득 모드</system:String>
-    <system:String x:Key="Reclamation2ExProductTip">제작할 도구 이름</system:String>
-    <system:String x:Key="Reclamation2ExProductPlaceholder">형광봉 (荧光棒)</system:String>
+    <system:String x:Key="ReclamationToolToCraftTip">제작할 도구 이름</system:String>
+    <system:String x:Key="ReclamationToolToCraftPlaceholder">형광봉 (荧光棒)</system:String>
     <!--  !Reclamation  -->
+    <!--  SingleInstance  -->
+    <system:String x:Key="MultiInstanceUnderSamePath" xml:space="preserve">
+동일한 경로에서 하나의 인스턴스만 시작할 수 있습니다!
+MAA 를 더 열려면 새 MAA를 다른 폴더로 복사하고 다른 MAA, 같은 adb 및 다른 에뮬레이터 주소를 사용하여 다중 열 수 있도록 설정합니다.
+    </system:String>
+    <!--  !SingleInstance  -->
 </ResourceDictionary>

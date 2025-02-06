@@ -2,9 +2,7 @@
 
 #include "Config/Roguelike/RoguelikeStageEncounterConfig.h"
 #include "Controller/Controller.h"
-#include "Status.h"
 #include "Task/ProcessTask.h"
-#include "Utils/ImageIo.hpp"
 #include "Utils/Logger.hpp"
 
 bool asst::RoguelikeStageEncounterTaskPlugin::verify(AsstMsg msg, const json::value& details) const
@@ -40,7 +38,7 @@ bool asst::RoguelikeStageEncounterTaskPlugin::_run()
     const RoguelikeMode& mode = m_config->get_mode();
     std::unordered_map<std::string, Config::RoguelikeEvent> event_map = RoguelikeStageEncounter.get_events(theme, mode);
     std::vector<std::string> event_names = RoguelikeStageEncounter.get_event_names(theme);
-    
+
     const auto event_name_task_ptr = Task.get("Roguelike@StageEncounterOcr");
     sleep(event_name_task_ptr->pre_delay);
 
@@ -89,8 +87,12 @@ bool asst::RoguelikeStageEncounterTaskPlugin::_run()
     callback(AsstMsg::SubTaskExtraInfo, info);
 
     const auto click_option_task_name = [&](const int item, const int total) {
-        return m_config->get_theme() + "@Roguelike@OptionChoose" + std::to_string(total) + "-"
-               + std::to_string(item);
+        if (item > total) {
+            Log.warn("Event:", event.name, "Total:", total, "Choice", item, "out of range, switch to choice", total);
+            return m_config->get_theme() + "@Roguelike@OptionChoose" + std::to_string(total) + "-" +
+                   std::to_string(total);
+        }
+        return m_config->get_theme() + "@Roguelike@OptionChoose" + std::to_string(total) + "-" + std::to_string(item);
     };
 
     for (int j = 0; j < 2; ++j) {
@@ -169,9 +171,7 @@ bool asst::RoguelikeStageEncounterTaskPlugin::satisfies_condition(
     return true;
 }
 
-int asst::RoguelikeStageEncounterTaskPlugin::process_task(
-    const Config::RoguelikeEvent& event,
-    const int special_val)
+int asst::RoguelikeStageEncounterTaskPlugin::process_task(const Config::RoguelikeEvent& event, const int special_val)
 {
     for (const auto& requirement : event.choice_require) {
         if (requirement.choose == -1) {

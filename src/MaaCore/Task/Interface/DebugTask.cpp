@@ -5,6 +5,8 @@
 #include "Utils/NoWarningCV.h"
 
 #include "Config/TaskData.h"
+
+#include "Common/AsstTypes.h"
 #include "Utils/ImageIo.hpp"
 #include "Utils/Logger.hpp"
 #include "Vision/Battle/BattlefieldClassifier.h"
@@ -13,11 +15,13 @@
 #include "Vision/Miscellaneous/DepotImageAnalyzer.h"
 #include "Vision/Miscellaneous/StageDropsImageAnalyzer.h"
 
-asst::DebugTask::DebugTask(const AsstCallback& callback, Assistant* inst) : InterfaceTask(callback, inst, TaskType) {}
+asst::DebugTask::DebugTask(const AsstCallback& callback, Assistant* inst) :
+    InterfaceTask(callback, inst, TaskType)
+{
+}
 
 bool asst::DebugTask::run()
 {
-    test_match_template();
     return true;
 }
 

@@ -1,16 +1,17 @@
-name: "Inactive Issues auto close"
-
-env: # config
-  daysBeforeStale: 90 # Number of days of inactivity before marking as stale
-  daysBeforeClose: 7 # Number of days to wait after marking as stale before closing
+name: "Inactive Issues Closer"
 
 on:
   schedule:
     - cron: "0 0 * * *" # Runs daily at UTC 00:00
   workflow_dispatch: # Allows manual triggering
 
+env: # config
+  daysBeforeStale: 90 # Number of days of inactivity before marking as stale
+  daysBeforeClose: 7 # Number of days to wait after marking as stale before closing
+
 jobs:
   stale:
+    if: github.repository_owner == 'MaaAssistantArknights'
     runs-on: ubuntu-latest
     permissions:
       actions: write # Workaround for https://github.com/actions/stale/issues/1090
@@ -34,5 +35,5 @@ jobs:
           days-before-pr-close: -1 # Completely disable closing for PRs
 
           # Temporary to reduce the huge issues number
-          operations-per-run: 500
+          operations-per-run: 100
           debug-only: false

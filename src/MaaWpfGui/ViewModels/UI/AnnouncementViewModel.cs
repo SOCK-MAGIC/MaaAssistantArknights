@@ -11,8 +11,8 @@
 // but WITHOUT ANY WARRANTY
 // </copyright>
 
-using System;
 using System.Threading.Tasks;
+using MaaWpfGui.Configuration;
 using MaaWpfGui.Constants;
 using MaaWpfGui.Helper;
 using Stylet;
@@ -26,7 +26,7 @@ namespace MaaWpfGui.ViewModels.UI
     // ReSharper disable once ClassNeverInstantiated.Global
     public class AnnouncementViewModel : Screen
     {
-        private string _announcementInfo = ConfigurationHelper.GetValue(ConfigurationKeys.AnnouncementInfo, string.Empty);
+        private string _announcementInfo = ConfigFactory.Root.AnnouncementInfo.Info;
 
         /// <summary>
         /// Gets the announcement info.
@@ -38,11 +38,11 @@ namespace MaaWpfGui.ViewModels.UI
             private set
             {
                 SetAndNotify(ref _announcementInfo, value);
-                ConfigurationHelper.SetValue(ConfigurationKeys.AnnouncementInfo, value);
+                ConfigFactory.Root.AnnouncementInfo.Info = value;
             }
         }
 
-        private bool _doNotRemindThisAnnouncementAgain = Convert.ToBoolean(ConfigurationHelper.GetValue(ConfigurationKeys.DoNotRemindThisAnnouncementAgain, bool.FalseString));
+        private bool _doNotRemindThisAnnouncementAgain = ConfigFactory.Root.AnnouncementInfo.DoNotShowAgain;
 
         public bool DoNotRemindThisAnnouncementAgain
         {
@@ -50,11 +50,11 @@ namespace MaaWpfGui.ViewModels.UI
             set
             {
                 SetAndNotify(ref _doNotRemindThisAnnouncementAgain, value);
-                ConfigurationHelper.SetValue(ConfigurationKeys.DoNotRemindThisAnnouncementAgain, value.ToString());
+                ConfigFactory.Root.AnnouncementInfo.DoNotShowAgain = value;
             }
         }
 
-        private bool _doNotShowAnnouncement = Convert.ToBoolean(ConfigurationHelper.GetValue(ConfigurationKeys.DoNotShowAnnouncement, bool.FalseString));
+        private bool _doNotShowAnnouncement = ConfigFactory.Root.AnnouncementInfo.DoNotShow;
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the update.
@@ -65,7 +65,7 @@ namespace MaaWpfGui.ViewModels.UI
             set
             {
                 SetAndNotify(ref _doNotShowAnnouncement, value);
-                ConfigurationHelper.SetValue(ConfigurationKeys.DoNotShowAnnouncement, value.ToString());
+                ConfigFactory.Root.AnnouncementInfo.DoNotShow = value;
             }
         }
 
@@ -75,10 +75,15 @@ namespace MaaWpfGui.ViewModels.UI
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task CheckAndDownloadAnnouncement()
         {
-            const string Path = "announcements/wpf.md";
-            const string Url = MaaUrls.MaaApi + Path;
+            string path = "announcements/wpf";
+            if (SettingsViewModel.GuiSettings.Language is not ("zh-cn" or "zh-tw"))
+            {
+                path += "_en";
+            }
 
-            using var response = await ETagCache.FetchResponseWithEtag(Url, string.IsNullOrEmpty(AnnouncementInfo));
+            string url = MaaUrls.MaaApi + path + ".md";
+
+            using var response = await ETagCache.FetchResponseWithEtag(url, string.IsNullOrEmpty(AnnouncementInfo));
 
             if (response == null ||
                 response.StatusCode == System.Net.HttpStatusCode.NotModified ||
@@ -96,6 +101,11 @@ namespace MaaWpfGui.ViewModels.UI
 
             ETagCache.Set(response);
             ETagCache.Save();
+        }
+
+        public void Close()
+        {
+            RequestClose();
         }
     }
 }

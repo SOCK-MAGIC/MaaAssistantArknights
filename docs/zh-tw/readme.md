@@ -9,7 +9,7 @@ dir:
 
 ::: center
 
-![MAA Logo](/image/maa-logo_512x512.png =256x256)
+![MAA Logo](/images/maa-logo_512x512.png =256x256)
 
 <!-- markdownlint-restore -->
 
@@ -19,8 +19,6 @@ dir:
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-blueviolet)
 ![license](https://img.shields.io/github/license/MaaAssistantArknights/MaaAssistantArknights) ![commit](https://img.shields.io/github/commit-activity/m/MaaAssistantArknights/MaaAssistantArknights?color=%23ff69b4)
 ![stars](https://img.shields.io/github/stars/MaaAssistantArknights/MaaAssistantArknights?style=social) ![GitHub all releases](https://img.shields.io/github/downloads/MaaAssistantArknights/MaaAssistantArknights/total?style=social)
-
-[简体中文](../zh-cn/readme.md) | 繁體中文 | [English](../en-us/readme.md) | [日本語](../ja-jp/readme.md) | [한국어](../ko-kr/readme.md)
 
 MAA 的意思是 MAA Assistant Arknights
 
@@ -32,9 +30,13 @@ MAA 的意思是 MAA Assistant Arknights
 
 :::
 
+## 下載與安裝
+
+請閱讀[文檔](./manual/newbie.md)後前往 [官網](https://maa.plus) 或 [Releases](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases) 下載，並參考[新手上路](./manual/newbie.md)進行安裝。
+
 ## 亮點功能
 
-- 刷理智，掉落辨識及上傳 [企鵝物流數據統計](https://penguin-stats.io/)；
+- 刷理智，掉落辨識及上傳 [企鵝物流數據統計](https://penguin-stats.io/)，[一圖流](https://ark.yituliu.cn/)；
 - 智能基建換班，自動計算幹員效率，單設施內最優解；同時也支援 [自定義排班](./protocol/base-scheduling-schema.md)；
 - 自動公招，可選使用加急許可，一次全部刷完！公招數據上傳 [企鵝物流數據統計](https://penguin-stats.io/result/stage/recruit/recruit) ， [一圖流](https://ark.yituliu.cn/survey/maarecruitdata) ；
 - 支援手動辨識公招介面，方便對高星公招做出選擇 ~~（你的這個高資回費出的是推王呢還是推王呢）~~
@@ -52,53 +54,32 @@ MAA 的意思是 MAA Assistant Arknights
 {
   "imageList": [
     {
-      "light": "image/zh-cn/readme/1-light.png",
-      "dark": "image/zh-cn/readme/1-dark.png"
+      "light": "images/zh-cn/readme/1-light.png",
+      "dark": "images/zh-cn/readme/1-dark.png"
     },
     {
-      "light": "image/zh-cn/readme/2-light.png",
-      "dark": "image/zh-cn/readme/2-dark.png"
+      "light": "images/zh-cn/readme/2-light.png",
+      "dark": "images/zh-cn/readme/2-dark.png"
     },
     {
-      "light": "image/zh-cn/readme/3-light.png",
-      "dark": "image/zh-cn/readme/3-dark.png"
+      "light": "images/zh-cn/readme/3-light.png",
+      "dark": "images/zh-cn/readme/3-dark.png"
     },
     {
-      "light": "image/zh-cn/readme/4-light.png",
-      "dark": "image/zh-cn/readme/4-dark.png"
+      "light": "images/zh-cn/readme/4-light.png",
+      "dark": "images/zh-cn/readme/4-dark.png"
     }
   ]
 }
 ```
 
-## 下載地址
-
-- [穩定版 / 公測版](https://github.com/MaaAssistantArknights/MaaAssistantArknights/releases)
-
 ## 使用說明
 
-### 基本說明
+### 功能介紹
 
-1. 請根據 [模擬器支援情況](./manual/device/)，進行對應的操作。
-2. 修改模擬器解析度為 `16:9` 比例，最低 `1280 * 720`，最高 `2K`。  
-   對於國際服（美服）玩家，由於介面佈局問題，我們則建議您將解析度修改為 `1920 * 1080`。
-3. 開始使用吧！
+請參閱 [用戶手冊](./manual/)。
 
-更多使用說明請參考 [詳細介紹](./manual/introduction/).
-
-## 常見問題
-
-- 軟體一打開就閃退
-- 連接錯誤、不知道 adb 路徑怎麽填寫
-- 連接成功了，但沒反應
-- 如何連接自定義端口
-- 下載速度慢，且鏡像站無法打開網頁
-- 下載到一半提示 “登錄” / “鑒權”
-- 連接正常，任務開始了，但是沒反應
-
-請參考 [常見問題](./manual/faq.md)
-
-## 外服支援
+### 外服支援
 
 目前國際服（美服）、日服、韓服、繁中服的絕大部分功能均已支援。但由於外服用戶較少及項目人手不足，很多功能並沒有進行全面的測試，所以請自行體驗。  
 若您遇到了 Bug，或對某個功能有強需求，歡迎在 [Issues](https://github.com/MaaAssistantArknights/MaaAssistantArknights/issues) 和 [討論區](https://github.com/MaaAssistantArknights/MaaAssistantArknights/discussions) 催更；或加入我們一起建設 MAA！請參考 [外服適配教學](#外服適配)
@@ -108,10 +89,9 @@ MAA 的意思是 MAA Assistant Arknights
 **目前項目組非常缺前端大佬，若您有相關經驗，歡迎加入我們！**
 
 - 全新框架：[MaaFramework](https://github.com/MaaAssistantArknights/MaaFramework)
-- 全新 GUI：[MaaAsstElectronUI](https://github.com/MaaAssistantArknights/MaaAsstElectronUI)
 - [作業站](https://prts.plus) 前端：[maa-copilot-frontend](https://github.com/MaaAssistantArknights/maa-copilot-frontend)
 - [作業站](https://prts.plus) 後端：[MaaBackendCenter](https://github.com/MaaAssistantArknights/MaaBackendCenter)
-- [官網](https://maa.plus) ： [前端](https://github.com/MaaAssistantArknights/maa-website)
+- [官網](https://maa.plus) ： [前端](https://github.com/MaaAssistantArknights/MaaAssistantArknights/tree/dev/website)
 - 深度學習：[MaaAI](https://github.com/MaaAssistantArknights/MaaAI)
 
 ### 多語言 (i18n)
@@ -157,7 +137,7 @@ MAA 以中文（簡體）為第一語言，翻譯詞條皆以中文（簡體）�
 
 感謝所有參與到開發 / 測試中的朋友們，是大家的幫助讓 MAA 越來越好！ (\*´▽｀)ノノ
 
-[![Contributors](https://contributors-img.web.app/image?repo=MaaAssistantArknights/MaaAssistantArknights&max=114514&columns=15)](https://github.com/MaaAssistantArknights/MaaAssistantArknights/graphs/contributors)
+[![Contributors](https://contributors-img.web.app/image?repo=MaaAssistantArknights/MaaAssistantArknights&max=105&columns=15)](https://github.com/MaaAssistantArknights/MaaAssistantArknights/graphs/contributors)
 
 ## 開發相關
 
@@ -207,15 +187,31 @@ MAA 以中文（簡體）為第一語言，翻譯詞條皆以中文（簡體）�
 
 ## 聲明
 
+- 本軟體使用 [GNU Affero General Public License v3.0 only](https://spdx.org/licenses/AGPL-3.0-only.html) 開源。
 - 本軟體 logo 並非使用 AGPL 3.0 協議開源，[耗毛](https://weibo.com/u/3251357314)、vie 兩位畫師及軟體全體開發者保留所有權利。不得以 AGPL 3.0 協議已授權為由在未經授權的情況下使用本軟體 logo，不得在未經授權的情況下將本軟體 logo 用於任何商業用途。
 - 本軟體開源、免費，僅供學習交流使用。若您遇到商家使用本軟體進行代練並收費，可能是設備與時間等費用，產生的問題及後果與本軟體無關。
+
+### DirectML 支援說明
+
+本軟體支援 GPU 加速功能，但 GPU 加速依賴於 Microsoft 提供的 DirectML（Microsoft.AI.DirectML）。為了方便使用者，我們隨安裝包附帶了一個未修改的 DirectML.dll 文件。
+
+#### 關於 DirectML.dll
+
+- 來源：Microsoft 官方
+- 許可證：請參考 Microsoft 的 DirectML 使用條款  
+  [DirectML 官方文檔](https://learn.microsoft.com/en-us/windows/ai/directml/)
+
+DirectML.dll 是 Microsoft 提供的獨立組件，不屬於本軟體的開源部分，也不受 AGPL-3.0 的約束。
+
+如果您不需要 GPU 支援，可以安全地刪除該 DLL 文件，軟體核心功能仍然可以正常運行。
 
 ## 廣告
 
 用戶交流 QQ 群：[MAA 使用 & 粥遊交流 QQ 群](https://ota.maa.plus/MaaAssistantArknights/api/qqgroup/index.html)  
+Discord 伺服器：[Discord](https://discord.gg/23DfZ9uA4V)  
 用戶交流 TG 群：[Telegram 群](https://t.me/+Mgc2Zngr-hs3ZjU1)  
 自動戰鬥 JSON 作業分享：[prts.plus](https://prts.plus) 或 [抄作業.com](http://抄作業.com)  
-Bilibili 直播間：[直播間](https://live.bilibili.com/2808861) 每晚直播敲代碼，近期很長一段時間應該都是在寫本軟體 ~  
+Bilibili 直播間：[MrEO 直播間](https://live.bilibili.com/2808861) 直播敲代碼 & [MAA-Official 直播間](https://live.bilibili.com/27548877) 遊戲/雜談  
 
 技術群（舟無關、禁水）：[內卷地獄！(QQ 群)](https://jq.qq.com/?_wv=1027&k=ypbzXcA2)  
 開發者群：[QQ 群](https://jq.qq.com/?_wv=1027&k=JM9oCk3C)  

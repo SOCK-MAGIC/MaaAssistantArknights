@@ -37,13 +37,13 @@ namespace MaaWpfGui.Services.Web
         {
             get
             {
-                var p = ConfigurationHelper.GetGlobalValue(ConfigurationKeys.UpdateProxy, string.Empty);
-                if (string.IsNullOrEmpty(p))
+                var proxy = SettingsViewModel.VersionUpdateSettings.Proxy;
+                if (string.IsNullOrEmpty(proxy))
                 {
                     return string.Empty;
                 }
 
-                return p.Contains("://") ? p : ConfigurationHelper.GetGlobalValue(ConfigurationKeys.ProxyType, "http") + $"://{p}";
+                return proxy.Contains("://") ? proxy : SettingsViewModel.VersionUpdateSettings.ProxyType + $"://{proxy}";
             }
         }
 
@@ -107,9 +107,9 @@ namespace MaaWpfGui.Services.Web
             }
         }
 
-        public async Task<string?> GetStringAsync(Uri uri, Dictionary<string, string>? extraHeader = null)
+        public async Task<string?> GetStringAsync(Uri uri, Dictionary<string, string>? extraHeader = null, HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead, bool logQuery = true)
         {
-            var response = await GetAsync(uri, extraHeader);
+            var response = await GetAsync(uri, extraHeader, httpCompletionOption, logQuery);
 
             if (response?.StatusCode != HttpStatusCode.OK)
             {
@@ -119,9 +119,9 @@ namespace MaaWpfGui.Services.Web
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<Stream?> GetStreamAsync(Uri uri, Dictionary<string, string>? extraHeader = null)
+        public async Task<Stream?> GetStreamAsync(Uri uri, Dictionary<string, string>? extraHeader = null, HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead, bool logQuery = true)
         {
-            var response = await GetAsync(uri, extraHeader);
+            var response = await GetAsync(uri, extraHeader, httpCompletionOption, logQuery);
 
             if (response?.StatusCode != HttpStatusCode.OK)
             {
@@ -131,7 +131,7 @@ namespace MaaWpfGui.Services.Web
             return await response.Content.ReadAsStreamAsync();
         }
 
-        public async Task<HttpResponseMessage?> GetAsync(Uri uri, Dictionary<string, string>? extraHeader = null, HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
+        public async Task<HttpResponseMessage?> GetAsync(Uri uri, Dictionary<string, string>? extraHeader = null, HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseHeadersRead, bool logQuery = true)
         {
             try
             {
@@ -146,13 +146,13 @@ namespace MaaWpfGui.Services.Web
                 }
 
                 var response = await _client.SendAsync(request, httpCompletionOption);
-                response.Log();
+                response.Log(logQuery);
 
                 return response;
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to send GET request to {Uri}", uri);
+                _logger.Error(e, "Failed to send GET request to {Uri}", uri.GetLeftPart(logQuery ? UriPartial.Query : UriPartial.Path));
                 return null;
             }
         }
@@ -292,7 +292,11 @@ namespace MaaWpfGui.Services.Web
 
         private HttpClient BuildHttpClient()
         {
-            var handler = new HttpClientHandler { AllowAutoRedirect = true, };
+            var handler = new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.All,
+                AllowAutoRedirect = true,
+            };
 
             var proxy = GetProxy();
             if (proxy != null)

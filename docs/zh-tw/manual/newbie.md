@@ -11,15 +11,13 @@ icon: ri:guide-fill
 
 1. 確認系統版本
 
-    MAA 僅支援 Windows 10 / 11，舊版 Windows 請參考[常見問題](./faq.md)置頂。
+    MAA 僅支援 Windows 10 / 11，舊版 Windows 請參考[常見問題](./faq.md#系統問題)。
+
+    非 Windows 用戶請參閱[模擬器及設備支援](./device/)。
 
 2. 安裝運行庫
 
-    MAA 需要 VCRedist x64 和 .NET 8，請右鍵開始按鈕打開終端，在終端內粘貼以下命令回車以進行安裝。
-
-    ```sh
-    winget install Microsoft.VCRedist.2015+.x64 Microsoft.DotNet.DesktopRuntime.8
-    ```
+    MAA 需要 VCRedist x64 和 .NET 8，請運行 MAA 目錄下的 `DependencySetup_依赖库安装.bat` 來安裝。
 
     更多信息參考[常見問題](faq.md#可能性-2--執行庫問題)。
 
@@ -37,7 +35,7 @@ icon: ri:guide-fill
 
 6. 正確設置模擬器解析度
 
-    模擬器解析度應為 `16:9` 比例，最低為 `1280x720`；對於國際服（美服）玩家，最低為 `1920x1080`。
+    模擬器解析度應為橫屏的 `1280x720` 或 `1920x1080`；對於美服（YosterEN）玩家，必須為 `1920x1080`。
 
 ## 初始配置
 

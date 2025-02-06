@@ -2,6 +2,14 @@
     "HS-Open": {
         "baseTask": "SS-Open"
     },
+    "OD-Open": {
+        "baseTask": "SS-Open",
+        "next": ["ODChapterToOD"],
+        "template": "StageSideStory.png"
+    },
+    "Sami@Roguelike@StageEnterBattleAgain": {
+        "specificRect": [1180, 460, 30, 20]
+    },
     "StartUpNotificationKR": {
         "action": "ClickSelf",
         "algorithm": "OcrDetect",
@@ -22,13 +30,47 @@
         "text": ["환경", "PRTS"]
     },
     "EnterChapterDifficultyHard": {
-        "text": ["하드모드", "하드"]
+        "text": ["하드모드", "하드", "작전진입"]
     },
     "EnterChapterDifficultyNormal": {
-        "text": ["노멀모드", "노멀"]
+        "text": ["노멀모드", "노멀", "작전진입"]
     },
     "SideStoryReopen": {
         "text": ["재개방"]
+    },
+    "BP-OpenOcr": {
+        "text": ["삶의", "길", "이벤트", "개방"]
+    },
+    "BPChapterToBP": {
+        "text": ["비콘", "설치"]
+    },
+    "BB-OpenOcr": {
+        "text": ["바벨", "개방", "이벤트"]
+    },
+    "BBChapterToBB": {
+        "text": ["미래", "선사", "하리라"]
+    },
+    "AS-OpenOcr": {
+        "text": ["태양을", "뿌리쳐라", "이벤트", "개방중"],
+        "roi": [0, 500, 500, 150]
+    },
+    "ASChapterToAS": {
+        "text": ["시민", "정원"]
+    },
+    "OD-8": {
+        "sub": ["OD-Open"]
+    },
+    "OD-7": {
+        "sub": ["OD-Open"]
+    },
+    "OD-6": {
+        "sub": ["OD-Open"]
+    },
+    "CR-OpenOcr": {
+        "text": ["스테이지", "개방"]
+    },
+    "CRChapterToCR": {
+        "text": ["전시", "회", "관람"]
     },
     "HS-9": {
         "sub": ["HS-Open", "HSChapterToHS"]
@@ -73,6 +115,12 @@
     "SLChapterToSL": {
         "text": ["온천", "휴가"]
     },
+    "HE-Open": {
+        "text": ["공상의", "정원", "이벤트", "개방"]
+    },
+    "HEChapterToHE": {
+        "text": ["암브로", "시우스", "수도원"]
+    },
     "WB-Open": {
         "text": ["등림의", "개방"]
     },
@@ -111,14 +159,23 @@
             ["드래곤플라이L", "드래곤플라이엘"],
             ["드래곤플라이F", "드래곤플라이에프"],
             ["드래곤플라이A", "드래곤플라이에이"],
+            ["Ash", "灰烬"],
+            ["Blitz", "闪击"],
+            ["Tachanka", "战车"],
+            ["Frost", "霜华"],
+            ["^Doc$", "医生"],
+            ["^E[lI1]a$", "艾拉"],
+            ["^[Il1]ana$", "双月"],
+            ["^Fuze$", "导火索"],
             [
-                "\\b(?!(Ash|Blitz|Tachanka|Frost|.*ancet2|THRMEX|Friston3|[CcOo0]ast.*le3|[Ww]|12F|Mon3tr|Sharp|Pith|Touch|Stormeye|[JUu][O0o]f{0,2}icial))(\\w)+$",
+                "\\b(?!(.*ancet2|THRMEX|Friston3|[CcOo0]ast.*le3|[Pp]honoR0|[Ww]|12F|Mon3tr|Sharp|Pith|Touch|Stormeye|[JUu][O0o]f{0,2}icial))(\\w)+$",
                 ""
             ],
             ["[CcOo0]ast.*le3", "Castle-3"],
             [".*ancet2", "Lancet-2"],
             ["THRMEX", "THRM-EX"],
             ["Friston3", "Friston-3"],
+            ["[Pp]honoR0", "PhonoR-0"],
             ["[JUu][O0o]f{0,2}icial", "U-Official"],
             ["^w$", "W"],
             ["실버애.*", "银灰"],
@@ -156,7 +213,6 @@
             ["플린트", "燧石"],
             ["아스테시아", "星极"],
             ["라플루마", "羽毛笔"],
-            ["Tachanka", "战车"],
             ["컨(빅|백)션", "断罪者"],
             ["아렌", "芳汀"],
             ["재키", "杰克"],
@@ -238,7 +294,6 @@
             [".*(홀|훌)(룽|롱)데이*", "첸더홀룽데이"],
             ["첸더홀룽데이", "假日威龙陈"],
             ["토디폰스", "熔泉"],
-            ["Ash", "灰烬"],
             ["아르케토", "空弦"],
             ["파인콘", "松果"],
             ["^로즈몬티스$", "迷迭香"],
@@ -271,7 +326,6 @@
             ["오로라", "极光"],
             ["애쉬락", "灰毫"],
             ["헤비레인", "暴雨"],
-            ["Blitz", "闪击"],
             ["머드락", "泥岩"],
             ["블레미샤인", "瑕光"],
             ["버(블|볼)", "泡泡"],
@@ -328,7 +382,6 @@
             ["키라라", "绮良"],
             ["베나", "贝娜"],
             ["글래디아", "歌蕾蒂娅"],
-            ["Frost", "霜华"],
             ["우요우", "乌有"],
             ["카프카", "卡夫卡"],
             ["로빈", "罗宾"],
@@ -696,15 +749,15 @@
             ["해럴드", "哈洛德"],
             ["비상난방기", "紧急供暖器"],
             ["부싯돌", "点火石"],
-            ["충전식독전용스피커", "可充能督战音响"],
-            ["스마트영공제어기", "智能空域控制机"],
-            ["급랭스프레이발사대", "速冷喷雾发射台"],
+            ["충전식독전용스.*", "可充能督战音响"],
+            ["스마트영공제어.*", "智能空域控制机"],
+            ["급랭스프레이발.*", "速冷喷雾发射台"],
             ["^워미$", "温米"],
             ["^레이$", "莱伊"],
             ["샌드비스트", "沙地兽"],
             [".?벌꿀주만세.*", "“蜜酿万岁！”"],
             ["^격려제$", "激励剂"],
-            ["바리케이드보강장치", "封阻加固装置"],
+            ["바리케이드보강.*", "封阻加固装置"],
             ["임시엄호장치", "临时掩护装置"],
             ["그레인버즈", "小满"],
             ["오리지늄폭발물", "源石爆炸物"],
@@ -716,7 +769,7 @@
             ["^캠핑카$", "旷野房车\n"],
             ["^완칭$", "万顷"],
             ["^분수대$", "灵动清泉"],
-            ["바리케이드", "封阻物"],
+            ["^바리케이드$", "封阻物"],
             ["^좌락$", "左乐"],
             ["고지대공사", "高台工事"],
             ["사막의구덩이", "流沙黯坑"],
@@ -749,7 +802,90 @@
             ["전달자우편함", "信使邮筒"],
             ["^사서함$", "讯息匣"],
             ["언밸런스디퓨저", "失衡异香"],
-            ["^게시판$", "告示牌"]
+            ["^게시판$", "告示牌"],
+            ["GRZMOT지뢰", "雷鸣地雷"],
+            ["체크포인트", "检查点"],
+            ["루토나다", "露托"],
+            ["원석충의심장", "“源石虫之心”"],
+            ["원석충유인장치", "源石虫引诱器"],
+            ["음파기록증폭기", "声波记录扩音器"],
+            ["^오다$", "奥达"],
+            ["아스카론", "阿斯卡纶"],
+            ["^아로마$", "阿罗玛"],
+            ["끈적이는사은품", "“黏黏的赠品”"],
+            ["주술발리스타", "巫术弩炮"],
+            ["그림자균열", "幽影门扉"],
+            ["랜덤아이템박스", "随机道具盒"],
+            ["가속모듈", "加速块"],
+            ["아츠공명에너지.*", "法术调和能量场"],
+            ["최첨단성과공유.*", "尖端研究成果共享终端"],
+            ["울부.*는스피.*", "啸叫音响"],
+            ["14장시스템컨트롤러", "十四章机制控制器"],
+            [".*파이어샤.*", "팽더파이어샤픈드"],
+            ["팽더파이어샤픈드", "历阵锐枪芬"],
+            ["부패의제단", "枯朽祭坛"],
+            ["위셔델", "维什戴尔"],
+            [".*(트에테|에테르).*", "시빌라이트에테르나"],
+            ["시빌라이트에테르나", "魔王"],
+            ["로고스", "逻各斯"],
+            ["레버넌트의그림자", "魂灵之影"],
+            ["토렌트격발기", "洪流束激发器"],
+            ["찰스린치", "查尔斯·林奇"],
+            ["코어증폭기", "核心增幅器"],
+            ["고양된영광", "振奋荣光"],
+            ["진지방호벽", "阵地屏障"],
+            ["축구공", "足球"],
+            ["협동경기통제", "促融共竞控制"],
+            ["접이식요새모듈", "折叠式堡垒模块"],
+            ["접이식보조장치", "折叠式辅助器械"],
+            ["시설정비공", "折叠设施维护员"],
+            ["접이식수리차", "折叠式维护车"],
+            ["접이식보급소", "折叠式后勤站"],
+            ["대용량자원스토리지", "海量资源存储"],
+            ["비밀연락스토리지", "机密联络存储"],
+            ["음향흡수증폭", "声能吸收增幅"],
+            ["음향방출증폭", "声能释放增幅"],
+            ["공진익스테리어", "共振外装"],
+            ["견고한익스테리어", "险固外装"],
+            ["조력자", "小帮手"],
+            ["울피아누스", "乌尔比安"],
+            ["루실라", "海霓"],
+            ["언더플로우", "深巡"],
+            ["헷갈리지않는방향", "从不混淆的方向"],
+            ["항로비콘", "航道信标"],
+            ["증식갑각", "赘生甲壳"],
+            ["사냥정보함", "狩闻匣"],
+            ["통에든향수", "桶装液香"],
+            ["철광석채집허브·구매", "铁矿采集站·采购"],
+            ["바위망치", "岩锤"],
+            ["탈레잔", "拟南盏"],
+            ["작전세트", "行动套装"],
+            ["얼음제트폭탄", "冰瀑喷射罐"],
+            ["전자동철광소", "全自动采铁站"],
+            ["쉘터제조기", "庇护制造器"],
+            ["레어탈레잔", "稀有·拟南盏"],
+            ["메탈크랩펌프·구매", "蟹蟹抽水泵·采购"],
+            ["석재채집허브·구매", "石材采集站·采购"],
+            ["외골격", "外骨骼"],
+            ["조련용사료", "驯兽口粮"],
+            ["전자동채석소", "全自动掘石站"],
+            ["뉴럴체인", "感知链接器"],
+            ["대형축사", "大型兽栏"],
+            ["전자동벌목소", "全自动切木站"],
+            ["환영방벽", "虚影壁障"],
+            ["사냥용발사대", "追猎发射台"],
+            ["바닐라가루", "草香粉"],
+            ["레어바닐라가루", "稀有·草香粉"],
+            ["레어바위망치", "稀有·岩锤"],
+            ["형광봉사출기", "荧光棒弹射装置"],
+            ["쇠약발사기", "凋亡发射器"],
+            ["목재채집허브·구매", "木材采集站·采购"],
+            ["파피루스", "莎草"],
+            ["태엽파울비스트", "发条羽兽"],
+            ["샌드레코너", "衡沙"],
+            ["나란투야", "娜仁图亚"],
+            ["결정제거기", "结晶消除桩"],
+            ["순수결정", "纯净结晶"]
         ]
     },
     "StartUpThemes": {
@@ -822,11 +958,14 @@
     "RecruitNow": {
         "text": ["즉시모집", "측시모집", "즉시"]
     },
+    "MiningActivities": {
+        "text": ["채굴", "허가증"]
+    },
     "OrundumActivities": {
         "ocrReplace": [["복.+방", "복권방"]],
-        "doc": "용문복권방 adjusted roi value for ocr recognition",
-        "text": ["용문", "복권방"],
-        "roi": [23, 125, 135, 55]
+        "doc": "Orundum Lucky Draw from Limited Event",
+        "text": ["용문", "복권방", "소원"],
+        "roi": [5, 65, 170, 110]
     },
     "OrundumActivitiesChoose": {
         "text": ["행운티켓", "선택"]
@@ -846,15 +985,20 @@
     "RecruitingActivitiesRecruitEnd": {
         "text": ["진행"]
     },
+    "SpecialAccessActivities": {
+        "doc": "5주년 먼슬리 카드",
+        "text": ["스페셜"],
+        "roi": [0, 20, 302, 302]
+    },
+    "SpecialAccessActivitiesConfirm": {
+        "postDelay": 500,
+        "text": ["수령", "하기"]
+    },
     "NoFriends": {
         "text": ["등록된", "없습니다"]
     },
     "VisitNextOcr": {
         "text": ["다음", "방문"]
-    },
-    "Mall": {
-        "ocrReplace": [["구매센.*", "구매센터"]],
-        "text": ["구매센터"]
     },
     "CreditStoreOcr": {
         "ocrReplace": [["크레.+", "크레딧"]],
@@ -911,8 +1055,12 @@
             ["소환", "召唤"],
             ["쾌속부활", "快速复活"],
             ["코스트\\+?", "费用回复"],
-            ["로(봇|못|뭇)", "支援机械"]
+            ["로(봇|못|뭇)", "支援机械"],
+            ["원소", "元素"]
         ]
+    },
+    "RecruitContinue": {
+        "text": ["계속", "모집"]
     },
     "InfrastReward": {
         "ocrReplace": [
@@ -920,6 +1068,36 @@
             ["(신|센)(뢰|리)도", "신뢰도"]
         ],
         "text": ["획득가능", "오더납품", "획득", "납품", "오퍼레이터신뢰도"]
+    },
+    "InfrastDormMini": {
+        "roi": [620, 240, 360, 480]
+    },
+    "InfrastOffice": {
+        "roi": [880, 330, 400, 160]
+    },
+    "InfrastOfficeMini": {
+        "roi": [980, 320, 300, 160]
+    },
+    "InfrastProcessing": {
+        "roi": [880, 200, 400, 200]
+    },
+    "InfrastProcessingMini": {
+        "roi": [980, 240, 300, 160]
+    },
+    "InfrastReception": {
+        "roi": [880, 120, 400, 160]
+    },
+    "InfrastReceptionMini": {
+        "roi": [980, 180, 300, 140]
+    },
+    "InfrastTraining": {
+        "roi": [880, 420, 400, 160]
+    },
+    "InfrastTrainingMini": {
+        "roi": [980, 400, 300, 140]
+    },
+    "InfrastControlMini": {
+        "roi": [620, 80, 360, 230]
     },
     "InfrastStationedInfo": {
         "text": ["배치정보"]
@@ -1142,6 +1320,12 @@
         "text": ["작전", "개시"],
         "roi": [1020, 410, 170, 210]
     },
+    "BattleStartSimulation": {
+        "Doc": "Delete the template and remove this modified roi task when paradox update comes PR#10439",
+        "roi": [417, 567, 444, 153],
+        "method": "Ccoeff",
+        "colorScales": []
+    },
     "StageDrops-Quantity": {
         "maskRange": [200, 255],
         "template": "empty.png",
@@ -1168,9 +1352,12 @@
             ["오버플로우컨버터", "溢能回收转化器"],
             ["경기기록분석기", "竞技记录分析仪"],
             ["전장지원드론", "战地援护无人机"],
-            ["충전식독전용스피커", "可充能督战音响"],
-            ["스마트영공제어기", "智能空域控制机"],
-            ["급랭스프레이발사대", "速冷喷雾发射台"]
+            ["충전식독전용스.*", "可充能督战音响"],
+            ["스마트영공제어.*", "智能空域控制机"],
+            ["급랭스프레이발.*", "速冷喷雾发射台"],
+            ["아츠공명에너지.*", "法术调和能量场"],
+            ["최첨단성과공유.*", "尖端研究成果共享终端"],
+            ["음파기록증폭기", "声波记录扩音器"]
         ]
     },
     "SSSBuffChooseConfirm": {
@@ -1208,6 +1395,16 @@
     },
     "GachaTenTimesPrefix@DoGacha": {
         "text": ["10회진행"]
+    },
+    "RA@Navigation-RecogniseTheme": {
+        "text": ["연", "산", "시", "작", "계", "속", "하", "기"]
+    },
+    "RA@Navigation-EnterCurrentTheme": {
+        "text": ["생존", "연산"]
+    },
+    "RecruitSupportConfirm": {
+        "ocrReplace": [[".?(원|운)유.?", "지원유닛"]],
+        "text": ["지원", "유닛"]
     },
     "RoguelikeChooseSupportBtnOcr": {
         "text": ["지원"]
@@ -1803,7 +2000,12 @@
             ["차원유동체", "维度流质"],
             ["붕괴의씨앗", "坍缩之种"],
             ["공간파편", "空间碎片"],
-            ["심한화상", "深度灼痕"]
+            ["심한화상", "深度灼痕"],
+            ["휴식", "歇息"],
+            ["도움 요청", "呼救"],
+            ["만족", "满足"],
+            ["도착", "到来"],
+            ["떠남", "离去"]
         ]
     },
     "Roguelike@ChooseDifficultyConfirm": {
@@ -1815,9 +2017,6 @@
     "Roguelike@PreSelectTheme": {
         "text": ["모든테마보기", "테마", "TODO: image of //INTEGRATED STRATEGIES"],
         "roi": [450, 480, 160, 45]
-    },
-    "Roguelike@RecruitSupportConfirm": {
-        "text": ["지원"]
     },
     "Roguelike@StageEncounterOcr": {
         "ocrReplace": [
@@ -1916,7 +2115,7 @@
             ["관찰", "瞥视"],
             ["(튤|툴|틀)립의의뢰", "郁金香的委托"],
             ["추종자의집회", "追随者集会"],
-            ["해탈", "解脱"],
+            ["^해탈$", "解脱"],
             ["해탈.+", "解脱？"],
             ["미치광이인형", "疯狂玩偶"],
             ["복수극", "复仇剧"],
@@ -1977,6 +2176,10 @@
     "Roguelike@StageTraderSpecialShoppingAfterRefresh": {
         "text": ["패스파인더", "패스파인더 핀"]
     },
+    "Phantom@Roguelike@CheckLevel": {
+        "roi": [1106, 32, 117, 36],
+        "text": ["고성", "노트"]
+    },
     "Phantom@Roguelike@NextLevel": {
         "text": ["안개의기로", "석양의정원", "고향의잔해", "악몽의시작", "붉은달회랑", "욕망의로비"]
     },
@@ -2006,6 +2209,10 @@
             ["붉은달회랑", "_exit"],
             ["욕망의로비", "_exit"]
         ]
+    },
+    "Mizuki@Roguelike@CheckLevel": {
+        "roi": [1114, 36, 91, 28],
+        "text": ["생태", "계보"]
     },
     "Mizuki@Roguelike@NextLevel": {
         "text": ["하늘빛해안", "연안외딴섬", "맹렬한파도", "은밀한온상", "신성한동굴", "심해의숲", "짙푸른요람"]
@@ -2081,6 +2288,10 @@
             ["피드백", "正在提交反馈至神经"],
             ["전달", "正在提交反馈至神经"]
         ]
+    },
+    "Sami@Roguelike@CheckLevel": {
+        "roi": [1106, 39, 97, 25],
+        "text": ["탐험", "기록"]
     },
     "Sami@Roguelike@Collapsal": {
         "text": ["선택적", "선택적무시", "이미지", "이미지에러"]
@@ -2241,6 +2452,10 @@
             [".*숨겨진비경", "_SKIP_"]
         ]
     },
+    "Sarkaz@Roguelike@CheckLevel": {
+        "doc": "살카즈 록라 추가 시 레벨 노트 이름 추가",
+        "text": ["TODO", "TODO"]
+    },
     "Reclamation2Begin": {
         "text": ["연", "산", "시", "작"]
     },
@@ -2322,14 +2537,7 @@
         "text": ["확인"]
     },
     "Reclamation2ExReadArchiveEnter": {
-        "doc": "Needs to be edited if confirmation window is removed later",
-        "docRef": "https://github.com/MaaAssistantArknights/MaaAssistantArknights/commit/bed66f2c7b8b3f6bd195659121a3d9a0acff8f8b",
-        "text": ["불러", "오기"],
-        "sub": [
-            "Reclamation2ExReadArchiveConfirm*2",
-            "Reclamation2ExReadArchiveSelectDay",
-            "Reclamation2ExReadArchiveSelectDayConfirm"
-        ]
+        "text": ["불러", "오기"]
     },
     "Reclamation2ExReadArchiveSelectDay": {
         "text": ["생존일"]
@@ -2358,14 +2566,8 @@
     "Reclamation2ProsperityMaxDeleteArchiveLastConfirm2": {
         "text": ["확인"]
     },
-    "Reclamation2ProsperityMaxSkipDayBeginNewDay": {
-        "text": ["시", "작", "하", "기"]
-    },
     "Reclamation2ProsperityMaxSkipDayClickContinue": {
         "text": ["탭하여", "계", "속"]
-    },
-    "Reclamation2SkipDayBeginNewDay": {
-        "text": ["시", "작", "하", "기"]
     },
     "Reclamation2SkipDayClickContinue": {
         "text": ["탭하여", "계", "속"]
@@ -2387,5 +2589,45 @@
     },
     "Reclamation2StageLeaveConfirm": {
         "text": ["확인"]
+    },
+    "Reclamation2StageSquadClearConfirm": {
+        "text": ["확인"]
+    },
+    "Tales@RA@CancelEnterBuildMode": {
+        "text": ["건설", "하기"]
+    },
+    "Tales@RA@ClickGatheringOfFeathers": {
+        "text": ["사냥터", "파울비스트의", "땅"]
+    },
+    "Tales@RA@ClickShrubberyGalore": {
+        "text": ["채집터", "우거진", "숲"],
+        "ocrReplace": [
+            [".+터", "채집터"],
+            [".*거진.*", "우거진숲"]
+        ]
+    },
+    "Tales@RA@ConfirmSquad": {
+        "text": ["작전", "개시"]
+    },
+    "Tales@RA@ConfirmToLoadSave": {
+        "text": ["확인"]
+    },
+    "Tales@RA@EnterNode": {
+        "text": ["작전", "개시"]
+    },
+    "Tales@RA@FinishCalc": {
+        "text": ["탭하여", "계", "속"]
+    },
+    "Tales@RA@PIS-Resume": {
+        "text": ["계", "속", "하", "기"]
+    },
+    "Tales@RA@PNS-ClickBaseCamp": {
+        "text": ["캠프", "만남", "광장"]
+    },
+    "Tales@RA@PNS-Commence": {
+        "text": ["연", "산", "시", "작"]
+    },
+    "Tales@RA@ResourceGained": {
+        "text": ["탭하여", "계", "속"]
     }
 }

@@ -32,11 +32,9 @@ Matcher::ResultOpt Matcher::analyze() const
         if (m_log_tracing && max_val > 0.5 && max_val > threshold - 0.2) { // 得分太低的肯定不对，没必要打印
             Log.trace("match_templ |", templ_name, "score:", max_val, "rect:", rect, "roi:", m_roi);
         }
-#ifdef ASST_DEBUG
         else {
             Log.debug("match_templ |", templ_name, "score:", max_val, "rect:", rect, "roi:", m_roi);
         }
-#endif
         if (max_val < threshold) {
             continue;
         }
@@ -93,8 +91,15 @@ std::vector<Matcher::RawResult> Matcher::preproc_and_match(const cv::Mat& image,
         }
 
         if (templ.cols > image.cols || templ.rows > image.rows) {
-            Log.error("templ size is too large", templ_name, "image size:", image.cols, image.rows,
-                      "templ size:", templ.cols, templ.rows);
+            Log.error(
+                "templ size is too large",
+                templ_name,
+                "image size:",
+                image.cols,
+                image.rows,
+                "templ size:",
+                templ.cols,
+                templ.rows);
             return {};
         }
 
@@ -121,8 +126,7 @@ std::vector<Matcher::RawResult> Matcher::preproc_and_match(const cv::Mat& image,
                              const MatchTaskInfo::Ranges mask_ranges,
                              const cv::Mat& templ,
                              const cv::Mat& templ_gray,
-                             bool with_close)
-            -> std::optional<cv::Mat> {
+                             bool with_close) -> std::optional<cv::Mat> {
             // Union all masks, not intersection
             cv::Mat mask = cv::Mat::zeros(templ_gray.size(), CV_8UC1);
             for (const auto& range : mask_ranges) {
@@ -187,7 +191,7 @@ std::vector<Matcher::RawResult> Matcher::preproc_and_match(const cv::Mat& image,
             fp.convertTo(fp, CV_32S);
             cv::Mat count_result;
             cv::divide(2 * tp, tp + fp + tp_fn, count_result, 1, CV_32F); // 数色结果为 f1_score
-            cv::multiply(matched, count_result, matched);                 // 最终结果是数色和模板匹配的点积
+            cv::multiply(matched, count_result, matched); // 最终结果是数色和模板匹配的点积
         }
         results.emplace_back(RawResult { .matched = matched, .templ = templ, .templ_name = templ_name });
     }

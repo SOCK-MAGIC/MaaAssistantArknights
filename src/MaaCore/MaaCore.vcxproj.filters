@@ -441,6 +441,9 @@
     <ClInclude Include="Task\Miscellaneous\BattleFormationTask.h">
       <Filter>Source\Task\Miscellaneous</Filter>
     </ClInclude>
+    <ClInclude Include="Task\Miscellaneous\UseSupportUnitTaskPlugin.h">
+      <Filter>Source\Task\Miscellaneous</Filter>
+    </ClInclude>
     <ClInclude Include="Task\Miscellaneous\BattleProcessTask.h">
       <Filter>Source\Task\Miscellaneous</Filter>
     </ClInclude>
@@ -460,12 +463,6 @@
       <Filter>Source\Task\Roguelike</Filter>
     </ClInclude>
     <ClInclude Include="Task\Roguelike\Map\RoguelikeMap.h">
-      <Filter>Source\Task\Roguelike</Filter>
-    </ClInclude>
-    <ClInclude Include="Task\Roguelike\Map\RoguelikeRoutingTask.h">
-      <Filter>Source\Task\Roguelike</Filter>
-    </ClInclude>
-    <ClInclude Include="Task\Roguelike\RoguelikeConfig.h">
       <Filter>Source\Task\Roguelike</Filter>
     </ClInclude>
     <ClInclude Include="Task\Roguelike\RoguelikeControlTaskPlugin.h">
@@ -540,18 +537,20 @@
     <ClInclude Include="Task\Interface\SingleStepTask.h">
       <Filter>Source\Task\Interface</Filter>
     </ClInclude>
+    <!-- 生息演算 .h Begin -->
     <ClInclude Include="Task\Interface\ReclamationTask.h">
       <Filter>Source\Task\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="Task\Reclamation\ReclamationBattlePlugin.h">
+    <ClInclude Include="Task\Reclamation\ReclamationConfig.h">
       <Filter>Source\Task\Reclamation</Filter>
     </ClInclude>
-    <ClInclude Include="Task\Reclamation\ReclamationConclusionReportPlugin.h">
+    <ClInclude Include="Task\Reclamation\AbstractReclamationTaskPlugin.h">
       <Filter>Source\Task\Reclamation</Filter>
     </ClInclude>
-    <ClInclude Include="Task\Reclamation\ReclamationControlTask.h">
+    <ClInclude Include="Task\Reclamation\ReclamationCraftTaskPlugin.h">
       <Filter>Source\Task\Reclamation</Filter>
     </ClInclude>
+    <!-- 生息演算 .h End -->
     <ClInclude Include="Utils\File.hpp">
       <Filter>Source\Utils</Filter>
     </ClInclude>
@@ -729,6 +728,30 @@
     <ClInclude Include="Vision\Roguelike\RoguelikeParameterAnalyzer.h">
       <Filter>Source\Vision\Roguelike</Filter>
     </ClInclude>
+    <ClInclude Include="Task\Roguelike\Map\RoguelikeRoutingTaskPlugin.h">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClInclude>
+    <ClInclude Include="LDExtras.h">
+      <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Vision\Battle\SupportListAnalyzer.h">
+      <Filter>Source\Vision\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Task\Roguelike\RoguelikeIterateMonthlySquadPlugin.h">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClInclude>
+    <ClInclude Include="Task\Roguelike\RoguelikeIterateDeepExplorationPlugin.h">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClInclude>
+    <ClInclude Include="Task\Roguelike\RoguelikeLevelTaskPlugin.h">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClInclude>
+    <ClInclude Include="Task\Roguelike\RoguelikeInputSeedTaskPlugin.h">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClInclude>
+    <ClInclude Include="Task\Roguelike\RoguelikeLastRewardSelectTaskPlugin.h">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vision\VisionHelper.cpp">
@@ -813,12 +836,6 @@
       <Filter>Source\Resource\Roguelike</Filter>
     </ClCompile>
     <ClCompile Include="Config\Roguelike\RoguelikeStageEncounterConfig.cpp">
-      <Filter>Source\Resource\Roguelike</Filter>
-    </ClCompile>
-    <ClCompile Include="Config\Roguelike\Sami\RoguelikeFoldartalConfig.cpp">
-      <Filter>Source\Resource\Roguelike</Filter>
-    </ClCompile>
-    <ClCompile Include="Config\Roguelike\Sami\RoguelikeCollapsalParadigmConfig.cpp">
       <Filter>Source\Resource\Roguelike</Filter>
     </ClCompile>
     <ClCompile Include="Config\Miscellaneous\BattleDataConfig.cpp">
@@ -962,6 +979,9 @@
     <ClCompile Include="Task\Miscellaneous\BattleFormationTask.cpp">
       <Filter>Source\Task\Miscellaneous</Filter>
     </ClCompile>
+    <ClCompile Include="Task\Miscellaneous\UseSupportUnitTaskPlugin.cpp">
+      <Filter>Source\Task\Miscellaneous</Filter>
+    </ClCompile>
     <ClCompile Include="Task\Miscellaneous\BattleProcessTask.cpp">
       <Filter>Source\Task\Miscellaneous</Filter>
     </ClCompile>
@@ -1061,18 +1081,20 @@
     <ClCompile Include="Task\Interface\SingleStepTask.cpp">
       <Filter>Source\Task\Interface</Filter>
     </ClCompile>
+    <!-- 生息演算 .cpp Begin -->
     <ClCompile Include="Task\Interface\ReclamationTask.cpp">
       <Filter>Source\Task\Interface</Filter>
     </ClCompile>
-    <ClCompile Include="Task\Reclamation\ReclamationBattlePlugin.cpp">
+    <ClCompile Include="Task\Reclamation\ReclamationConfig.cpp">
       <Filter>Source\Task\Reclamation</Filter>
     </ClCompile>
-    <ClCompile Include="Task\Reclamation\ReclamationConclusionReportPlugin.cpp">
+    <ClCompile Include="Task\Reclamation\AbstractReclamationTaskPlugin.cpp">
       <Filter>Source\Task\Reclamation</Filter>
     </ClCompile>
-    <ClCompile Include="Task\Reclamation\ReclamationControlTask.cpp">
+    <ClCompile Include="Task\Reclamation\ReclamationCraftTaskPlugin.cpp">
       <Filter>Source\Task\Reclamation</Filter>
     </ClCompile>
+    <!-- 生息演算 .cpp End -->
     <ClCompile Include="Controller\Controller.cpp">
       <Filter>Source\Controller</Filter>
     </ClCompile>
@@ -1219,6 +1241,33 @@
     </ClCompile>
     <ClCompile Include="Vision\Roguelike\RoguelikeParameterAnalyzer.cpp">
       <Filter>Source\Vision\Roguelike</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Roguelike\Sami\RoguelikeCollapsalParadigmConfig.cpp">
+      <Filter>Source\Resource\Roguelike</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Roguelike\Sami\RoguelikeFoldartalConfig.cpp">
+      <Filter>Source\Resource\Roguelike</Filter>
+    </ClCompile>
+    <ClCompile Include="LDExtras.cpp">
+      <Filter>Source\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Vision\Battle\SupportListAnalyzer.cpp">
+      <Filter>Source\Vision\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Task\Roguelike\RoguelikeIterateMonthlySquadPlugin.cpp">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClCompile>
+    <ClCompile Include="Task\Roguelike\RoguelikeIterateDeepExplorationPlugin.cpp">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClCompile>
+    <ClCompile Include="Task\Roguelike\RoguelikeLevelTaskPlugin.cpp">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClCompile>
+    <ClCompile Include="Task\Roguelike\RoguelikeInputSeedTaskPlugin.cpp">
+      <Filter>Source\Task\Roguelike</Filter>
+    </ClCompile>
+    <ClCompile Include="Task\Roguelike\RoguelikeLastRewardSelectTaskPlugin.cpp">
+      <Filter>Source\Task\Roguelike</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -30,8 +30,7 @@ namespace MaaWpfGui.Services.Managers
         /// <summary>
         /// Gets or sets a value indicating whether minimize to tray.
         /// </summary>
-        private bool ShouldMinimizeToTaskBar { get; set; }
-
+        private bool ShouldMinimizeToTray { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use tray icon.
@@ -45,10 +44,10 @@ namespace MaaWpfGui.Services.Managers
         {
             MainWindow.StateChanged += MainWindowStateChanged;
 
-            bool minimizeToTray = Convert.ToBoolean(ConfigurationHelper.GetValue(ConfigurationKeys.MinimizeToTray, bool.FalseString));
-            SetMinimizeToTaskBar(minimizeToTray);
+            bool minimizeToTray = Convert.ToBoolean(ConfigurationHelper.GetGlobalValue(ConfigurationKeys.MinimizeToTray, bool.FalseString));
+            SetMinimizeToTray(minimizeToTray);
 
-            bool useTrayIcon = Convert.ToBoolean(ConfigurationHelper.GetValue(ConfigurationKeys.UseTray, bool.TrueString));
+            bool useTrayIcon = Convert.ToBoolean(ConfigurationHelper.GetGlobalValue(ConfigurationKeys.UseTray, bool.TrueString));
             SetUseTrayIcon(useTrayIcon);
         }
 
@@ -56,7 +55,7 @@ namespace MaaWpfGui.Services.Managers
         public void Show()
         {
             MainWindow.Show();
-            MainWindow.WindowState = MainWindow.WindowState = WindowState.Normal;
+            MainWindow.WindowState = WindowState.Normal;
             MainWindow.Activate();
         }
 
@@ -69,7 +68,7 @@ namespace MaaWpfGui.Services.Managers
         /// <inheritdoc/>
         public void Collapse()
         {
-            MainWindow.WindowState = MainWindow.WindowState = WindowState.Minimized;
+            MainWindow.WindowState = WindowState.Minimized;
         }
 
         /// <inheritdoc/>
@@ -89,9 +88,9 @@ namespace MaaWpfGui.Services.Managers
         public WindowState GetWindowState() => MainWindow.WindowState;
 
         /// <inheritdoc/>
-        public void SetMinimizeToTaskBar(bool shouldMinimizeToTaskBar)
+        public void SetMinimizeToTray(bool shouldMinimizeToTray)
         {
-            ShouldMinimizeToTaskBar = shouldMinimizeToTaskBar;
+            ShouldMinimizeToTray = shouldMinimizeToTray;
         }
 
         /// <inheritdoc/>
@@ -108,7 +107,7 @@ namespace MaaWpfGui.Services.Managers
         /// <param name="e">The event arguments.</param>
         private void MainWindowStateChanged(object sender, EventArgs e)
         {
-            if (ShouldMinimizeToTaskBar && ShouldUseTrayIcon)
+            if (ShouldMinimizeToTray && ShouldUseTrayIcon)
             {
                 ChangeVisibility(MainWindow.WindowState != WindowState.Minimized);
             }
@@ -131,7 +130,7 @@ namespace MaaWpfGui.Services.Managers
                 MainWindow.Visibility = Visibility.Hidden;
             }
 
-            ((RootView)MainWindow).NotifyIcon.useTrayMenu.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+            ((RootView)MainWindow).NotifyIcon.hideTrayMenu.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Window GetWindowIfVisible()

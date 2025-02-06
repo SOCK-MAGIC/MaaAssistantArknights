@@ -32,6 +32,7 @@ icon: material-symbols:task
                                             //      - DoNothing:        什么都不做
                                             //      - Stop:             停止当前任务
                                             //      - Swipe:            滑动，对应 specificRect 与 rectMove 字段
+                                            //      - Input:            输入文本，要求 algorithm 为 JustReturn，对应 inputText 字段
 
         "sub": ["SubTaskName1", "SubTaskName2"],
                                             // 可选项，子任务，不推荐使用。会在执行完当前任务后，依次执行每一个子任务
@@ -84,6 +85,7 @@ icon: material-symbols:task
                                             // 当 action 为 ClickRect 时有效且必选，表示指定的点击位置（范围内随机一点）。
                                             // 当 action 为 Swipe 时有效且必选，表示滑动起点。
                                             // 以 1280 * 720 为基准自动缩放
+                                            // 当 algorithm 为 "OcrDetect" 时，specificRect[0] 和 specificRect[1] 表示灰度上下限阈值。
 
         "specialParams": [int, ...],        // 某些特殊识别器需要的参数
                                             // 额外的，当 action 为 Swipe 时可选，[0] 表示 duration，[1] 表示 是否启用额外滑动
@@ -116,7 +118,7 @@ icon: material-symbols:task
                                             // 不填写时默认为 Ccoeff
                                             //      - Ccoeff:       对颜色不敏感的模板匹配算法，对应 cv::TM_CCOEFF_NORMED
                                             //      - RGBCount:     对颜色敏感的模板匹配算法，
-                                            //                      先将待匹配区域和模板图片依据 maskRange 二值化，
+                                            //                      先将待匹配区域和模板图片依据 colorScales 二值化，
                                             //                      以 F1-score 为指标计算 RGB 颜色空间内的相似度，
                                             //                      再将结果与 Ccoeff 的结果点积
                                             //      - HSVCount:     类似 RGBCount，颜色空间换为 HSV
@@ -137,8 +139,12 @@ icon: material-symbols:task
         "isAscii": false,                   // 可选项，要识别的文字内容是否为 ASCII 码字符
                                             // 不填写默认 false
 
-        "withoutDet": false                 // 可选项，是否不使用检测模型
+        "withoutDet": false,                // 可选项，是否不使用检测模型
                                             // 不填写默认 false
+
+        /* 以下字段仅当 algorithm 为 JustReturn，action 为 Input 时有效 */
+
+        "inputText": "A string text."       // 必选项，要输入的文字内容，以字符串的形式
 
     }
 }

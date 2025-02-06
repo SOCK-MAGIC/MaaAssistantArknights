@@ -2,6 +2,7 @@
 
 #include "Config/Miscellaneous/RecruitConfig.h"
 #include "Config/TaskData.h"
+#include "Utils/Logger.hpp"
 #include "Vision/Matcher.h"
 #include "Vision/MultiMatcher.h"
 #include "Vision/OCRer.h"
@@ -10,12 +11,14 @@ bool asst::RecruitImageAnalyzer::analyze()
 {
     m_tags_result.clear();
 
-    time_analyze();
-    refresh_analyze();
-    permit_analyze();
-    bool ret = tags_analyze();
+    bool ret0 = time_analyze();
+    bool ret1 = refresh_analyze();
+    bool ret2 = permit_analyze();
+    bool ret3 = tags_analyze();
 
-    return ret;
+    Log.trace("time_analyze:", ret0, "refresh_analyze:", ret1, "permit_analyze:", ret2, "tags_analyze:", ret3);
+
+    return ret0 && ret3;
 }
 
 bool asst::RecruitImageAnalyzer::tags_analyze()
@@ -48,8 +51,12 @@ bool asst::RecruitImageAnalyzer::time_analyze()
     MultiMatcher decrement_a(m_image);
     decrement_a.set_task_info("RecruitTimerDecrement");
     auto result_opt = decrement_a.analyze();
-    if (!result_opt) return false;
-    if (result_opt->size() != 2) return false; // expecting two buttons
+    if (!result_opt) {
+        return false;
+    }
+    if (result_opt->size() != 2) {
+        return false; // expecting two buttons
+    }
     sort_by_horizontal_(*result_opt);
     m_hour_decrement = result_opt->at(0).rect;
     m_minute_decrement = result_opt->at(1).rect;

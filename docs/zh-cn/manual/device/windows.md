@@ -33,12 +33,12 @@ const fullySupport = shuffleArray([
     {
         name: 'MuMu 模拟器 12',
         link: 'https://mumu.163.com/',
-        note: '完美支持，且额外支持[独家截图增强模式](../connection.html#mumu-截图增强模式)。已知兼容 Hyper-V。\n\n- “完成后退出模拟器”功能可能偶现异常，如果遇到请向 MuMu 官方反馈。\n- 3.5.4 ~ 3.5.7 版本 MuMu 12 的“后台保活”功能会导致截图失败，推荐使用 3.5.7 之后的版本；若您正在使用 3.5.4 ~ 3.5.7 版本的 MuMu 12，请关闭 MuMu 12 设置 - 其他 中的“后台挂机时保活运行”（详见[官方公告](https://mumu.163.com/help/20230802/35047_1102450.html)）。',
+        note: '完美支持，且额外支持[截图增强模式](../connection.html#mumu-截图增强模式)。已知兼容 Hyper-V。\n\n- “完成后退出模拟器”功能可能偶现异常，如果遇到请向 MuMu 官方反馈。',
     },
     {
         name: '雷电模拟器',
         link: 'https://www.ldmnq.com/',
-        note: '完美支持。已知兼容 Hyper-V。\n\n- 雷电 9 推荐使用 9.0.57 及以上版本；雷电 5 推荐使用 5.0.67 及以上版本；\n- 低于上述版本则需要在 `设置` - `连接设置` 中运行 `强制替换 ADB`，才能使用 Minitouch, MaaTouch 等高效的触控模式；',
+        note: '完美支持，且额外支持[截图增强模式](../connection.html#雷电截图增强模式)。已知兼容 Hyper-V。\n\n- 雷电 9 安装器在安装过程中会自动静默关闭 Hyper-V，若有相关需求请留意。',
     },
     {
         name: '夜神模拟器',
@@ -50,18 +50,13 @@ const fullySupport = shuffleArray([
         link: 'https://www.xyaz.cn/',
         note: '完美支持，但测试较少。',
     },
-    {
-        name: 'Google Play 游戏（开发者）',
-        link: 'https://developer.android.com/games/playgames/emulator?hl=zh-cn',
-        note: '完美支持，但测试较少。必须开启 Hyper-V，且必须登录谷歌账户。',
-    },
 ]);
 
 const partiallySupport = shuffleArray([
     {
         name: 'MuMu 模拟器 6',
         link: 'https://mumu.163.com/update/win/',
-        note: '自 MAA v5.1.0 起放弃支持，网易已在 2023.8.15 停止维护。\n\n- 不再支持自动检测连接，需使用通用连接配置，并手动配置 ADB 路径和连接地址。\n- 需要在 `设置` - `连接设置` 中运行 `强制替换 ADB`，才能使用 Minitouch, MaaTouch 等高效的触控模式。\n- 需要使用管理员权限运行 MAA 才能使用“完成后退出模拟器”相关功能。\n- 不支持使用 MuMu 6 默认的几个奇葩分辨率，需要改成 `1280x720`，`1920x1080`，`2560x1440` 等 16:9 比例。\n- MuMu 6 多开使用的是同一个 ADB 端口，所以无法支持多开的 MuMu 6。',
+        note: '自 MAA v5.1.0 起放弃支持，网易已在 2023.8.15 停止维护。\n\n- 不再支持自动检测连接，需使用通用连接配置，并手动配置 ADB 路径和连接地址。\n- 需要在 `设置` - `连接设置` 中运行 `强制替换 ADB`，才能使用 Minitouch, MaaTouch 等高效的触控模式。\n- 需要使用管理员权限运行 MAA 才能使用“完成后退出模拟器”相关功能。\n- 不支持使用 MuMu 6 默认的几个奇葩分辨率，需要改成 `1280x720`、`1920x1080` 等 16:9 比例。\n- MuMu 6 多开使用的是同一个 ADB 端口，所以无法支持多开的 MuMu 6。',
     },
     {
         name: '适用于 Android™️ 的 Windows 子系统',
@@ -73,21 +68,18 @@ const partiallySupport = shuffleArray([
         link: 'https://developer.android.com/studio/run/managing-avds',
         note: '理论支持。\n\n- 从 Android 10 开始，Minitouch 在 SELinux 为 `Enforcing` 模式时不再可用，请切换至其他触控模式，或将 SELinux **临时**切换为 `Permissive` 模式。\n- AVD 是为调试而生的，更建议使用其他为游戏而设计的模拟器。',
     },
+    {
+        name: 'Google Play 游戏（开发者）',
+        link: 'https://developer.android.com/games/playgames/emulator?hl=zh-cn',
+        note: '理论支持。必须开启 Hyper-V，且必须登录谷歌账户。\n\n- 需要使用 [自定义连接](../connection.html) 的方式来连接，ADB 端口为 `6520`。\n- 由于 Android 10 及更新版本的 SELinux 策略，Minitouch 无法正常工作，请切换到其他触控模式。\n- 每次启动模拟器后的首次连接都会失败，需勾选 `连接失败后尝试关闭并重启ADB进程`。',
+    },
 ]);
 
 const notSupport = shuffleArray([
     {
-        name: 'MuMu 手游助手（星云引擎）',
-        note: '不支持，未开放 ADB 端口。',
-    },
-    {
-        name: '腾讯手游助手',
-        note: '不支持，未开放 ADB 端口。',
-    },
-    {
         name: 'Google Play 游戏',
         link: 'https://play.google.com/googleplaygames',
-        note: '不支持，[玩家客户端](https://developer.android.com/games/playgames/pg-emulator?hl=zh-cn#installing-game-consumer)未开放 ADB 端口。',
+        note: '不支持，[玩家客户端](https://developer.android.com/games/playgames/pg-emulator?hl=zh-cn#installing-game-consumer)无法连接 ADB。',
     },
 ]);
 

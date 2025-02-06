@@ -30,6 +30,8 @@ namespace MaaWpfGui.Constants
 
         public const string Telegram = "https://t.me/+Mgc2Zngr-hs3ZjU1";
 
+        public const string Discord = "https://discord.gg/23DfZ9uA4V";
+
         public const string PrtsPlus = "https://prts.plus";
 
         public const string PrtsPlusCopilotGet = "https://prts.maa.plus/copilot/get/";
@@ -55,7 +57,7 @@ namespace MaaWpfGui.Constants
         public const string AdbMaaMirrorDownloadUrl = "https://ota.maa.plus/MaaAssistantArknights/api/binaries/adb-windows.zip";
         public const string GoogleAdbFilename = "adb-windows.zip";
 
-        private static string Language => ConfigurationHelper.GetValue(ConfigurationKeys.Localization, LocalizationHelper.DefaultLanguage);
+        private static string Language => ConfigurationHelper.GetGlobalValue(ConfigurationKeys.Localization, LocalizationHelper.DefaultLanguage);
 
         private const string MaaDocs = "https://maa.plus/docs";
 
@@ -80,5 +82,12 @@ namespace MaaWpfGui.Constants
             "zh-tw" => $"{GitHubIssues}/new?assignees=&labels=bug&template=cn-bug-report.yaml",
             _ => $"{GitHubIssues}/new?assignees=&labels=bug&template=en-bug-report.yaml",
         };
+
+        // 资源更新更新源
+        public const string GithubResourceUpdate = "https://github.com/MaaAssistantArknights/MaaResource/archive/refs/heads/main.zip";
+
+        public const string MirrorChyanWebsite = "https://mirrorc.top";
+        public const string MirrorChyanLine2 = "http://47.96.114.138:8800";
+        public const string MirrorChyanResourceUpdate = $"{MirrorChyanWebsite}/api/resources/MaaResource/latest";
     }
 }

@@ -1,13 +1,10 @@
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:system="clr-namespace:System;assembly=mscorlib">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!--  設定  -->
     <system:String x:Key="Settings">設定</system:String>
     <system:String x:Key="GeneralSettings">一般設定</system:String>
     <system:String x:Key="AdvancedSettings">高度な設定</system:String>
     <system:String x:Key="PerformanceSettings">パフォーマンス設定</system:String>
-    <system:String x:Key="GameSettings">対象クライアント</system:String>
+    <system:String x:Key="GameSettings">実行設定</system:String>
     <system:String x:Key="BaseSettings">基地設定</system:String>
     <system:String x:Key="RoguelikeSettings">統合戦略設定</system:String>
     <system:String x:Key="RecruitingSettings">公開求人設定</system:String>
@@ -21,9 +18,12 @@
     <system:String x:Key="HotKeySettings">ホットキー設定</system:String>
     <system:String x:Key="UpdateSettings">アップデート設定</system:String>
     <system:String x:Key="AboutUs">About us</system:String>
+    <system:String x:Key="MaaVersion">MAA バージョン</system:String>
+    <system:String x:Key="BuildDateTime">ビルド日付</system:String>
     <system:String x:Key="CoreVersion">Core バージョン</system:String>
     <system:String x:Key="UiVersion">UI バージョン</system:String>
     <system:String x:Key="ResourceVersion">リソースバーション</system:String>
+    <system:String x:Key="ResourceDateTime">リソース日付</system:String>
     <system:String x:Key="Off">シャットダウン</system:String>
     <system:String x:Key="ExternalNotificationTips">注:外部通知機能は現在、「すべてのタスクが完了しました」という通知のみを送信します。</system:String>
     <system:String x:Key="ExternalNotificationSettings">外部通知</system:String>
@@ -46,11 +46,18 @@
     <system:String x:Key="ExternalNotificationSmtpTo">受信者</system:String>
     <system:String x:Key="ExternalNotificationDiscordBotToken">ボットトークン</system:String>
     <system:String x:Key="ExternalNotificationDiscordUserId">ユーザーID</system:String>
+    <system:String x:Key="ExternalNotificationDiscordWebhookUrl">ウェブフック URL</system:String>
     <system:String x:Key="ExternalNotificationTelegramBotToken">ボットトークン</system:String>
     <system:String x:Key="ExternalNotificationTelegramChatId">チャットID</system:String>
-    <system:String x:Key="UseGpuForInference">処理の加速のためにGPUを使用する</system:String>
+    <system:String x:Key="ExternalNotificationQmsgServer">サーバ</system:String>
+    <system:String x:Key="ExternalNotificationQmsgKey">Qmsg Key</system:String>
+    <system:String x:Key="ExternalNotificationQmsgUser">ユーザーQQ</system:String>
+    <system:String x:Key="ExternalNotificationQmsgBot">ボットを送信するQQ</system:String>
+    <system:String x:Key="UseGpuForInference">推論加速のためにGPUを使用する</system:String>
     <system:String x:Key="GpuOptionDisable">使用しない</system:String>
     <system:String x:Key="GpuOptionSystemDefault">システムデフォルトGPU</system:String>
+    <system:String x:Key="GpuDeprecatedMessage">現在選択されている推論加速 GPU ({0})は推奨されません。\n\n「設定」-「パフォーマンス設定」で別の GPU を選択するか、このメッセージを無効にできます。</system:String>
+    <system:String x:Key="GpuAllowDeprecated">非推奨 GPU の使用を許可する</system:String>
     <!--  設定ガイド  -->
     <system:String x:Key="TaskSettings">タスク設定</system:String>
     <system:String x:Key="SettingsGuide">設定ガイド</system:String>
@@ -92,9 +99,9 @@
     <system:String x:Key="DefaultInfrast">標準設定</system:String>
     <system:String x:Key="UserDefined">ユーザー定義</system:String>
     <system:String x:Key="153Time3">153 3周/日</system:String>
+    <system:String x:Key="153Time4">153 4周/日</system:String>
     <system:String x:Key="243Time3">243 3周/日</system:String>
     <system:String x:Key="243Time4">243 4周/日</system:String>
-    <system:String x:Key="252Time3">252 3周/日</system:String>
     <system:String x:Key="333Time3">333 3周/日</system:String>
     <system:String x:Key="CustomInfrastFile">基地構成ファイルの指定</system:String>
     <system:String x:Key="CustomInfrastFileParseFailed">基地構成ファイルのパースエラー！</system:String>
@@ -119,6 +126,9 @@
     <system:String x:Key="RoguelikeStrategyGold">源石錐の収集、2層到着後終了</system:String>
     <system:String x:Key="RoguelikeStrategyLastReward">支援選択を得るため3層到着後に終了</system:String>
     <system:String x:Key="RoguelikeStrategyCollapse">パラダイムロストをファーミングして、非レアパラダイムロストに遭遇したらすぐに再起動します</system:String>
+    <system:String x:Key="RoguelikeCollectibleModeSquad">支援選択を得るモードの分隊</system:String>
+    <system:String x:Key="RoguelikeStrategyMonthlySquad">月間小隊をグラインドし、第五層に到達したら即座に退出</system:String>
+    <system:String x:Key="RoguelikeStrategyDeepExploration">深層探索をグラインドし、できるだけ多くの層をクリア</system:String>
     <system:String x:Key="StartingSquad">最初の分隊</system:String>
     <system:String x:Key="StartingRoles">最初の職業</system:String>
     <system:String x:Key="StartingCoreChar">最初のオペレーター（一人だけ）</system:String>
@@ -126,13 +136,18 @@
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">このオペレーターがbattle_dataにありません。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">「最初のオペレーター」直接昇進</system:String>
     <system:String x:Key="RoguelikeOnlyStartWithEliteTwo">指定オペレーターの昇進招集までリセマラし、戦闘を行わない</system:String>
+    <system:String x:Key="RoguelikeStartWithTwoIdeas">Repeat for a start with 2 ideas</system:String>
     <system:String x:Key="Roguelike3FirstFloorFoldartal">第一層遠見で指定された啓示板を取得し、戦闘を行わない</system:String>
     <system:String x:Key="Roguelike3NewSquad2StartingFoldartal">生活重視分隊で開始、指定された啓示板を取得する</system:String>
     <system:String x:Key="Roguelike3NewSquad2StartingFoldartalTip">最大3つ書き込み、半角セミコロン;で区切る</system:String>
+    <system:String x:Key="RoguelikeCollapseList">崩壊パラダイムリスト</system:String>
+    <system:String x:Key="RoguelikeCollapseListTip">英語のセミコロン「;」で区切る、空白のままにするとデフォルトリストが使用されます。</system:String>
     <system:String x:Key="RoguelikeUseSupportUnit">「最初のオペレーター」をサポートから選択</system:String>
     <system:String x:Key="RoguelikeUseNonFriendSupport">戦友以外のサポートの使用を許可</system:String>
-    <system:String x:Key="RoguelikeDelayAbortUntilCombatComplete">戦闘終了まえに「停止」を遅らせる</system:String>
+    <system:String x:Key="RoguelikeDelayAbortUntilCombatComplete">自動ローグ 戦闘終了まえに「停止」を遅らせる</system:String>
     <system:String x:Key="RoguelikeStopAtFinalBoss">第5階層のボスの手前で一時停止する</system:String>
+    <system:String x:Key="RoguelikeStopAtMaxLevel">最大レベル達成時に停止</system:String>
+    <system:String x:Key="RoguelikeStartWithSeed">启用刷钱种子</system:String>
     <system:String x:Key="DeploymentWithPause">統合戦略/保全駐在でポーズトリックを使用します（ベータ機能のため非推奨です）</system:String>
     <system:String x:Key="AdbLiteEnabled">軽量ADBを使用(実験機能)</system:String>
     <system:String x:Key="KillAdbOnExit">終了時にADBを終了する</system:String>
@@ -148,6 +163,9 @@
     <system:String x:Key="IS4NewSquad2">博闻广记分队（占位）</system:String>
     <system:String x:Key="IS4NewSquad3">蓝图测绘分队（占位）</system:String>
     <system:String x:Key="IS4NewSquad4">因地制宜分队（占位）</system:String>
+    <system:String x:Key="IS4NewSquad5">异想天开分队（占位）</system:String>
+    <system:String x:Key="IS4NewSquad6">点刺成锭分队（占位）</system:String>
+    <system:String x:Key="IS4NewSquad7">拟态学者分队（占位）</system:String>
     <system:String x:Key="LeaderSquad">指揮分隊</system:String>
     <system:String x:Key="GatheringSquad">集団分隊</system:String>
     <system:String x:Key="SupportSquad">支援分隊</system:String>
@@ -182,7 +200,7 @@
     <system:String x:Key="EmulatorNotFound">エミュレータが検出されない\n管理者権限でこのアプリを開くか\n手動で接続設定を行ってください</system:String>
     <system:String x:Key="EmulatorTooMany">複数のシミュレータが検出されたため\n不要なエミュレータを閉じるか\n手動で接続設定を行ってください</system:String>
     <system:String x:Key="EmulatorStartFailed">エミュレータの起動に失敗しました\n管理者権限でこのソフトウェアを開いていただくか\n手動でエミュレータを起動してください。</system:String>
-    <system:String x:Key="SwitchLanguage">言語を切り替える</system:String>
+    <system:String x:Key="SwitchLanguage">言語を切り替える 🌐</system:String>
     <system:String x:Key="Language">言語</system:String>
     <system:String x:Key="LanguageChangedTip">言語設定が変更されました、今すぐMAAを再起動して言語設定を適用しますか？</system:String>
     <system:String x:Key="ManualRestart">後で</system:String>
@@ -217,10 +235,14 @@
 4. 内部テスト版の更新方法を非開発ユーザーに共有しないでください。不要な混乱とリスクを避けるためです。
 
 設定 - About us - フィードバックのリンクをクリックして、このポップアップをキャンセルできます。ご理解とご協力をお願いいたします！</system:String>
-    <system:String x:Key="UpdateCheck">Update version</system:String>
+    <system:String x:Key="UpdateCheck">更新バージョン</system:String>
     <system:String x:Key="DownloadWithAria2">aria2を使う</system:String>
     <system:String x:Key="UpdateCheckNow">アップデートを確認する</system:String>
     <system:String x:Key="ShowChangelog">変更履歴</system:String>
+    <system:String x:Key="ResourceUpdate">リソース更新</system:String>
+    <system:String x:Key="ResourceUpdateSource">リソース更新ソース</system:String>
+    <system:String x:Key="MirrorChyan">ミラーちゃん</system:String>
+    <system:String x:Key="MirrorChyanResourceUpdateTip">Mirrorちゃんがリソースのバージョン更新を検出しましたが。「設定-ソフトウェア更新」でCDKを設定するか、GitHubのソースを使用してリソースのバージョンを更新してください。</system:String>
     <system:String x:Key="NewVersionFoundTitle">新しいバージョンが見つかりました</system:String>
     <system:String x:Key="NewVersionFoundDescDownloading">バックグラウンドでダウンロードを行います……</system:String>
     <system:String x:Key="NewVersionFoundDescId" xml:space="preserve">バージョン: </system:String>
@@ -257,13 +279,15 @@
     <system:String x:Key="AddConfigSuccess">構成&lt; {0}&gt;が正常に追加されました</system:String>
     <system:String x:Key="ConfigExists">構成 &lt; {0}&gt; は既に存在します</system:String>
     <system:String x:Key="LaunchOnSystemStartup">スタートアップ</system:String>
+    <system:String x:Key="LaunchOnSystemStartupAdminPrompt">
+        管理者権限での起動は、起動時の自動実行をサポートしていません。MAAを長時間管理者権限で実行することはお勧めしません。\n必要な場合は、「コントロールパネル &gt; Windowsツール &gt; タスクスケジューラ」に移動してカスタムタスクを作成してください。トリガーを設定する際に、「最も高い特権で実行」を必ず選択してください。
+    </system:String>
     <system:String x:Key="RunTaskAfterLaunch">アプリの起動時に自動的に実行</system:String>
     <system:String x:Key="MinimizeAfterLaunch">アプリの起動時に自動的に最小化</system:String>
     <system:String x:Key="ClientType">クライアントバージョン</system:String>
     <system:String x:Key="AutoRestartOption">ゲームが切断されたときに自動的に再接続する</system:String>
     <system:String x:Key="HelpUsWithOverseasServersTip">グローバルサーバーの対応は非常に大変で、皆様の協力が必要です！プログラミングの知識は必要ありません。</system:String>
     <system:String x:Key="OpenEmulatorAfterLaunch">起動時にエミュレータ自動起動</system:String>
-    <system:String x:Key="MinimizingStartup">エミュレーターの起動を最小化する</system:String>
     <system:String x:Key="WaitForEmulator">エミュレータを待つ時間（秒）</system:String>
     <system:String x:Key="WaitForEmulatorFinish">待ち時間は終わりました</system:String>
     <system:String x:Key="EmulatorPath">エミュレータパス</system:String>
@@ -289,12 +313,23 @@
     <system:String x:Key="RoguelikeThemeMizuki">ミヅキ</system:String>
     <system:String x:Key="RoguelikeThemeSami">サーミ</system:String>
     <system:String x:Key="RoguelikeThemeSarkaz">サルカズ</system:String>
+    <system:String x:Key="RoguelikeDifficulty">難易度</system:String>
     <system:String x:Key="Strategy">ストラテジー</system:String>
     <system:String x:Key="StartTimesLimit">冒険をN回始めた後に停止する</system:String>
     <system:String x:Key="GoldTimesLimit">N回投資した後に停止する</system:String>
     <system:String x:Key="StopOnGoldLimit">源石錐が上限に達した後に停止する</system:String>
     <system:String x:Key="InvestmentEnabled">源石錐を投資する</system:String>
     <system:String x:Key="InvestmentWithMoreScore">投資モードでは買い物、採用、2階への入場が可能</system:String>
+    <system:String x:Key="RoguelikeCollectibleModeShopping">支援選択を得るモードで、ショッピング有効化</system:String>
+    <system:String x:Key="RoguelikeStartWithSelectList">支援選択の期待される報酬</system:String>
+    <system:String x:Key="RoguelikeStartWithKettle">電気ケトル</system:String>
+    <system:String x:Key="RoguelikeStartWithShield">シールド値</system:String>
+    <system:String x:Key="RoguelikeStartWithIngot">源石錐</system:String>
+    <system:String x:Key="RoguelikeStartWithHope">希望</system:String>
+    <system:String x:Key="RoguelikeStartWithRandomReward">ランダム報酬</system:String>
+    <system:String x:Key="RoguelikeStartWithKey">鍵</system:String>
+    <system:String x:Key="RoguelikeStartWithDice">ダイスロール回数</system:String>
+    <system:String x:Key="RoguelikeStartWithIdea">構想（占位）</system:String>
     <system:String x:Key="RefreshTraderWithDice">ダイスで品揃えを更新する（ミチビキリンジュウ）</system:String>
     <system:String x:Key="PenguinId">Penguin-StatsのレポートのID（デジタル部分のみ）</system:String>
     <system:String x:Key="EnablePenguin">Penguin-Statsへ報告</system:String>
@@ -334,12 +369,15 @@
     <system:String x:Key="SystemNotification">重要な通知をポップアップする</system:String>
     <system:String x:Key="HideCloseButton">「閉じる」ボタンを隠す</system:String>
     <system:String x:Key="WindowTitleScrollable">タイトルのスクロール機能</system:String>
+    <system:String x:Key="NullFunctionality">右クリックチェックボックス機能を反転する</system:String>
     <system:String x:Key="TitleBarDisplayContent">タイトルバー表示コンテンツ</system:String>
     <system:String x:Key="UseLogItemDateFormat">カスタムログ日付形式</system:String>
     <system:String x:Key="LogItemDateFormatString">日付書式文字列</system:String>
     <system:String x:Key="PromptRestartForSettingsChange">変更を適用するためにすぐに再起動しますか？</system:String>
     <system:String x:Key="SwitchResolutionTip">エミュレータの解像度を1920x1080に変更!</system:String>
     <system:String x:Key="ResolutionInfoYoStarEN">エミュレータが1920x1080に設定されていることを確認してください</system:String>
+    <system:String x:Key="AllowUseStoneSave">源石の数を割る保存状態を許可</system:String>
+    <system:String x:Key="AllowUseStoneSaveWarning">この機能は危険な機能と見なされます。「確認」ボタンを押すと、リスクを理解し、受け入れることに同意したと見なされます。</system:String>
     <system:String x:Key="UseAlternateStage">代替ステージを選択可能にする</system:String>
     <system:String x:Key="UseRemainingSanityStage">余剰理性の使用</system:String>
     <system:String x:Key="UseRemainingSanityStageTip">メインタスク終了後に指定されたステージを選択しても、理性剤も源石も使わない</system:String>
@@ -370,25 +408,40 @@
     <system:String x:Key="ConnectionPreset">接続構成</system:String>
     <system:String x:Key="ScreenshotTest">スクリーンショットテスト</system:String>
     <system:String x:Key="MuMu12ExtrasEnabled">MuMu のスクリーンショット拡張モードを有効にする</system:String>
-    <system:String x:Key="MuMu12ExtrasEnabledTip">
-        MuMu 12 V4.0.0以降を利用する必要があり、MuMu 12 Arknights Globalには対応していません。\n
-        この機能を有効にした後、初めて使用する前にスクリーンショット テストを実行することを強くお勧めします。\n\n
-        以下の情報を記入してください：\n\n
-        1. エミュレーターパス：（例：C:\\Program Files\\Netease\\MuMuPlayer-12.0）\n
-        エミュレーターパスは、エミュレーターアプリケーションの親フォルダーパスを記入してください。例えば、アプリケーションのパスが\n
-        「C:\\Program Files\\Netease\\MuMuPlayer-12.0\\shell\\MuMuPlayer.exe」\n
-        の場合、\n
-        「C:\\Program Files\\Netease\\MuMuPlayer-12.0」\n
-        を記入してください。\n\n
-        2. インスタンス番号：（例：0）\n
-        インスタンス番号はMuMuマルチインスタンスマネージャーで確認できます。デフォルトは0です。複数のインスタンスがある場合、番号はインスタンスの前に表示されます。\n\n
-        3. ウィンドウ番号：（例：0）\n
-        注意：MuMuのバックグラウンドでのアクティブ維持を閉じた後は0を記入してください。バックグラウンドでのアクティブ維持を開始する場合は、自分で方法を探してください。
+    <system:String x:Key="MuMu12ExtrasEnabledTip" xml:space="preserve">
+MuMu 12 V4.0.0 以降を利用する必要があり、MuMu 12 Arknights Global には対応していません。
+この機能を有効にした後、すぐにスクリーンショットテストを実行することを強くお勧めします。
+MAA はレジストリからインストールパスを自動的に取得しますが、失敗した場合は手動で入力してください。\n
+インストールパスには、エミュレーターのインストールディレクトリのルートディレクトリを入力する必要があります。例えば、エミュレーターのプロセスファイルパスが
+C:\\Program Files\\Netease\\MuMuPlayer-12.0\\shell\\MuMuPlayer.exe
+の場合、
+C:\\Program Files\\Netease\\MuMuPlayer-12.0 を入力してください。\n
+注意：
+1. 接続アドレスのポート番号が 7555 の場合、ポート番号を 16384 に変更してください。
+2. ネットワークブリッジを使用している場合は、MuMu ネットワークブリッジモードを選択し、シリアル番号を手動で入力する必要があります。
     </system:String>
     <system:String x:Key="MuMu12EmulatorPath">MuMu12 エミュレータパス</system:String>
+    <system:String x:Key="MuMuBridgeConnection">MuMu ネットワークブリッジモード</system:String>
+    <system:String x:Key="MuMuBridgeConnectionTip">自分が何をしているのか分かっていない限り、このオプションを有効にしないでください</system:String>
     <system:String x:Key="MuMu12Index">インスタンス番号</system:String>
     <system:String x:Key="MuMu12Display">表示番号</system:String>
-    <system:String x:Key="MuMuExtrasNotEnabledMessage">MumuExtras が有効になっていません。関連する設定を確認してください</system:String>
+    <system:String x:Key="MuMuExtrasNotEnabledMessage">MuMu スクリーンショットの強化 が有効になっていません。関連する設定を確認してください</system:String>
+    <system:String x:Key="LdExtrasEnabled">LD のスクリーンショット拡張モードを有効にする</system:String>
+    <system:String x:Key="LdExtrasEnabledTip" xml:space="preserve">
+LDPlayer 9 V9.1.32以降が必要です。
+この機能を有効にした後、すぐにスクリーンショットテストを実行することを強くお勧めします。
+MAA はレジストリから自動的にインストールパスを取得しますが、失敗した場合は手動で入力してください。\n
+インストールパスはエミュレーターのインストールディレクトリのルートディレクトリを入力してください。例えば、エミュレーターのプロセスファイルパスが
+C:\\leidian\\LDPlayer9\\dnplayer.exe
+の場合、
+C:\\leidian\\LDPlayer9
+と入力してください。\n
+インスタンス番号は雷電マルチインスタンスマネージャーで確認できます。
+メインインスタンスは 0 で、その他のインスタンスはバージョン/IDの後の番号です。\n
+    </system:String>
+    <system:String x:Key="LdEmulatorPath">LD エミュレータパス</system:String>
+    <system:String x:Key="LdIndex">インスタンス番号</system:String>
+    <system:String x:Key="LdExtrasNotEnabledMessage">LD スクリーンショットの強化 が有効になっていません。関連する設定を確認してください</system:String>
     <system:String x:Key="RetryOnDisconnected">ADB接続が失敗した場合、エミュレータの起動を試みる</system:String>
     <system:String x:Key="RetryOnDisconnectedTip">再接続に20回失敗した後、エミュレータを再起動してみてください，バックグラウンドのタイムドタスクを使用し、終了時にエミュレータを終了させるタスクを設定する場合は、必ずチェックを入れること</system:String>
     <system:String x:Key="RetryOnDisconnectedEmulatorPathEmptyError">エミュレータのパスが空です！「起動設定-エミュレータのパス」を入力してから再度選択してください。</system:String>
@@ -405,11 +458,20 @@
     <system:String x:Key="Mall">FP獲得と交換</system:String>
     <system:String x:Key="Mission">報酬受取</system:String>
     <system:String x:Key="AutoRoguelike">自動ローグ</system:String>
-    <system:String x:Key="ReclamationAlgorithm">生息演算「砂中の火」</system:String>
-    <system:String x:Key="ReclamationAlgorithm2">生息演算「熱砂秘聞」</system:String>
+    <system:String x:Key="Reclamation">生息演算</system:String>
+    <system:String x:Key="ReclamationTheme">主題</system:String>
+    <system:String x:Key="ReclamationThemeFire">砂中の火</system:String>
+    <system:String x:Key="ReclamationThemeTales">熱砂秘聞</system:String>
+    <system:String x:Key="ReclamationModeProsperityNoSave">セーブせずに、出入りを繰り返して生息ポイントを稼ぐ</system:String>
+    <system:String x:Key="ReclamationModeProsperityInSave">セーブしながら、支援アイテムを組み立てて生息ポイントを稼ぐ</system:String>
+    <system:String x:Key="ReclamationIncrementMode">増加方式</system:String>
+    <system:String x:Key="ReclamationIncrementModeClick">連打</system:String>
+    <system:String x:Key="ReclamationIncrementModeHold">長押し</system:String>
+    <system:String x:Key="ReclamationMaxCraftCountPerRound">1回の最大クラフト回数</system:String>
     <system:String x:Key="OperNameLanguage">オペレーター名の表示言語</system:String>
-    <system:String x:Key="OperNameLanguageMAA">MAAをフォローする</system:String>
+    <system:String x:Key="OperNameLanguageMAA">MAA をフォローする</system:String>
     <system:String x:Key="OperNameLanguageClient">ゲームクライアントをフォローする</system:String>
+    <system:String x:Key="OperNameLanguageForce">指定された言語を強制的に使用する</system:String>
     <system:String x:Key="Light">ライトモード</system:String>
     <system:String x:Key="Dark">ダークモード</system:String>
     <system:String x:Key="SyncWithOs">OSと同期する</system:String>
@@ -422,9 +484,13 @@
     <system:String x:Key="ExitSelf">MAAを終了する</system:String>
     <system:String x:Key="ExitEmulator">エミュレータを終了する</system:String>
     <system:String x:Key="Hibernate">休止状態にする</system:String>
+    <system:String x:Key="HibernateTip">Windows の電源オプションで休止状態を有効にする必要があります。そうしないと、この機能は無効になります。</system:String>
+    <system:String x:Key="Sleep">スリープ</system:String>
     <system:String x:Key="Shutdown">シャットダウン</system:String>
     <system:String x:Key="Once">1回のみ*</system:String>
-    <system:String x:Key="PostActionOnceTip">有効にすると、変更は次回の実行まで保存されません。</system:String>
+    <system:String x:Key="PostActionOnceTip" xml:space="preserve">1回のみ実行するには、まず1回のみチェックしてください
+チェックが1回のみの場合、動作を実行すると1回のみをチェック前の状態に戻ります
+下のアクションを右クリックすると、1回だけ選択状態が同期してアクティブ/キャンセルされます</system:String>
     <system:String x:Key="IfNoOtherMaa">他のMAAがない場合</system:String>
     <system:String x:Key="BackToAndroidHome">エミュレータのホーム画面に戻る</system:String>
     <system:String x:Key="LinkStart">Link Start!</system:String>
@@ -432,7 +498,7 @@
     <system:String x:Key="WaitAndStop">待機 &amp; 停止</system:String>
     <!--  戦闘設定  -->
     <system:String x:Key="UseSanityPotion">理性剤使用数</system:String>
-    <system:String x:Key="UseOriginitePrime">割る源石の数*</system:String>
+    <system:String x:Key="UseOriginitePrime">割る源石の数</system:String>
     <system:String x:Key="PerformBattles">周回数指定</system:String>
     <system:String x:Key="AssignedMaterial">素材の指定</system:String>
     <system:String x:Key="Quantity">ドロップ数</system:String>
@@ -480,7 +546,7 @@
     <system:String x:Key="Pormpt2">日曜です。殲滅作戦は忘れてないですか〜</system:String>
     <!--  !戦闘設定  -->
     <!--  Logs  -->
-    <system:String x:Key="VersionMismatch">UI と Core のバージョンが一致しません: {0} および {1}、予測不可能な動作の原因となる可能性があります。ファイルを手動で置換しないでください。</system:String>
+    <system:String x:Key="VersionMismatch">UI と Core のバージョンが一致しません: {0} と {1}、予測不可能な動作を引き起こす可能性があります。ファイルを手動で置き換えたり、更新中にファイルを占有しないでください。\n\n完全なパッケージをダウンロードして、現在のフォルダーの内容を上書きしてください。</system:String>
     <system:String x:Key="ConnectingToEmulator">エミュレータ接続中……</system:String>
     <system:String x:Key="UnselectedTask">タスクが選択されていません</system:String>
     <system:String x:Key="Running">動作中……</system:String>
@@ -496,6 +562,7 @@
     <system:String x:Key="AboutToShutdown">完了しました。シャットダウンしようとしています。キャンセルしますか？</system:String>
     <system:String x:Key="ShutdownPrompt">ヒント</system:String>
     <system:String x:Key="HibernatePrompt">完了しました。休止状態にしようとしています</system:String>
+    <system:String x:Key="SleepPrompt">完了しました、スリープ状態に入ります</system:String>
     <system:String x:Key="UnknownActionAfterCompleted">未知の終了動作</system:String>
     <system:String x:Key="AnnihilationTaskTip">ステージ選択が殲滅任務になっています。任務終了後、残りの代替ステージが試されます。一部の戦闘設定は有効になりません。</system:String>
     <system:String x:Key="AnnihilationTaskFailed">殲滅戦に失敗、代替ステージを使用しますが、一部の戦闘設定が有効ではありません</system:String>
@@ -525,7 +592,8 @@
     <!--  Operator Recognition  -->
     <system:String x:Key="OperBoxRecognition">オペレーター</system:String>
     <system:String x:Key="OperBoxRecognitionTip">「戦術要員」は、オペレーター識別の正確性に影響します。戦術要員のオペレーターの識別が誤っている場合は、自己判断してください。\nこの機能はまだテスト中です。もし統計情報に問題があれば、debug/depotフォルダを圧縮し、issueを提出してください~</system:String>
-    <system:String x:Key="OperBoxRecognitionResult">所有していない: {0} : \n\n{1}\n\n所有している: {2} : \n\n{3}</system:String>
+    <system:String x:Key="OperBoxHaveList">所有している: {0}</system:String>
+    <system:String x:Key="OperBoxNotHaveList">所有していない: {0}</system:String>
     <system:String x:Key="StartToOperBoxRecognition">認識開始</system:String>
     <system:String x:Key="OperBoxCopyToClipboard">クリップボードにコピー</system:String>
     <!--  !Operator Recognition  -->
@@ -563,6 +631,10 @@
     <system:String x:Key="GachaAgreeDisclaimer">理解した</system:String>
     <system:String x:Key="ShowDisclaimerNoMore">再度表示しない</system:String>
     <!--  !Gacha Recognition  -->
+    <!--  Peep  -->
+    <system:String x:Key="Peep">Peep</system:String>
+    <system:String x:Key="PeepTargetFps">目標フレームレート</system:String>
+    <!--  !Peep  -->
     <!--  Logs  -->
     <system:String x:Key="Identifying">認識中……</system:String>
     <system:String x:Key="IdentificationCompleted">認識完了</system:String>
@@ -606,15 +678,14 @@
         3. SSSには、resource/copilot フォルダー内に複数の組み込みファイルがあります。\n
         手動形成後、「開始デプロイメント」画面から開始してください（「ループ回数」で使用可能）。\n\n
         4. サポートを使うときは、「自動編成」をオフにし、手動でオペレーターを選択してから始めましょう；\n\n
-        5. ビデオ認識もサポートされており、ガイドビデオをドラッグして使用できます。\n
-        ビデオ解像度は16:9必須。黒枠、エミュレーター枠、特殊な形状、画面効果などが無いことを確認してください。\n\n
-        6. バトルリスト:\n
+        5. 「戦術要員」機能を有効にすると、「自動編成」のオペレーター選択に影響を与える可能性があります。「自動編成」を使用する際は「戦術要員」をオフにするか、不足しているオペレーターを手動で補充して編成を完成させることをお勧めします。\n\n
+        6. Copilot作業ステーションでは、入力欄の右側にある貼り付けボタンをクリックして、謎のコードを貼り付けることができます。左クリックで単一のジョブを貼り付け、右クリックでジョブセット全体を貼り付けます。\n\n
+        7. バトルリスト:\n
         ジョブを選択した後、リストの下のステージ名が正しいことを確認してください (例: CV-EX-1)。 \n
         追加: 左クリックして通常難易度を追加し、右クリックして強襲難易度を追加します。\n
         クリア: 左クリックするとリストがクリアされ、右クリックすると非アクティブなタスクのみが削除されます。\n
         開始する前に、ステージ選択画面に切り替える必要があります。章間のナビゲーションはサポートされていません。\n
-        理性不足の場合、戦闘が失敗した場合、または 3 つ星を解決できない場合、アクションは終了します。 \n
-        一括インポートを使用して強襲ステージを追加する場合は、ファイル名を変更する必要があります (例: '1-7(Raid).json')。\n\n
+        理性不足の場合、戦闘が失敗した場合、または 3 つ星を解決できない場合、アクションは終了します。
     </system:String>
     <system:String x:Key="CopilotFileReadError">ファイルの読み取りに失敗しました！</system:String>
     <system:String x:Key="CopilotNoFound">対応する攻略ファイルが見つかりません！</system:String>
@@ -626,16 +697,18 @@
     <!--  !Copilot  -->
     <!--  ErrorView  -->
     <system:String x:Key="Error">エラー</system:String>
+    <system:String x:Key="ErrorCongratulations">おめでとうございます</system:String>
     <system:String x:Key="ErrorProlog">MAA に問題が発生しました</system:String>
     <system:String x:Key="ErrorDetails">詳細情報</system:String>
     <system:String x:Key="ErrorSolution">解決策</system:String>
+    <system:String x:Key="ErrorSolutionMoveMaaExeOutOfFolder">MAA.exe ファイルを単独で移動しないでください。ソフトウェアの場所を変更する必要がある場合は、フォルダー全体を移動するか、このフォルダーに MAA.exe のショートカットを作成してから、ショートカットを別の場所にドラッグしてください。</system:String>
     <system:String x:Key="ErrorSolutionCrash">ドキュメント「よくある問題 - クラッシュ」を参照してください。</system:String>
     <system:String x:Key="ErrorSolutionUpdatePackageExtractionFailed">アップデートパッケージの解凍に失敗しました。ルートディレクトリにあるアップデートパッケージを手動で解凍してみてください。</system:String>
     <system:String x:Key="ErrorSolutionReplaceAdb">エミュレータとADBを閉じるか、コンピューターを再起動してから、管理者権限でMAAを開いて操作してください。</system:String>
     <system:String x:Key="ErrorSolutionFailedToMove">ファイルが占有されています。コンピュータを再起動して再試行してください。</system:String>
     <system:String x:Key="ErrorSolutionSelectDefaultBrowser">リンクを開けませんでした。Windows 設定に移動してデフォルトのブラウザを選択してください。</system:String>
     <system:String x:Key="ErrorFeedbackLinkText">GitHub issueを作成する</system:String>
-    <system:String x:Key="ErrorQqGroupLinkText">QQグループに参加して問題をフィードバックする</system:String>
+    <system:String x:Key="ErrorQqGroupLinkText">QQグループに入ります</system:String>
     <system:String x:Key="CopyErrorMessage">エラー情報をコピーする</system:String>
     <!--  !ErrorView  -->
     <!--  AsstProxy  -->
@@ -667,9 +740,9 @@
     <system:String x:Key="CompleteTask" xml:space="preserve">タスク完了: </system:String>
     <system:String x:Key="StartCombat" xml:space="preserve">戦闘開始: </system:String>
     <system:String x:Key="CompleteCombat">戦闘完了</system:String>
-    <system:String x:Key="AllTasksComplete">すべてのタスクが完了しました！</system:String>
+    <system:String x:Key="AllTasksComplete">すべてのタスクが完了しました！\n({0} 後)</system:String>
     <system:String x:Key="SanityReport">({TimeDiff} 後)、{DateTime} に理性が完全回復します。</system:String>
-    <system:String x:Key="AllTaskCompleteContent">MAA は、{DateTime} の {Preset} 構成の下にあるすべてのプリセット タスクを完了しました。</system:String>
+    <system:String x:Key="AllTaskCompleteContent">({TimeDiff} 後) MAA は、{DateTime} の {Preset} 構成の下にあるすべてのプリセット タスクを完了しました。</system:String>
     <system:String x:Key="BackgroundLinkStarted">Tasks started</system:String>
     <system:String x:Key="BackgroundLinkStopped">Tasks stopped</system:String>
     <system:String x:Key="FailedToOpenClient">クライアントを開くのに失敗しました。構成ファイルを確認してください</system:String>
@@ -679,6 +752,7 @@
     <system:String x:Key="GiveUpUploadingPenguins">Penguin-Statsへのアップロードをあきらめました</system:String>
     <system:String x:Key="TheEx">ステージ報酬がないため停止します</system:String>
     <system:String x:Key="MissingOperators">次のオペレーターがオペレーターグループにありません：</system:String>
+    <system:String x:Key="RecruitSuppportOperator">サポートユニットを追加：{0}</system:String>
     <system:String x:Key="StageQueue">ステージキュー:</system:String>
     <system:String x:Key="UnableToAgent">自動指揮利用不可</system:String>
     <system:String x:Key="MissionStart">行動開始しました</system:String>
@@ -704,6 +778,9 @@
     <system:String x:Key="GameDropNoRestart">ゲームが落ちたため、再接続せず任務を停止します</system:String>
     <system:String x:Key="RoguelikeGamePass">ゲームクリア、おめでとうございます！</system:String>
     <system:String x:Key="RoguelikeSpecialItemBought">スペシャルアイテムを購入しました！</system:String>
+    <system:String x:Key="MonthlySquadCompleted">月間チーム全てクリアしました！おめでとうございます！</system:String>
+    <system:String x:Key="DeepExplorationCompleted">深部探索全てクリアしました！おめでとうございます！</system:String>
+    <system:String x:Key="DeepExplorationNotUnlockedComplain">深部探索はまだアンロックされていません</system:String>
     <system:String x:Key="SSSGamePass">ゲームクリア、おめでとうございます！</system:String>
     <system:String x:Key="Trader">ステージ: 怪しい旅商人</system:String>
     <system:String x:Key="SafeHouse">ステージ: 安全な片隅</system:String>
@@ -743,8 +820,8 @@
     <system:String x:Key="DefaultNoExtraTags">追加のタグを選択しない</system:String>
     <system:String x:Key="SelectExtraTags">常に 3 つのタグを選択する</system:String>
     <system:String x:Key="SelectExtraOnlyRareTags">可能な限りタグを選択し、かつ高い星のタグのみを選択する</system:String>
-    <system:String x:Key="AutoRecruitHighPriority">優先タグ（セミコロンで区切）</system:String>
-    <system:String x:Key="AutoRecruitHighPriorityTooltip">サブストリングで十分です、できるだけ多くのタグの傾向を選択します</system:String>
+    <system:String x:Key="AutoRecruitHighPriority">優先タグ</system:String>
+    <system:String x:Key="AutoRecruitHighPriorityTooltip">できるだけ多くのタグの傾向を選択します</system:String>
     <system:String x:Key="NotEnoughStaff">利用可能なオペレーターが不足しています</system:String>
     <system:String x:Key="StageInfoError">ステージ認識エラー</system:String>
     <system:String x:Key="UseFormation">使用編成</system:String>
@@ -752,8 +829,7 @@
     <system:String x:Key="BattleFormation">編成開始</system:String>
     <system:String x:Key="BattleFormationSelected" xml:space="preserve">オペレーターを選択: </system:String>
     <system:String x:Key="CurrentSteps">現在の手順: {0} {1}</system:String>
-    <system:String x:Key="UnsupportedLevel">サポートされていないステージです。ステージ名を確認するか、設定に移動してソフトウェア更新をチェックし、リソースバージョンを更新してみてください！</system:String>
-    <system:String x:Key="ResourceUpdatePaused">サーバーリソースの制約により、リソースバージョンの更新は一時的に停止しています。レベルファイルを手動でインポートするか、新しいバージョンのリリースをお待ちください</system:String>
+    <system:String x:Key="UnsupportedLevel">サポートされていないステージです。ステージ名を確認するか、「設定 - ソフトウェア更新 - リソース更新」に移動してリソースバージョンを更新してみてください！</system:String>
     <system:String x:Key="RecruitTagsDetected" xml:space="preserve">認識結果: </system:String>
     <system:String x:Key="ConnectFailed">接続失敗</system:String>
     <system:String x:Key="TryToReconnectByAdb">再接続を試みています</system:String>
@@ -776,6 +852,7 @@
     <system:String x:Key="QqGroup">QQグループ</system:String>
     <system:String x:Key="QqChannel">QQ channel</system:String>
     <system:String x:Key="Telegram">Telegram</system:String>
+    <system:String x:Key="Discord">Discord</system:String>
     <system:String x:Key="Help">よくある質問</system:String>
     <system:String x:Key="Issue">フィードバック</system:String>
     <!--  !About  -->
@@ -850,23 +927,30 @@
     <system:String x:Key="DoNotRemindThisAnnouncementAgain">このお知らせをもう表示しない</system:String>
     <!--  !Announcement  -->
     <!--  Reclamation  -->
-    <system:String x:Key="ReclamationEarlyTip" xml:space="preserve">詳細設定のオプションでモードを切り替えることができます
-
+    <system:String x:Key="ReclamationEarlyTip" xml:space="preserve">
 生息演算のサポートはまだ初期段階にありますので、ご利用の際は以下の点にご注意ください：
 
- セーブファイルなし: 初期設定でポイントを稼ぐ。
-  1. すでにセーブデータがある場合は使用できません（既存のセーブデータを削除します）
-  2. 生息演算の編成にオペレーターがいる場合は使用できません（特に戦闘の後は、現在の編成を空にするだけで十分です）
-  3. タスクは生息演算のメイン画面で開始する必要があります（ナビゲーションはまだ書かれていません）
+ 初期設定でポイントを稼ぐ：（既存のセーブデータが削除されることに注意してください）
+  0.ポイントがいっぱいになると「タスク完了」が出力され、タスクは自動的に停止します
+  1. 理論的には、タスクは、セーブデータの有無に関係なく、ポイント獲得のためのどの時点からでもタスクを開始できる。
+  2. 生息演算の編成にオペレーターを入れることができるが、テストしていないのでお勧めしない。
+  3. ナビゲーションがまだ書かれていないので、生息演算の画面以外の場所からタスクを開始することはできない。
+  4. タスク中にエラーが出たり、ポイントが満杯なかたでタスクが完了した場合は、GitHubにissueを提出してください。
 
- セーブファイルあり: クラフトでポイントを稼ぐ(高度な設定)。
+ セーブデータあり、支援道具組立でポイントを稼ぐ（高度な設定）：
   1. 条件は、決算後初日と、その後3日間、敵襲がないこと。
   2. 大地図のインターフェースに入った後に開始する必要があります（駐屯地を見ることができるページ）
   3. 作れる数字がちょうど99の倍数の場合、スタックしてしまうので、セーブする前に少し使い切り、後で修正することができる。
     </system:String>
     <system:String x:Key="ReclamationBePatient">改善するのが待ちきれません！また急いでいます</system:String>
     <system:String x:Key="Reclamation2ExEnable">道具作りでポイントを得る</system:String>
-    <system:String x:Key="Reclamation2ExProductTip">支援道具名</system:String>
-    <system:String x:Key="Reclamation2ExProductPlaceholder">ケミカルライト</system:String>
+    <system:String x:Key="ReclamationToolToCraftTip">支援道具名</system:String>
+    <system:String x:Key="ReclamationToolToCraftPlaceholder">ケミカルライト</system:String>
     <!--  !Reclamation  -->
+    <!--  SingleInstance  -->
+    <system:String x:Key="MultiInstanceUnderSamePath" xml:space="preserve">
+同じパスの下で起動できるのは1つのインスタンスのみ！
+MAA を複数開くには、新しい MAA を他のフォルダにコピーし、異なる MAA、同じ adb、異なるシミュレータアドレスを使用して複数の操作を行うように設定します。
+    </system:String>
+    <!--  !SingleInstance  -->
 </ResourceDictionary>

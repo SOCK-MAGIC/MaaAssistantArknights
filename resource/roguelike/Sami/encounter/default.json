@@ -136,18 +136,6 @@
             "choose": 3,
             "choices": [
                 {
-                    "name": "意思意思",
-                    "option_num": 3,
-                    "choose": 1,
-                    "requirements": [
-                        {
-                            "name": "OriginiumIngot",
-                            "type": ">",
-                            "value": "2"
-                        }
-                    ]
-                },
-                {
                     "name": "重金酬谢",
                     "option_num": 3,
                     "choose": 2,
@@ -159,6 +147,18 @@
                         },
                         {
                             "name": "Vision",
+                            "type": ">",
+                            "value": "2"
+                        }
+                    ]
+                },
+                {
+                    "name": "意思意思",
+                    "option_num": 3,
+                    "choose": 1,
+                    "requirements": [
+                        {
+                            "name": "OriginiumIngot",
                             "type": ">",
                             "value": "2"
                         }
@@ -188,7 +188,8 @@
         {
             "name": "特里蒙旅行社特派团",
             "option_num": 3,
-            "choose": 1
+            "choose": 1,
+            "fallback_choices": [[4, 1]]
         },
         {
             "name": "在地公共移动站N6号",
@@ -282,17 +283,17 @@
         {
             "name": "沼泽里的抽泣声",
             "option_num": 3,
-            "choose": 1
+            "choose": 3
         },
         {
             "name": "有利可图",
             "option_num": 3,
-            "choose": 1
+            "choose": 3
         },
         {
             "name": "随行人员",
             "option_num": 3,
-            "choose": 1
+            "choose": 3
         },
         {
             "name": "邪恶计划鸭",
@@ -335,12 +336,12 @@
         {
             "name": "请君入戏",
             "option_num": 3,
-            "choose": 1
+            "choose": 3
         },
         {
             "name": "北风女巫",
             "option_num": 3,
-            "choose": 1,
+            "choose": 3,
             "choices": [
                 {
                     "name": "乖乖照做",
@@ -456,18 +457,6 @@
             "choose": 1,
             "choices": [
                 {
-                    "name": "选择他脚边的货品",
-                    "option_num": 3,
-                    "choose": 2,
-                    "requirements": [
-                        {
-                            "name": "Vision",
-                            "type": ">",
-                            "value": "1"
-                        }
-                    ]
-                },
-                {
                     "name": "选择仓库深处的货品",
                     "option_num": 3,
                     "choose": 3,
@@ -490,7 +479,23 @@
                             "value": "四叶草化石"
                         }
                     ]
+                },
+                {
+                    "name": "选择他脚边的货品",
+                    "option_num": 3,
+                    "choose": 2,
+                    "requirements": [
+                        {
+                            "name": "Vision",
+                            "type": ">",
+                            "value": "1"
+                        }
+                    ]
                 }
+            ],
+            "fallback_choices": [
+                [4, 4],
+                [1, 1]
             ]
         },
         {
@@ -765,7 +770,8 @@
         {
             "name": "探寻前路",
             "option_num": 3,
-            "choose": 2
+            "choose": 2,
+            "fallback_choices": [[2, 2]]
         },
         {
             "name": "前行的林地",

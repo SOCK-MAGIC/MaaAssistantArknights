@@ -1,5 +1,6 @@
 ---
 order: 1
+icon: ic:round-rocket-launch
 ---
 
 # 开始唤醒
@@ -13,6 +14,8 @@ This page is outdated and maybe still in Simplified Chinese. Translation is need
 自动启动模拟器需额外设置，详见启动设置，且需勾选连接设置内的 `ADB 连接失败时尝试启动模拟器`。
 
 ## 账号切换
+
+本功能需與切換配置或定時執行一起使用，會在每次執行 `開始喚醒` 任務時都進行一次賬號切換操作。
 
 仅支持切换至已登录的账号，使用登录名进行查找，请保证输入内容在所有已登录账号唯一。
 

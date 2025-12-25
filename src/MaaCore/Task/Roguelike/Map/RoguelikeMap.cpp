@@ -4,11 +4,11 @@
 #include <limits>
 
 #include "Utils/Logger.hpp"
-#include "Utils/Ranges.hpp"
+#include <ranges>
 
 asst::RoguelikeMap::RoguelikeMap()
 {
-    m_curr_pos = create_and_insert_node(RoguelikeNodeType::Init, init_index, 0).value();
+    m_curr_pos = create_and_insert_node(RoguelikeNodeType::Init, INIT_INDEX, 0).value();
 }
 
 // ————————————————————————————————————————————————————————————————————————————————
@@ -16,7 +16,7 @@ asst::RoguelikeMap::RoguelikeMap()
 // ————————————————————————————————————————————————————————————————————————————————
 
 std::optional<size_t>
-    asst::RoguelikeMap::create_and_insert_node(const RoguelikeNodeType& type, const size_t& column, const int& y)
+    asst::RoguelikeMap::create_and_insert_node(const RoguelikeNodeType type, const size_t& column, const int& y)
 {
     const RoguelikeNodePtr node = std::make_shared<RoguelikeNode>(type, column, y);
     return insert_node(node, column);
@@ -49,13 +49,13 @@ void asst::RoguelikeMap::set_curr_pos(const size_t& node_index)
 
 void asst::RoguelikeMap::update_node_costs()
 {
-    for (const RoguelikeNodePtr& node : ranges::reverse_view(m_nodes)) {
+    for (const RoguelikeNodePtr& node : std::ranges::reverse_view(m_nodes)) {
         node->cost = m_cost_fun(node);
         if (!node->succs.empty()) {
-            auto succ_costs = node->succs | views::transform([&](const size_t node_index) {
+            auto succ_costs = node->succs | std::views::transform([&](const size_t node_index) {
                                   return m_cost_fun(m_nodes.at(node_index));
                               });
-            node->cost += ranges::min(succ_costs);
+            node->cost += std::ranges::min(succ_costs);
         }
     }
 }
@@ -64,7 +64,7 @@ void asst::RoguelikeMap::reset()
 {
     m_nodes.clear();
     m_column_indices.clear();
-    m_curr_pos = create_and_insert_node(RoguelikeNodeType::Init, init_index, 0).value();
+    m_curr_pos = create_and_insert_node(RoguelikeNodeType::Init, INIT_INDEX, 0).value();
 }
 
 // ————————————————————————————————————————————————————————————————————————————————
@@ -73,8 +73,8 @@ void asst::RoguelikeMap::reset()
 
 size_t asst::RoguelikeMap::get_column_begin(const size_t& column) const
 {
-    if (column == init_index) {
-        return init_index;
+    if (column == INIT_INDEX) {
+        return INIT_INDEX;
     }
     if (column >= m_column_indices.size()) {
         Log.warn(__FUNCTION__, "| column does not exist");
@@ -101,10 +101,9 @@ size_t asst::RoguelikeMap::get_next_node() const
         return m_curr_pos;
     }
 
-    const size_t next_index =
-        ranges::min(curr->succs, [&](const size_t& node1_index, const size_t& node2_index) {
-            return m_nodes.at(node1_index)->cost < m_nodes.at(node2_index)->cost;
-        });
+    const size_t next_index = std::ranges::min(curr->succs, [&](const size_t& node1_index, const size_t& node2_index) {
+        return m_nodes.at(node1_index)->cost < m_nodes.at(node2_index)->cost;
+    });
     return next_index;
 }
 
@@ -233,13 +232,12 @@ void asst::RoguelikeMap::set_node_refresh_times(const size_t& node_index, int re
 std::optional<size_t> asst::RoguelikeMap::insert_node(const RoguelikeNodePtr& node, const size_t& column)
 {
     // 第一个 node 必须为 init node
-    if (column != init_index && m_nodes.empty()) [[unlikely]] {
+    if (column != INIT_INDEX && m_nodes.empty()) [[unlikely]] {
         Log.error(__FUNCTION__, "| insert node to column", column, "before init node");
         return std::nullopt;
     }
     // 只允许有一个 init node
-    if (column == init_index && column < m_column_indices.size() && m_column_indices.at(column) > 0)
-        [[unlikely]] {
+    if (column == INIT_INDEX && column < m_column_indices.size() && m_column_indices.at(column) > 0) [[unlikely]] {
         Log.error(__FUNCTION__, "| init node has already exist");
         return std::nullopt;
     }

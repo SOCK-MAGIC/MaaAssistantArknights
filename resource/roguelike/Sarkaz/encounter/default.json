@@ -65,8 +65,8 @@
         },
         {
             "name": "竣工仪式",
-            "option_num": 1,
-            "choose": 1,
+            "option_num": 2,
+            "choose": 2,
             "choices": [
                 {
                     "name": "我们是来参加研讨会的",
@@ -83,8 +83,8 @@
             ]
         },
         {
-            "name": "戴冠式",
-            "option_num": 2,
+            "name": "转机",
+            "option_num": 3,
             "choose": 2
         },
         {
@@ -155,6 +155,25 @@
             ]
         },
         {
+            "name": "一叶扁舟",
+            "option_num": 2,
+            "choose": 2,
+            "choices": [
+                {
+                    "name": "与阿纳萨商量",
+                    "option_num": 2,
+                    "choose": 2,
+                    "requirements": [
+                        {
+                            "name": "Relic",
+                            "type": "have",
+                            "value": "希望时代的涂鸦"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "失落财宝",
             "option_num": 3,
             "choose": 3,
@@ -206,14 +225,14 @@
         },
         {
             "name": "相遇",
-            "option_num": 3,
+            "option_num": 4,
             "choose": 1,
             "choices": [
                 {
                     "name": "它邀请对方共享猎物",
-                    "option_num": 3,
+                    "option_num": 4,
                     "choose": 1,
-                    "reward": [
+                    "requirements": [
                         {
                             "name": "Relic",
                             "type": "get",
@@ -223,17 +242,35 @@
                 },
                 {
                     "name": "它向前扑去",
-                    "option_num": 3,
+                    "option_num": 4,
                     "choose": 2,
-                    "reward": [
+                    "requirements": [
                         {
                             "name": "Relic",
                             "type": "get",
                             "value": "死仇时代的恨意"
                         }
                     ]
+                },
+                {
+                    "name": "它回应愿望",
+                    "option_num": 4,
+                    "choose": 3,
+                    "requirements": [
+                        {
+                            "name": "Relic",
+                            "type": "get",
+                            "value": "美愿时代的留恋"
+                        }
+                    ]
                 }
             ]
+        },
+        {
+            "name": "相逢",
+            "option_num": 4,
+            "choose": 1,
+            "docs": "#11907"
         },
         {
             "name": "虫卡兹！",
@@ -243,12 +280,38 @@
         {
             "name": "捷径",
             "option_num": 2,
-            "choose": 2
+            "choose": 1
         },
         {
             "name": "驮兽旅行家",
             "option_num": 3,
-            "choose": 1
+            "choose": 3,
+            "choices": [
+                {
+                    "name": "与驮兽同行",
+                    "option_num": 3,
+                    "choose": 1,
+                    "requirements": [
+                        {
+                            "name": "Relic",
+                            "type": "get",
+                            "value": "牧驮人的摇铃"
+                        }
+                    ]
+                },
+                {
+                    "name": "索要定金",
+                    "option_num": 3,
+                    "choose": 1,
+                    "requirements": [
+                        {
+                            "name": "Relic",
+                            "type": "get",
+                            "value": "牧驮人的摇铃"
+                        }
+                    ]
+                }
+            ]
         },
         {
             "name": "深坑秘宝",
@@ -345,13 +408,13 @@
         },
         {
             "name": "未来猎手",
-            "option_num": 2,
-            "choose": 2,
+            "option_num": 3,
+            "choose": 3,
             "choices": [
                 {
                     "name": "拿出希望的画作",
                     "option_num": 3,
-                    "choose": 2,
+                    "choose": 3,
                     "requirements": [
                         {
                             "name": "Relic",
@@ -363,7 +426,7 @@
                 {
                     "name": "拿出仇恨的矛头",
                     "option_num": 3,
-                    "choose": 2,
+                    "choose": 3,
                     "requirements": [
                         {
                             "name": "Relic",
@@ -376,23 +439,70 @@
         },
         {
             "name": "造物倒影",
-            "option_num": 4,
-            "choose": 4
-        },
-        {
-            "name": "解读变迁",
             "option_num": 3,
-            "choose": 3
+            "choose": 3,
+            "choices": [
+                {
+                    "name": "撞碎它的载体",
+                    "option_num": 4,
+                    "choose": 2,
+                    "requirements": [
+                        {
+                            "name": "Relic",
+                            "type": "have",
+                            "value": "死仇时代的恨意"
+                        }
+                    ]
+                }
+            ]
         },
         {
-            "name": "聚思成塔",
+            "name": "财源广进",
             "option_num": 3,
-            "choose": 3
+            "choose": 3,
+            "choices": [
+                {
+                    "name": "奉上一些财物",
+                    "option_num": 3,
+                    "choose": 1,
+                    "requirements": [
+                        {
+                            "name": "OriginiumIngot",
+                            "type": ">",
+                            "value": "7"
+                        }
+                    ]
+                },
+                {
+                    "name": "奉上所有财物",
+                    "option_num": 3,
+                    "choose": 2,
+                    "requirements": [
+                        {
+                            "name": "OriginiumIngot",
+                            "type": "<",
+                            "value": "13"
+                        }
+                    ]
+                },
+                {
+                    "name": "虔诚祈祷",
+                    "option_num": 4,
+                    "choose": 3,
+                    "requirements": [
+                        {
+                            "name": "Relic",
+                            "type": "have",
+                            "value": "希望时代的涂鸦"
+                        }
+                    ]
+                }
+            ]
         },
         {
-            "name": "价高者得",
-            "option_num": 2,
-            "choose": 2
+            "name": "表达欲",
+            "option_num": 3,
+            "choose": 1
         },
         {
             "name": "阴魂不散",
@@ -448,9 +558,9 @@
             "choose": 2,
             "choices": [
                 {
-                    "name": "举起矛头！",
+                    "name": "狩猎死仇",
                     "option_num": 3,
-                    "choose": 3,
+                    "choose": 2,
                     "requirements": [
                         {
                             "name": "Relic",
@@ -462,14 +572,30 @@
             ]
         },
         {
+            "name": "解读变迁",
+            "option_num": 3,
+            "choose": 3
+        },
+        {
+            "name": "聚思成塔",
+            "option_num": 3,
+            "choose": 3
+        },
+        {
+            "name": "价高者得",
+            "option_num": 2,
+            "choose": 2
+        },
+        {
             "name": "前瞻",
             "option_num": 2,
             "choose": 2
         },
         {
             "name": "原初异途",
-            "option_num": 3,
-            "choose": 3
+            "option_num": 4,
+            "choose": 4,
+            "fallback_choices": [[3, 3]]
         },
         {
             "name": "巴别塔雇员",
@@ -493,12 +619,13 @@
         {
             "name": "待诉说的故事",
             "option_num": 2,
-            "choose": 2
+            "choose": 2,
+            "next_event": "吸纳思维"
         },
         {
-            "name": "待诉说的真相",
-            "option_num": 2,
-            "choose": 2
+            "name": "吸纳思维",
+            "option_num": 1,
+            "choose": 1
         },
         {
             "name": "魂灵见闻：以血还血",
@@ -512,6 +639,16 @@
         },
         {
             "name": "魂灵见闻：石心双子",
+            "option_num": 2,
+            "choose": 2
+        },
+        {
+            "name": "戴冠式",
+            "option_num": 2,
+            "choose": 2
+        },
+        {
+            "name": "空无前兆",
             "option_num": 2,
             "choose": 2
         },
@@ -535,9 +672,19 @@
             ]
         },
         {
+            "name": "待诉说的真相",
+            "option_num": 2,
+            "choose": 2
+        },
+        {
             "name": "扣响异音",
             "option_num": 2,
             "choose": 2
+        },
+        {
+            "name": "淡然面对",
+            "option_num": 3,
+            "choose": 3
         },
         {
             "name": "温暖余韵",
@@ -545,9 +692,9 @@
             "choose": 1
         },
         {
-            "name": "淡然面对",
+            "name": "似是而非",
             "option_num": 3,
-            "choose": 3
+            "choose": 2
         }
     ]
 }

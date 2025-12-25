@@ -41,6 +41,9 @@ typedef void(ASST_CALL* AsstCallback)(int msg, const char* details, void* custom
       SubTaskCompleted,           // 서브태스크 완료
       SubTaskExtraInfo,           // 서브태스크에 대한 추가 정보
       SubTaskStopped,             // 서브태스크 중지
+
+      /* Web Request */
+      ReportRequest = 30000,       // 보고 요청
   };
   ```
 
@@ -156,7 +159,7 @@ typedef void(ASST_CALL* AsstCallback)(int msg, const char* details, void* custom
   창고 인식
 - `OperBox`  
   오퍼레이터 박스 인식
-- `ReclamationAlgorithm`  
+- `Reclamation`  
   Reclamation Algorithm (CN 클라이언트의 새로운 모드)
 - `Custom`  
   사용자 정의 태스크
@@ -196,7 +199,7 @@ typedef void(ASST_CALL* AsstCallback)(int msg, const char* details, void* custom
 
 #### 자주 사용되는 `subtask` 필드 값
 
-- `ProcessTask`  
+- `ProcessTask`
 
   ```json
   // 상세 정보에 대한 예시
@@ -445,14 +448,14 @@ typedef void(ASST_CALL* AsstCallback)(int msg, const char* details, void* custom
   ```
 
 - `RecruitNoPermit`  
-    모집 라이센스가 없습니다
+   모집 라이센스가 없습니다
 
-    ```json
-    // 상세 정보에 대한 예시
-    {
-        "continue": true,   // 계속 새로고침할지 말지
-    }
-    ```
+  ```json
+  // 상세 정보에 대한 예시
+  {
+      "continue": true,   // 계속 새로고침할지 말지
+  }
+  ```
 
 - `RecruitTagsSelected`  
   공개모집 태그 선택 완료
@@ -616,3 +619,19 @@ typedef void(ASST_CALL* AsstCallback)(int msg, const char* details, void* custom
 
 - `UnsupportedLevel`  
   지원되지 않는 레벨 이름
+
+### ReportRequest
+
+이 필드는 코어 모듈에서 UI 계층으로 네트워크 요청 정보를 전달하는 데 주로 사용되며, UI는 실제 HTTP 보고 작업을 수행합니다.
+
+```json
+{
+  "url": "string",            // 요청의 전체 URL 예: https://penguin-stats.io/PenguinStats/api/v2/report
+  "headers": {                // 요청 헤더 키-값 쌍 (Content-Type 제외, UI에서 추가)
+    "authorization": "PenguinID 1234567890",
+    "User-Agent": "MaaAssistantArknights/1.2.3 cpr/4.5.6"
+  },
+  "body": "string",           // 요청 본문 내용 (보통 JSON 형식의 문자열)
+  "subtask": "string"         // 구체적인 보고 작업을 식별하는 서브태스크 이름 예: "ReportToPenguinStats", "ReportToYituliu"
+}
+```

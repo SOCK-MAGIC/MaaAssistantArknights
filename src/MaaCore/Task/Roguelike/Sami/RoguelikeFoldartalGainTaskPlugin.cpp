@@ -1,7 +1,6 @@
 #include "RoguelikeFoldartalGainTaskPlugin.h"
 
 #include "Controller/Controller.h"
-#include "Status.h"
 #include "Task/ProcessTask.h"
 #include "Utils/Logger.hpp"
 #include "Vision/OCRer.h"
@@ -46,7 +45,7 @@ bool asst::RoguelikeFoldartalGainTaskPlugin::verify(AsstMsg msg, const json::val
         m_ocr_after_combat = true;
         return true;
     }
-    if (task_view == "Roguelike@NextLevel") {
+    if (task_view == "Roguelike@FoldartalGainNextLevel") {
         m_ocr_next_level = true;
         return true;
     }
@@ -122,7 +121,10 @@ bool asst::RoguelikeFoldartalGainTaskPlugin::gain_stage_award()
     }
 
     auto foldartal = analyzer.get_result().front().text;
-    gain_foldartal(std::move(foldartal));
+    // 深入调查调查装备也使用同一个入口，先分类
+    if (foldartal != "雷达" || "留声机" || "景观" || "LUD" || "踢脚" || "自走车") {
+        gain_foldartal(std::move(foldartal));
+    }
     if (m_ocr_after_combat) {
         ctrler()->click(analyzer.get_result().front().rect);
     }
@@ -132,7 +134,5 @@ bool asst::RoguelikeFoldartalGainTaskPlugin::gain_stage_award()
 
 void asst::RoguelikeFoldartalGainTaskPlugin::gain_foldartal(std::string name)
 {
-    auto foldartal_list = m_config->get_foldartal();
-    foldartal_list.emplace_back(std::move(name));
-    m_config->set_foldartal(std::move(foldartal_list));
+    m_config->status().foldartal_list.emplace_back(std::move(name));
 }

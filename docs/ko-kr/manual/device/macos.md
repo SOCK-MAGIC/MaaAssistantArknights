@@ -5,10 +5,6 @@ icon: basil:apple-solid
 
 # Mac 지원
 
-::: tip
-문제가 발생하면 [FAQ](../faq.md)를 먼저 참조하세요.
-:::
-
 ## Apple Silicon 칩셋
 
 ### ✅ [PlayCover](https://playcover.io)（제일 부드럽습니다! 🚀）
@@ -41,7 +37,17 @@ icon: basil:apple-solid
 
 지원됩니다. 그러나 Android 10부터는 SELinux가 `Enforcing` 모드일 때 `Minitouch`를 사용할 수 없습니다. 다른 터치 모드로 전환하거나 SELinux를 **임시**로 `Permissive` 모드로 변경하세요.
 
+### ✅ [블루스택 에어](https://www.bluestacks.com/mac) (무료, Apple M 시리즈 칩에 최적화된 버전)
+
+지원되며, 테스트 결과 maatouch를 통해 `127.0.0.1:5555`로 연결할 수 있습니다.
+
+에뮬레이터의 **`설정`** - **`고급`**에서 **`Android 디버깅(ADB)`**을 활성화해야 합니다。
+
 ## Intel 칩셋
+
+::: tip
+Mac 버전 개발에 인력이 부족하여 업데이트 속도가 비교적 느립니다. Mac에 내장된 멀티 시스템 기능을 사용해 Windows를 설치하고 Windows 버전 MAA를 사용하는 것을 추천합니다.
+:::
 
 ### ✅ [블루스택 에뮬레이터 CN](https://www.bluestacks.cn/)
 
@@ -53,7 +59,7 @@ icon: basil:apple-solid
 
 ### ✅ [녹스 에뮬레이터](https://www.yeshen.com/)
 
-완벽하게 지원됩니다. 현재 Mac의 MAAX 버전은 에뮬레이터 자동 감지 기능을 지원하지 않으므로 MAA 설정 - 연결 설정에서 adb를 사용하여 127.0.0.1:62001에 연결해야 합니다. 포트가 기본 5555가 아니라는 점에 유의하세요. 에뮬레이터 포트에 대한 자세한 설명은 [에뮬레이터 포트](../faq.md#adb-및-연결-주소-확인)를 참조하세요.
+완벽하게 지원됩니다.
 
 추가로, macOS에서 녹스 에뮬레이터의 adb 이진 파일의 위치는 `/Applications/NoxAppPlayer.app/Contents/MacOS/adb`이며 부모 디렉토리 `MacOS`에서 `adb devices` 명령을 사용하여 adb 포트를 확인할 수 있습니다.
 

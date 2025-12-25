@@ -1,10 +1,18 @@
 #pragma once
 
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
+#include <csignal>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <functional>
 #include <iostream>
 #include <mutex>
+#include <ranges>
+#include <streambuf>
 #include <thread>
 #include <type_traits>
 #include <utility>
@@ -12,11 +20,12 @@
 #include "Common/AsstTypes.h"
 #include "Common/AsstVersion.h"
 #include "Locale.hpp"
+#include "MaaUtils/SingletonHolder.hpp"
+#include "MaaUtils/Time.hpp"
 #include "Meta.hpp"
+#include "NullStreambuf.hpp"
 #include "Platform.hpp"
-#include "Ranges.hpp"
-#include "SingletonHolder.hpp"
-#include "Time.hpp"
+#include "Utils/ExceptionStacktrace.hpp"
 #include "WorkingDir.hpp"
 
 #if defined(__APPLE__) || defined(__linux__)
@@ -271,6 +280,7 @@ public:
     requires has_stream_insertion_operator<std::ostream, T>
     console_ostream& operator<<(T&& v)
     {
+#ifdef _WIN32
         if constexpr (std::convertible_to<T, std::string_view>) {
             asst::utils::utf8_scope scope(m_ofs.get());
             m_ofs.get() << std::forward<T>(v);
@@ -278,6 +288,9 @@ public:
         else {
             m_ofs.get() << std::forward<T>(v);
         }
+#else
+        m_ofs.get() << std::forward<T>(v);
+#endif
         return *this;
     }
 
@@ -334,7 +347,7 @@ public:
 template <typename... Args>
 ostreams(Args&&...) -> ostreams<to_reference_wrapper_t<Args>...>;
 
-class Logger : public SingletonHolder<Logger>
+class Logger : public MAA_NS::SingletonHolder<Logger>
 {
 public:
     struct separator
@@ -459,32 +472,14 @@ public:
                 s << utils::path_to_utf8_string(std::forward<T>(v));
             }
             else if constexpr (std::same_as<Logger::level, remove_cvref_t<T>>) {
-                constexpr int buff_len = 128;
-                char buff[buff_len] = { 0 };
 #ifdef _WIN32
-#ifdef _MSC_VER
-                sprintf_s(
-                    buff,
-                    buff_len,
-#else  // ! _MSC_VER
-                sprintf(
-                    buff,
-#endif // END _MSC_VER
-                    "[%s][%s][Px%x][Tx%4.4lx]",
-                    asst::utils::get_format_time().c_str(),
-                    v.str.data(),
-                    m_pid,
-                    m_tid);
-#else  // ! _WIN32
-                sprintf(
-                    buff,
-                    "[%s][%s][Px%x][Tx%4.4hx]",
-                    asst::utils::get_format_time().c_str(),
-                    v.str.data(),
-                    m_pid,
-                    m_tid);
-#endif // END _WIN32
-                s << buff;
+                int pid = _getpid();
+#else
+                int pid = ::getpid();
+#endif
+                auto tid = static_cast<uint16_t>(std::hash<std::thread::id> {}(std::this_thread::get_id()));
+
+                s << std::format("[{}][{}][Px{}][Tx{}]", MAA_NS::format_now(), v.str, pid, tid);
             }
             else if constexpr (std::is_enum_v<T> && enum_could_to_string<T>) {
                 s << asst::enum_to_string(std::forward<T>(v));
@@ -495,7 +490,7 @@ public:
             else if constexpr (std::constructible_from<std::string, T>) {
                 s << std::string(std::forward<T>(v));
             }
-            else if constexpr (ranges::input_range<T>) {
+            else if constexpr (std::ranges::input_range<T>) {
                 s << "[";
                 std::string_view comma_space {};
                 for (const auto& elem : std::forward<T>(v)) {
@@ -521,20 +516,6 @@ public:
         separator m_sep = separator::space;
         std::unique_lock<std::mutex> m_trace_lock;
         stream_t m_ofs;
-
-        inline static thread_local const auto m_pid =
-#ifdef _WIN32
-            _getpid();
-#else
-            ::getpid();
-#endif
-
-        inline static thread_local const auto m_tid =
-#ifdef _WIN32
-            ::GetCurrentThreadId();
-#else
-            static_cast<unsigned short>(std::hash<std::thread::id> {}(std::this_thread::get_id()));
-#endif
     };
 
     // template <typename stream_t>
@@ -552,8 +533,55 @@ public:
     template <typename stream_t, typename... Args>
     LogStream(std::unique_lock<std::mutex>&&, stream_t&&, Args&&...) -> LogStream<stream_t>;
 
+    class LogStreambuf : public std::filebuf
+    {
+    public:
+        LogStreambuf(std::filebuf* dest_buf) :
+            dest(dest_buf)
+        {
+        }
+
+        std::streamsize count_bytes() const { return count; }
+
+    protected:
+        int_type overflow(int_type c) override
+        {
+            if (c != traits_type::eof()) {
+                ch = static_cast<char>(c);
+                count++;
+                if (dest) {
+                    dest->sputc(ch);
+                }
+            }
+            return ch;
+        }
+
+        int sync() override
+        {
+            if (dest) {
+                return dest->pubsync();
+            }
+            return 0;
+        }
+
+        // 处理字符块
+        std::streamsize xsputn(const char* s, std::streamsize n) override
+        {
+            count += n;
+            if (dest) {
+                return dest->sputn(s, n);
+            }
+            return n;
+        }
+
+    private:
+        char ch = 0;
+        std::filebuf* dest;
+        std::streamsize count = 0;
+    };
+
 public:
-    virtual ~Logger() override { flush(false); }
+    virtual ~Logger() override { flush(); }
 
     // static bool set_directory(const std::filesystem::path& dir)
     // {
@@ -568,19 +596,20 @@ public:
     template <typename T>
     auto operator<<(T&& arg)
     {
-        ensure_opened();
+        std::unique_lock lock { m_trace_mutex };
+        rotate();
         if constexpr (std::same_as<level, remove_cvref_t<T>>) {
 #ifdef ASST_DEBUG
-            return LogStream(m_trace_mutex, ostreams { console_ostream(std::cout), m_ofs }, arg);
+            return LogStream(std::move(lock), ostreams { console_ostream(std::cout), m_of }, arg);
 #else
-            return LogStream(m_trace_mutex, m_ofs, arg);
+            return LogStream(std::move(lock), m_of, arg);
 #endif
         }
         else {
 #ifdef ASST_DEBUG
-            return LogStream(m_trace_mutex, ostreams { console_ostream(std::cout), m_ofs }, level::trace, arg);
+            return LogStream(std::move(lock), ostreams { console_ostream(std::cout), m_of }, level::trace, arg);
 #else
-            return LogStream(m_trace_mutex, m_ofs, level::trace, arg);
+            return LogStream(std::move(lock), m_of, level::trace, arg);
 #endif
         }
     }
@@ -610,13 +639,57 @@ public:
     template <typename... Args>
     inline void debug([[maybe_unused]] Args&&... args)
     {
-#ifdef ASST_DEBUG
-        std::unique_lock lock { m_trace_mutex };
-        log(std::move(lock), level::debug, std::forward<Args>(args)...);
+#ifndef ASST_DEBUG
+        static const bool need_log = std::filesystem::exists("DEBUG.txt");
+        if (!need_log) {
+            return;
+        }
 #endif
+        std::unique_lock lock { m_trace_mutex };
+        log(std::move(lock), level::debug, m_scopes.next(), std::forward<Args>(args)...);
     }
 
 #undef LOGGER_FUNC_WITH_LEVEL
+
+    template <typename... args_t>
+    auto error_(args_t&&... args)
+    {
+        return stream(level::error, m_scopes.next(), std::forward<args_t>(args)...);
+    }
+
+    template <typename... args_t>
+    auto warn_(args_t&&... args)
+    {
+        return stream(level::warn, m_scopes.next(), std::forward<args_t>(args)...);
+    }
+
+    template <typename... args_t>
+    auto info_(args_t&&... args)
+    {
+        return stream(level::info, m_scopes.next(), std::forward<args_t>(args)...);
+    }
+
+    template <typename... args_t>
+    auto debug_(args_t&&... args)
+    {
+#ifndef ASST_DEBUG
+        static const bool need_log = std::filesystem::exists("DEBUG.txt");
+        if (!need_log) {
+            return LogStream(
+                std::unique_lock { m_trace_mutex },
+                null_stream,
+                level::debug,
+                std::forward<args_t>(args)...);
+        }
+#endif
+        return stream(level::debug, m_scopes.next(), std::forward<args_t>(args)...);
+    }
+
+    template <typename... args_t>
+    auto trace_(args_t&&... args)
+    {
+        return stream(level::trace, m_scopes.next(), std::forward<args_t>(args)...);
+    }
 
     template <typename... Args>
     inline int push(Args&&... args)
@@ -648,70 +721,113 @@ public:
         if (!lv.is_enabled()) {
             return;
         }
-        ensure_opened();
-        (LogStream(
-             std::move(lock),
+        rotate();
 #ifdef ASST_DEBUG
-             ostreams { console_ostream(std::cout), m_ofs },
-#else
-             m_ofs,
-#endif
-             lv)
+        (LogStream(std::move(lock), ostreams { console_ostream(std::cout), m_of }, lv)
          << ... << std::forward<Args>(args));
+#else
+        (LogStream(std::move(lock), m_of, lv) << ... << std::forward<Args>(args));
+
+#endif
     }
 
-    void flush(bool rorate_log_file = true)
+    void flush()
     {
         std::unique_lock<std::mutex> m_trace_lock(m_trace_mutex);
         if (m_ofs.is_open()) {
+            m_of.flush();
             m_ofs.close();
-        }
-        if (rorate_log_file) {
-            rotate();
         }
     }
 
 private:
-    friend class SingletonHolder<Logger>;
+    friend class MAA_NS::SingletonHolder<Logger>;
 
     Logger() :
-        m_directory(UserDir.get())
+        m_directory(UserDir.get()),
+        m_buff(nullptr),
+        m_of(&m_buff)
     {
-        std::filesystem::create_directories(m_log_path.parent_path());
-        rotate();
-        log_init_info();
-    }
+        initialize_exception_handlers();
 
-    void ensure_opened()
-    {
-        if (m_ofs && m_ofs.is_open()) [[likely]] {
-            return;
-        }
-
-        // m_ofs assigned in multiple threads simultaneously can cause double free
-        std::unique_lock lock { m_trace_mutex };
-        if (m_ofs && m_ofs.is_open()) {
-            return;
-        }
-        m_ofs = std::ofstream(m_log_path, std::ios::out | std::ios::app);
-    }
-
-    void rotate() const
-    {
-        constexpr uintmax_t MaxLogSize = 4ULL * 1024 * 1024;
         try {
-            if (std::filesystem::exists(m_log_path) && std::filesystem::is_regular_file(m_log_path)) {
-                const uintmax_t log_size = std::filesystem::file_size(m_log_path);
-                if (log_size >= MaxLogSize) {
-                    std::filesystem::rename(m_log_path, m_log_bak_path);
-                }
-            }
+            std::filesystem::create_directories(m_log_path.parent_path());
         }
         catch (std::filesystem::filesystem_error& e) {
             std::cerr << e.what() << std::endl;
         }
         catch (...) {
         }
+
+        LoadFileStream();
+        log_init_info();
+    }
+
+    void rotate()
+    {
+        if (!m_of || !m_ofs || !m_ofs.is_open()) {
+            LoadFileStream();
+        }
+        if (m_file_size + m_buff.count_bytes() <= MaxLogSize) {
+            return;
+        }
+        try {
+            if (!std::filesystem::exists(m_log_path) || !std::filesystem::is_regular_file(m_log_path)) {
+                return;
+            }
+            m_buff.close();
+            m_ofs.close();
+            std::filesystem::rename(m_log_path, m_log_bak_path);
+        }
+        catch (std::filesystem::filesystem_error& e) {
+            std::cerr << e.what() << std::endl;
+        }
+        catch (...) {
+        }
+        LoadFileStream();
+    }
+
+    void LoadFileStream()
+    {
+#ifdef _WIN32
+        FILE* fp = nullptr;
+        int file_handle = -1;
+        int oflag = _O_WRONLY | _O_APPEND | _O_CREAT | _O_BINARY | _O_NOINHERIT; // 写入、追加、创建、二进制、不可继承
+        int shflag = _SH_DENYWR;                                                 // 允许其他进程读取但不能写入
+        int pmode = _S_IREAD | _S_IWRITE;                                        // 读写权限
+
+        // 打开文件
+        if (_sopen_s(&file_handle, utils::path_to_utf8_string(m_log_path).c_str(), oflag, shflag, pmode) == 0) {
+            // 文件打开成功，转换为FILE*指针
+            fp = _fdopen(file_handle, "a"); // 使用追加模式
+            if (!fp) {
+                // 如果转换失败，关闭文件句柄
+                _close(file_handle);
+            }
+        }
+
+        if (!fp) {
+            // 打开失败时回退到原始方法
+            m_ofs = std::ofstream(m_log_path, std::ios::out | std::ios::app);
+        }
+        else {
+            // 使用文件指针创建新的std::ofstream
+            // 注意：传递文件指针的所有权给ofstream
+            m_ofs = std::ofstream(fp);
+
+            // 如果需要，这里还可以添加一个安全检查
+            if (!m_ofs) {
+                fclose(fp);
+                m_ofs = std::ofstream(m_log_path, std::ios::out | std::ios::app);
+            }
+        }
+#else
+        m_ofs = std::ofstream(m_log_path, std::ios::out | std::ios::app);
+#endif
+        // 获取文件大小并设置缓冲区
+        m_file_size = std::filesystem::exists(m_log_path) ? std::filesystem::file_size(m_log_path) : 0;
+        m_buff = LogStreambuf(m_ofs.rdbuf());
+        m_of.rdbuf(&m_buff);
     }
 
     void log_init_info()
@@ -724,6 +840,204 @@ private:
         trace("-----------------------------");
     }
 
+    inline static std::atomic<const char*> g_last_signal_reason { nullptr };
+
+    static void write_crash_file(const char* reason, const char* detail = nullptr) noexcept
+    {
+        FILE* f = nullptr;
+#ifdef ASST_DEBUG
+        auto path = (UserDir.get() / "debug" / "crash.log").string();
+#else
+        auto path = (UserDir.get() / "crash.log").string();
+#endif // ASST_DEBUG
+#ifdef _WIN32
+        if (fopen_s(&f, path.c_str(), "a") != 0) {
+            return;
+        }
+#else
+        f = fopen(path.c_str(), "a");
+#endif // _WIN32
+        if (!f) {
+            return;
+        }
+        fprintf(f, "=== FATAL ERROR ===\n");
+        if (reason) {
+            fprintf(f, "Reason: %s\n", reason);
+        }
+        if (detail) {
+            fprintf(f, "Detail: %s\n", detail);
+        }
+        fprintf(f, "===================\n\n");
+        fflush(f);
+        fclose(f);
+    }
+
+#ifdef _WIN32
+    // SEH 未处理异常过滤器
+    static LONG WINAPI unhandled_exception_filter(PEXCEPTION_POINTERS pExceptionInfo)
+    {
+        try {
+            auto& logger = Logger::get_instance();
+            std::string exception_details = utils::ExceptionStacktrace::capture_exception_stack_trace(pExceptionInfo);
+            logger.error("=== UNHANDLED EXCEPTION ===");
+            logger.error("Version", asst::Version);
+            logger.error("Built at", __DATE__, __TIME__);
+            logger.error("User Dir", UserDir.get());
+            logger.error(std::format("Module Base Address: 0x{:016X}", utils::ExceptionStacktrace::get_base_address()));
+            logger.error("Exception details with stack trace:");
+            logger.error(exception_details);
+            logger.error("============================");
+            logger.flush();
+            write_crash_file("Unhandled Exception with Stack Trace", exception_details.c_str());
+        }
+        catch (...) {
+            // 如果日志记录失败，直接写入文件
+            write_crash_file("Unhandled Exception", "Failed to capture stack trace");
+        }
+
+        // 返回 EXCEPTION_EXECUTE_HANDLER 让程序正常终止
+        return EXCEPTION_CONTINUE_EXECUTION;
+    }
+#endif
+
+    static void custom_terminate_handler() noexcept
+    {
+        static bool in_handler = false;
+        if (in_handler) {
+            std::_Exit(EXIT_FAILURE); // 避免递归
+        }
+        in_handler = true;
+
+        try {
+            auto& logger = Logger::get_instance();
+
+            // 先写信号信息
+            if (auto sig_reason = g_last_signal_reason.load()) {
+                logger.error("=== FATAL ERROR ===");
+                logger.error("Signal caught:", sig_reason);
+                logger.flush();
+                write_crash_file("Fatal Signal", sig_reason);
+            }
+
+            // 再处理 C++ 异常
+            std::string exception_info = "Unknown exception";
+            std::string stack_trace;
+            if (auto eptr = std::current_exception()) {
+                try {
+                    std::rethrow_exception(eptr);
+                }
+                catch (const std::exception& e) {
+                    exception_info = std::string("std::exception: ") + e.what() + " (type: " + typeid(e).name() + ")";
+                    stack_trace = utils::ExceptionStacktrace::capture_current_stack_trace();
+                }
+                catch (...) {
+                    exception_info = "Unknown exception type";
+                    stack_trace = utils::ExceptionStacktrace::capture_current_stack_trace();
+                }
+            }
+
+            logger.error("=== FATAL ERROR ===");
+            logger.error("Version", asst::Version);
+            logger.error("Built at", __DATE__, __TIME__);
+            logger.error("User Dir", UserDir.get());
+            logger.error(
+                "MaaCore Base Address:",
+                std::format("0x{:016X}", utils::ExceptionStacktrace::get_base_address()));
+            logger.error("Unhandled exception caught:", exception_info);
+            logger.error("Exception stack trace:");
+            if (!stack_trace.empty()) {
+                logger.error(stack_trace);
+                write_crash_file("Unhandled exception stack trace:", stack_trace.c_str());
+            }
+            else {
+                logger.error("empty");
+                write_crash_file("empty");
+            }
+            logger.error("Program terminating...");
+            logger.error("===================");
+            logger.flush();
+            write_crash_file("Unhandled exception", exception_info.c_str());
+        }
+        catch (...) {
+            std::cerr << "=== FATAL ERROR ===" << std::endl;
+            std::cerr << "Failed to log exception details to file" << std::endl;
+            std::cerr << "Unhandled exception caught, program terminating..." << std::endl;
+            std::cerr << "===================" << std::endl;
+        }
+    }
+
+    static void signal_handler(int sig)
+    {
+        std::string sig_name;
+        switch (sig) {
+        case SIGSEGV:
+            sig_name = "SIGSEGV (Segmentation Fault)";
+            break;
+        case SIGABRT:
+            sig_name = "SIGABRT (Abort)";
+            break;
+        case SIGFPE:
+            sig_name = "SIGFPE (Floating Point Error)";
+            break;
+        case SIGILL:
+            sig_name = "SIGILL (Illegal Instruction)";
+            break;
+        default:
+            sig_name = "Signal " + std::to_string(sig);
+            break;
+        }
+        g_last_signal_reason.store(sig_name.c_str());
+        custom_terminate_handler();
+        std::_Exit(EXIT_FAILURE);
+    }
+
+    static void initialize_exception_handlers()
+    {
+#ifdef _WIN32
+        // Windows: 设置未处理异常过滤器
+        SetUnhandledExceptionFilter(unhandled_exception_filter);
+#endif
+
+        std::signal(SIGSEGV, signal_handler);
+        std::signal(SIGABRT, signal_handler);
+        std::signal(SIGFPE, signal_handler);
+        std::signal(SIGILL, signal_handler);
+#ifdef ASST_DEBUG
+        const auto& path = UserDir.get() / "debug" / "crash.log";
+        if (std::filesystem::exists(path)) {
+            std::filesystem::remove(path);
+        }
+#endif // ASST_DEBUG
+    }
+
+    template <typename... args_t>
+    auto stream(level lv, args_t&&... args)
+    {
+        rotate();
+        if (lv.is_enabled()) {
+#ifdef ASST_DEBUG
+            return LogStream(
+                std::unique_lock { m_trace_mutex },
+                ostreams { console_ostream(std::cout), m_of },
+                lv,
+                std::forward<args_t>(args)...);
+#else
+            return LogStream(std::unique_lock { m_trace_mutex }, m_of, lv, std::forward<args_t>(args)...);
+#endif
+        }
+        else {
+#ifdef ASST_DEBUG
+            return LogStream(
+                std::unique_lock { m_trace_mutex },
+                ostreams { console_ostream(std::cout), null_stream },
+                lv,
+                std::forward<args_t>(args)...);
+#else
+            return LogStream(std::unique_lock { m_trace_mutex }, null_stream, lv, std::forward<args_t>(args)...);
+#endif
+        }
+    }
+
     detail::scope_slice m_scopes;
 
     std::filesystem::path m_directory;
@@ -732,6 +1046,13 @@ private:
     std::filesystem::path m_log_bak_path = m_directory / "debug" / "asst.bak.log";
     std::mutex m_trace_mutex;
     std::ofstream m_ofs;
+    LogStreambuf m_buff;
+    std::ostream m_of;
+    std::size_t m_file_size = 0;
+
+    static inline utils::NullStreambuf null_buf {};
+    static inline std::ostream null_stream { &null_buf };
+    const std::size_t MaxLogSize = 64LL * 1024 * 1024;
 };
 
 inline constexpr Logger::separator Logger::separator::none;
@@ -792,11 +1113,11 @@ private:
 #define _CatVarNameWithLine(Var) _Cat(Var, __LINE__)
 
 #define Log asst::Logger::get_instance()
-#define LogDebug Log << asst::Logger::level::debug
-#define LogTrace Log << asst::Logger::level::trace
-#define LogInfo Log << asst::Logger::level::info
-#define LogWarn Log << asst::Logger::level::warn
-#define LogError Log << asst::Logger::level::error
+#define LogDebug Log.debug_()
+#define LogTrace Log.trace_()
+#define LogInfo Log.info_()
+#define LogWarn Log.warn_()
+#define LogError Log.error_()
 
 #define LogTraceScope LoggerAux _CatVarNameWithLine(_func_aux_)
 

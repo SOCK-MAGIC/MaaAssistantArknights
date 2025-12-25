@@ -52,6 +52,11 @@
             "direction": "up"
         },
         {
+            "groups": ["益达"],
+            "location": [1, 3],
+            "direction": "right"
+        },
+        {
             "groups": ["投锋"],
             "location": [2, 3],
             "direction": "right"
@@ -92,12 +97,12 @@
             "direction": "up"
         },
         {
-            "groups": ["基石", "挡人先锋", "地面C", "异德", "刺客", "重装", "其他地面"],
+            "groups": ["基石", "挡人先锋", "地面C", "异德", "刺客", "重装", "其他地面", "障碍物"],
             "location": [2, 2],
             "direction": "down"
         },
         {
-            "groups": ["基石", "挡人先锋", "地面C", "异德", "刺客", "重装", "其他地面"],
+            "groups": ["基石", "挡人先锋", "地面C", "异德", "刺客", "重装", "其他地面", "障碍物"],
             "location": [2, 1],
             "direction": "down"
         }

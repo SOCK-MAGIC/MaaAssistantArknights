@@ -31,19 +31,43 @@ icon: ri:earth-fill
 3. スクリーンショットにタスクバー、ステータスバー、通知バーなどの余計なコンテンツが含まれていないことを確認する。
 4. スクリーンショットに、認識される必要があるすべてのコンテンツが含まれていることを確認します。
 
-画像を切り出して、テキストや画像の関心領域（ROI）を得るためには、`Python` と `OpenCV` をインストールし、`MaaAssistantArknights/tools/CropRoi/main.py` ファイルをダウンロードする必要があります。
+画像を切り出して、テキストや画像の関心領域（ROI）を得るためには、`MaaAssistantArknights/tools/ImageCropper` ツールを使用する必要があります。
 
-次に、以下の手順を実行します。
+**ImageCropper** は、事前に準備したスクリーンショットや ADB 接続されたデバイスから、ROI 領域の切り取り、保存、カラーピッキング操作をサポートする強力なスクリーンショットツールです。
 
-1. `main.py`と同じディレクトリに、新しい `src` と `dst` フォルダを作成します。
-2. サイズを変更する必要がある、または新しいROI値を必要とするテキスト/画像の**完全なスクリーンショット**を `src` フォルダに配置します。
-3. `main.py`を実行します。
-4. マウスをドラッグして、余計なコンテンツが入らないようにしながら、対象範囲を選択します。
-5. 範囲が決まったら、`S`で保存、`Q`ボタンで終了します。切り取られた画像は、dstフォルダに保存されます。
+### 環境設定
+
+`Python` 環境が必要で、推奨バージョンは `3.11`、最小バージョンは `3.9` 以上です。
+
+### 依存関係のインストール
+
+Windows ユーザーは `install.bat` を直接実行することをお勧めします。または手動でインストール：
+
+```shell
+python -m pip install -r requirements.txt
+```
+
+### 使用手順
+
+1. 事前に準備したスクリーンショットがある場合は、`./src/` ディレクトリに保存します
+2. `start.bat` または `python main.py [device serial]` を実行します（デバイスアドレスはオプション）
+   - ツールは接続された ADB デバイスを自動的に検索し、プロンプトに従ってデバイスを選択します（ENTER を押してスキップ）
+   - `python main.py [device serial]` で直接特定のデバイスに接続することもできます
+3. ポップアップウィンドウで、左クリックで対象範囲を選択し、スクロールホイールでズーム、右クリックで画像を移動します
+4. キーボードショートカットを使用：
+   - `S` または `ENTER` を押して対象範囲を保存
+   - `F` を押してフルスクリーン標準化スクリーンショットを保存
+   - `R` を押して ROI 範囲のみを出力（保存しない）
+   - `C` を押して ROI 範囲と ColorMatch フィールドを出力（保存しない）
+   - `Z`、`DELETE`、または `BACKSPACE` を押して元に戻す
+   - `0` ~ `9` を押してウィンドウをズーム
+   - `Q` または `ESC` を押して終了
+   - その他のキーを押して現在のスクリーンショットをスキップ/更新
+5. 対象範囲のスクリーンショットは `./dst/` ディレクトリに保存されます
 
 例えば、切り取られた後の出力は次のようになる。
 
-``` log
+```log
 src: Screenshot_xxx.png
 dst: Screenshot_xxx.png_426,272,177,201.png
 original roi: 476, 322, 77, 101,
@@ -60,8 +84,8 @@ amplified roi: 426, 272, 177, 201
 
 例
 
-- ENクライアントのテンプレートイメージフォルダの場所は  `MaaAssistantArknights\resource\global\YoStarEN\resource\template`.
-- 大陸版クライアントのテンプレートイメージフォルダの場所は  `MaaAssistantArknights\resource\template`.
+- ENクライアントのテンプレートイメージフォルダの場所は `MaaAssistantArknights\resource\global\YoStarEN\resource\template`.
+- 大陸版クライアントのテンプレートイメージフォルダの場所は `MaaAssistantArknights\resource\template`.
 
 task.json`ファイルに記載されているテンプレート画像を参照し、大陸版クライアントと海外クライアントのテンプレート画像を比較し、海外クライアントに不足しているテンプレートを特定します。
 
@@ -75,8 +99,8 @@ task.json`ファイルに記載されているテンプレート画像を参照�
 
 例
 
-- ENクライアントの `task.json` の場所は  `MaaAssistantArknights\resource\global\YoStarEN\resource\tasks.json`.
-- 大陸版クライアントの `task.json` の場所は  `MaaAssistantArknights\resource\tasks.json`.
+- ENクライアントの `task.json` の場所は `MaaAssistantArknights\resource\global\YoStarEN\resource\tasks.json`.
+- 大陸版クライアントの `task.json` の場所は `MaaAssistantArknights\resource\tasks.json`.
 
 テキストを変更するには、対応するタスクを探し、`text`フィールドを対応するサーバーに表示されている内容に変更します。特定された内容は、ゲーム内の完全な内容の部分文字列である可能性があることに留意してください。一般的には、純粋なASCII文字として認識されない限り、テキストを含む`text`はすべて置き換える必要があります。
 
@@ -108,7 +132,7 @@ ROIの範囲を変更するには
 
 ログを解析することは、プログラムに関する問題を特定するのに役立ちます。以下はログの例
 
-``` log
+```log
 [2022-12-18 17:43:17.535][INF][Px7ec][Tx15c8] {"taskchain":"Award","details":{"to_be_recognized":["Award@ReturnTo","Award","ReceiveAward","DailyTask","WeeklyTask","Award@CloseAnno","Award@CloseAnnoTexas","Award@TodaysSupplies","Award@FromStageSN"],"cur_retry":10,"retry_times":20},"first":["AwardBegin"],"taskid":2,"class":"asst::ProcessTask","subtask":"ProcessTask","pre_task":"AwardBegin"}
 [2022-12-18 17:43:18.398][INF][Px7ec][Tx15c8] Call ` C:\Program Files\BlueStacks_nxt\. \HD-Adb.exe -s 127.0.0.1:5555 exec-out "screencap | gzip -1" ` ret 0 , cost 862 ms , stdout size: 2074904 , socket size: 0
 [2022-12-18 17:43:18.541][TRC][Px7ec][Tx15c8] OcrPack::recognize | roi: [ 500, 50, 300, 150 ]
@@ -130,6 +154,7 @@ ROIの範囲を変更するには
 - `"taskid"` はタスク番号です。
 - `"class"` と `subtask` はそれぞれ、タスクのクラスとサブタスクを表す。
 - `"pre_task"` は一つ前のタスクを表す。
+
 さらに、コマンドの実行結果 (例: `Call`) と `OCR` の情報 (例: `OcrPack::recognize`) がログに記録されます。
 
 例えば、このログの `"to_be_recognized"`,`"cur_retry":3, "retry_times":20` は、タスクの認識を10回試行し、最大回数は20回であることを意味しています。最大回数に達すると、そのタスクはスキップされ、エラーが報告され、次のタスクが実行されます。前のタスクで問題がない場合、ここで認識に問題がある可能性があります。この問題をトラブルシューティングするには、ログに記載されているタスクに対応するテンプレートファイルがあるか、対応するタスクの `text` フィールドが正しくないか、タスク認識のための `roi` 範囲が正しくないかを確認し、必要な修正を加えてください。

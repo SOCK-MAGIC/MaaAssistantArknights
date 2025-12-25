@@ -6,10 +6,14 @@ icon: material-symbols:task
 # Tasks 스키마
 
 ::: tip
+It is recommended to use [Visual Studio Code](https://code.visualstudio.com/) and install [Maa Pipeline Support](https://marketplace.visualstudio.com/items?itemName=nekosu.maa-support) extension for efficient editing. For more details, please visit the extension's homepage and the [docs](../develop/vsc-ext-tutorial.md).
+:::
+
+::: warning
 주의: JSON 형식은 주석을 지원하지 않으므로 아래의 예시에서 주석은 제거해주시기 바랍니다.
 :::
 
-`resource/tasks.json`의 사용법 및 각 필드 설명
+`resource/tasks`의 사용법 및 각 필드 설명
 
 ## 개요
 
@@ -24,16 +28,16 @@ icon: material-symbols:task
                                             // - JustReturn: 인식 없이 작업을 직접 실행합니다.
                                             // - MatchTemplate: 이미지 매칭
                                             // - OcrDetect: 텍스트 인식
-                                            // - Hash: 해시 계산
+                                            // - FeatureMatch: 특징 매칭
 
         "action": "ClickSelf",              // 선택 사항, 인식 후 작업 유형을 나타냅니다.
                                             // 입력하지 않으면 기본값은 DoNothing입니다.
                                             // - ClickSelf: 인식된 위치를 클릭합니다 (인식된 대상 범위 내에서 무작위 점).
-                                            // - ClickRand: 화면 전체에서 무작위 위치를 클릭합니다.
                                             // - ClickRect: 지정된 영역을 클릭합니다. specificRect 필드에 해당합니다. 이 옵션은 권장하지 않습니다.
                                             // - DoNothing: 아무 작업도 수행하지 않습니다.
                                             // - Stop: 현재 작업을 중지합니다.
                                             // - Swipe: 슬라이드, specificRect 및 rectMove 필드와 관련이 있습니다.
+                                            // - Input: 텍스트 입력, algorithm이 JustReturn이어야 하며, inputText 필드에 해당합니다.
 
         "sub": [ "SubTaskName1", "SubTaskName2" ],
                                             // 선택 사항, 서브 작업 목록입니다. 현재 작업이 실행된 후에 각 서브 작업을 순차적으로 실행합니다.
@@ -48,12 +52,10 @@ icon: material-symbols:task
                                             // 입력하지 않으면 무한히 실행됩니다.
                                             // 최대 횟수에 도달하면 exceededNext 필드가 존재한다면 exceededNext 작업이 실행되며, 그렇지 않으면 현재 작업이 중지됩니다.
 
-        "next": [ "OtherTaskName1", "OtherTaskName2" ],
-                                            // 선택 사항, 현재 작업 및 서브 작업 실행 후에 실행될 다음 작업을 나타냅니다.
-                                            // 리스트의 맨 앞부터 순서대로 인식되며, 첫 번째로 일치하는 작업이 실행됩니다.
-                                            // 입력하지 않으면 현재 작업 실행 후에 중지됩니다.
-                                            // 동일한 작업에 대해 두 번째 인식부터는 첫 번째 인식 이후에 다시 인식되지 않습니다.
-                                            // JustReturn 유형의 작업은 마지막 아이템에 위치하지 않도록 주의하세요.
+        "next": ["OtherTaskName1", "OtherTaskName2"],
+                                            // 선택 사항, 현재 작업과 sub 작업을 완료한 후 다음에 실행할 작업을 나타냅니다.
+                                            // 앞에서부터 순차적으로 인식하여 첫 번째로 매칭되는 작업을 실행합니다.
+                                            // 입력하지 않으면 현재 작업 완료 후 바로 중지됩니다.
 
         "exceededNext": [ "OtherTaskName1", "OtherTaskName2" ],
                                             // 선택 사항, 최대 실행 횟수에 도달했을 때 실행할 작업을 나타냅니다.
@@ -71,7 +73,7 @@ icon: material-symbols:task
 
         "cache": false,                      // 선택 사항, 작업이 캐싱을 사용하는지 여부를 나타냅니다. 기본값은 false입니다.
                                             // 최초 인식 이후에는 해당 위치만 인식하며, 성능을 크게 개선할 수 있습니다.
-   
+
 
  // 단, 대상 인식 위치가 절대로 변하지 않을 작업에만 사용하세요. 대상 인식 위치가 항상 변하는 경우 false로 설정하세요.
 
@@ -88,9 +90,14 @@ icon: material-symbols:task
                                             // action이 ClickRect인 경우 유효하고 필수입니다. 지정된 클릭 위치를 나타냅니다 (범위 내의 무작위 점).
                                             // action이 Swipe인 경우 유효하고 필수입니다. 슬라이드의 시작점을 나타냅니다.
                                             // Auto-scaling으로 기준은 1280 * 720입니다.
+                                            // algorithm이 "OcrDetect"일 경우, specificRect[0]과 specificRect[1]은 그레이스케일의 상한선과 하한선 임계값을 나타냅니다.
 
         "specialParams": [ int, ... ],      // 일부 특수 인식기에 필요한 매개변수를 나타냅니다.
                                             // 추가 옵션, action이 Swipe인 경우 [0]은 지속 시간, [1]은 추가 슬라이드 여부를 나타냅니다.
+
+        "highResolutionSwipeFix": false,    // 선택 항목. 고해상도 스와이프 보정을 활성화할지 여부.
+                                            // 현재는 스테이지 내비게이션만 Unity 스와이프 방식을 사용하지 않으므로 이 옵션을 켜야 함
+                                            // 기본값은 false
 
         /* 다음 필드들은 algorithm이 MatchTemplate인 경우에만 유효합니다. */
 
@@ -100,8 +107,36 @@ icon: material-symbols:task
         "templThreshold": 0.8,              // 선택 사항, 이미지 템플릿 매칭 점수의 임계값을 나타냅니다. 이 점수 이상인 경우 이미지가 인식되었다고 판단합니다.
                                             // 기본값은 0.8입니다. 실제 점수는 로그에서 확인할 수 있습니다.
 
-        "maskRange": [ 1, 255 ], // 선택 사항, 흑백 마스크 범위를 나타냅니다. 예를 들어 인식할 필요가 없는 이미지 부분은 검은색으로 칠해질 수 있습니다 (0의 흑백 값).
+        "maskRange": [ 1, 255 ],            // 선택 사항, 흑백 마스크 범위를 나타냅니다.
+                                            // 예를 들어 인식할 필요가 없는 이미지 부분은 검은색으로 칠해질 수 있습니다 (0의 흑백 값).
                                             // 그러면 "maskRange"를 [ 1, 255 ]로 설정하면 검은색 처리된 부분은 즉시 무시됩니다.
+
+
+        "colorScales": [                    // method가 HSVCount 또는 RGBCount일 때 유효하고 필수, 색상 마스크 범위.
+            [                               // list<array<array<int, 3>, 2>> / list<array<int, 2>>
+                [23, 150, 40],              // 구조는 [[lower1, upper1], [lower2, upper2], ...]
+                [25, 230, 150]              //     내측이 int일 경우는 그레이스케일,
+            ],                              //     　　array<int, 3>일 경우는 삼채널 색상으로, method에 따라 RGB 또는 HSV로 결정됩니다；
+            ...                             //     중간 층의 array<*, 2>는 색상(또는 그레이스케일)의 하한과 상한:
+        ],                                  //     외층은 다른 색상 범위를 나타내며, 식별할 영역은 템플릿 이미지에서 이들의 마스크의 합집합입니다.
+
+        "colorWithClose": true,             // 선택 사항, method가 HSVCount 또는 RGBCount일 때 유효, 기본값은 true
+                                            // 색상 수를 세는 동안 마스크 범위에 먼저 닫힘 연산을 적용할지 여부.
+                                            // 닫힘 연산은 작은 검은 점을 메울 수 있으며, 일반적으로 색상 수 세기 매칭 효과를 향상시키지만 이미지에 텍스트가 포함된 경우 false로 설정하는 것이 좋습니다
+
+        "pureColor": false,                 // 선택 사항, method가 HSVCount 또는 RGBCount일 때 유효, 기본값은 false
+                                            // true인 경우 템플릿 매칭 점수를 무시하고 색상 매칭 결과에만 의존
+                                            // 색상 특징이 뚜렷하지만 템플릿 매칭 효과가 좋지 않은 시나리오에 적합
+                                            // 이 옵션 사용 시 templThreshold를 상향 조정하는 것이 권장됨
+
+        "method": "Ccoeff",                 // 선택 사항, 템플릿 매칭 알고리즘, 목록 형태일 수 있음
+                                            // 지정하지 않을 경우 기본값은 Ccoeff
+                                            //      - Ccoeff:       색상에 민감하지 않은 템플릿 매칭 알고리즘, cv::TM_CCOEFF_NORMED에 해당
+                                            //      - RGBCount:     색상에 민감한 템플릿 매칭 알고리즘,
+                                            //                      먼저 마스크 범위에 따라 매칭 영역과 템플릿 이미지를 이진화하고,
+                                            //                      RGB 색 공간 내의 유사도를 F1-score를 지표로 계산한 후,
+                                            //                      결과를 Ccoeff 결과와 점곱합니다
+                                            //      - HSVCount:     RGBCount와 유사하지만 색상 공간을 HSV로 변경
 
         /* 다음 필드들은 algorithm이 OcrDetect인 경우에만 유효합니다. */
 
@@ -119,12 +154,37 @@ icon: material-symbols:task
         "isAscii": false,                   // 선택 사항, 인식할 텍스트 내용이 ASCII 문자인지 여부를 나타냅니다.
                                             // 기본값은 false입니다.
 
-        "withoutDet": false                 // 선택 사항, 탐지 모델을 사용하지 않을지 여부를 나타냅니다.
+        "withoutDet": false,                // 선택 사항, 탐지 모델을 사용하지 않을지 여부를 나타냅니다.
                                             // 기본값은 false입니다.
 
-        /* 다음 필드들은 algorithm이 Hash인 경우에만 유효합니다. */
-        // 이 알고리즘은 아직 미성숙하며, 특수한 경우에만 사용되므로 현재는 권장되지 않습니다.
-        // Todo
+        /* 다음 필드들은 algorithm이 OcrDetect이고 withoutDet가 true일 때만 유효합니다 */
+
+        "useRaw": true,                     // 선택 사항, 원본 이미지를 사용하여 매칭할지 여부
+                                            // 기본값은 true이며, false이면 그레이스케일 매칭
+
+        "binThreshold": [140, 255],         // 선택 사항. 그레이스케일 이진화의 상한 임계값 (기본값: [140, 255])
+                                            // 이 값보다 높은 픽셀은 배경으로 간주되어 문자 영역에서 제외됩니다
+                                            // 최종적으로 [lower, upper] 범위의 픽셀만 문자 전경으로 유지됩니다
+
+        /* 다음 필드들은 algorithm이 JustReturn이고 action이 Input일 때만 유효합니다 */
+
+        "inputText": "A string text.",      // 필수 사항. 입력할 문자열 내용, 문자열 형식
+
+        /* 다음 필드들은 FeatureMatch인 경우에만 유효합니다. */
+
+        "template": "xxx.png",              // 선택 사항. 일치시킬 이미지 파일 이름. 문자열 또는 문자열 목록일 수 있습니다.
+                                            // 기본값: "taskname.png"
+
+        "count": 4,                         // 일치시킬 특징점 수(임계값), 기본값: 4
+
+        "ratio": 0.6,                       // KNN 일치 알고리즘의 거리 비율, [0 - 1.0]. 비율이 클수록 일치가 느슨해지고 연결하기가 더 쉽습니다. 기본값: 0.6
+
+        "detector": "SIFT",                 // 특징점 검출기 유형, 선택 사항: SIFT, ORB, BRISK, KAZE, AKAZE, SURF; 기본값: SIFT
+                                            // SIFT: 높은 계산 복잡도, 스케일 불변성, 회전 불변성. 최상의 효과.
+                                            // ORB: 매우 빠른 계산 속도, 회전 불변성. 하지만 스케일 불변성은 없습니다.
+                                            // BRISK: 매우 빠른 계산 속도, 스케일 불변성, 회전 불변성을 가집니다.
+                                            // KAZE: 2D 및 3D 이미지에 적용 가능하며, 스케일 불변성과 회전 불변성을 가집니다.
+                                            // AKAZE: 빠른 계산 속도, 스케일 불변성과 회전 불변성을 가집니다.
     }
 }
 ```
@@ -160,13 +220,11 @@ icon: material-symbols:task
 ```
 
 - 작업 "B@A"가 `tasks.json`에 정의되어 있다면
-
   1. `B@A`의 `algorithm` 필드가 `A`의 `algorithm`과 다른 경우, 파생된 클래스 매개변수는 상속되지 않습니다(단지 `TaskInfo`로 정의된 매개변수만 상속됨).
   2. 이미지 매칭 작업의 경우, 명시적으로 정의되지 않으면 `template`은 `B@A.png`가 됩니다(단지 "A" 작업의 `template` 이름을 상속하지 않음). 그렇지 않은 경우 다른 파생된 클래스 매개변수는 "A" 작업에서 직접 상속됩니다.
   3. `TaskInfo` 기본 클래스에 정의된 매개변수 (모든 유형의 작업에 해당하는 매개변수, 예를 들어 algorithm, roi, next 등)가 `B@A` 내에서 명시적으로 정의되지 않은 경우, 앞에서 언급한 `sub` 등 다섯 개의 필드를 제외한 나머지 매개변수는 `B@` 접두어가 추가된 상속시 추가됩니다. 그 외의 매개변수는 `A` 작업의 매개변수를 직접 상속합니다.
 
   > _참고: `"XXX#self"`는 `"#self"`와 동일한 의미를 갖습니다._
-  >
 
 ### 기반 작업
 

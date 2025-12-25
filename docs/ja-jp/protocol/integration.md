@@ -26,28 +26,28 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 #### Return Value
 
 - `TaskId`  
-    以下の構成で、タスクの追加に成功した場合のタスクID;
-    タスクの追加に失敗した場合は0。
+   以下の構成で、タスクの追加に成功した場合のタスクID;
+  タスクの追加に失敗した場合は0。
 
 #### Parameter Description
 
 - `AsstHandle handle`  
-    Instance handle
+   Instance handle
 - `const char* type`  
-    Task type
+   Task type
 - `const char* params`  
-    Task parameters in JSON
+   Task parameters in JSON
 
 ##### List of Task Types
 
 - `StartUp`  
-    Start-up
+   Start-up
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool,              // このタスクを有効にするかどうか、オプション、デフォルトは true
-    "client_type": string,       // クライアントバージョン、オプション、デフォルトは空白
+    "client_type": string,       // クライアントバージョン（必須）
                                  // オプション: "Official" | "Bilibili" | "txwy" | "YoStarEN" | "YoStarJP" | "YoStarKR"
     "start_game_enabled": bool,  // クライアントを自動的に起動するかどうか、オプション, デフォルトはfalse
     "account_name": string       // アカウントの切り替え、オプション、デフォルトで切り替えしません
@@ -58,9 +58,9 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `CloseDown`  
-  ゲームを閉じる  
+  ゲームを閉じる
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool,              // このタスクを有効にするかどうか、オプション、デフォルトは true
@@ -70,9 +70,9 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `Fight`  
-    Operation
+   Operation
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool,             // このタスクを有効にするかどうか、オプション、デフォルトは true
@@ -84,8 +84,11 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
     "medicine": int,            // 理性回復剤の最大使用数、オプション、デフォルトは 0
     "expiring_medicine": int,   // 48 時間以内に期限切れになった理性回復剤の最大使用数、オプション、デフォルトは 0
     "stone": int,               // 純正源石の最大使用数、オプション、デフォルトは 0
-    "times": int,               // 最大周回数、オプション、デフォルトは無限
+    "times": int,               // 最戦闘回数、オプション、デフォルトは無限
     "series": int,              // 連戦回数、オプション、1~6
+                                // -1  シリーズの切り替えを無効にするには
+                                // 0   現在利用可能なシリーズ数の最大数に自動的に切り替えるには、現在のサニティが6回未満の場合は、利用可能な最小回数を選択します.
+                                // 1~6 指定した回数に変更するには
     "drops": {                  // ドロップ数の指定、オプション、デフォルトは指定なし
         "30011": int,           // Key: item_ID; value: 素材の数。Keyは resource/item_index.json に記載されています
         "30062": int            // OR 組み合わせ
@@ -106,9 +109,9 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 いくつかの特別ステージ名もサポートしています、[組み込み例](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/master/tools/AutoLocalization/example/ja-jp.xaml#L230)をご参照ください
 
 - `Recruit`  
-    公開求人
+   公開求人
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool,             // このタスクを有効にするかどうか、オプション、デフォルトは true
@@ -148,16 +151,17 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `Infrast`  
-    基地シフト
+   基地シフト
 
-```json
+```json5
 {
     "enable": bool,         // タスクを有効にするかどうか、オプション、デフォルトは true
     "mode": int,            // シフトモード、オプション、デフォルトは 0。
                             // 0 - デフォルトのシフト モード、単一施設の最適解
                             // 10000 - シフト変更モードをカスタマイズし、ユーザー構成を読み取り、プロトコルドキュメント/インフラストシフト.md を参照してください
+                            // 20000 - ローテーション: ワンキーローテーションモード。コントロールセンター、発電所、寮、オフィスをスキップします。他の施設はシフトを変更しませんが、基本的な操作は保持されます (ドローンの使用、応接室のロジックなど)
     "facility": [           // シフト対象施設（順序付け）、必須。動作中の編集はサポートされていません.
-        string,             // 施設名: "Mfg" | "Trade" | "Power" | "Control" | "Reception" | "Office" | "Dorm"
+        string,             // 施設名: "Mfg" | "Trade" | "Power" | "Control" | "Reception" | "Office" | "Dorm" | "Processing" | "Training"
         ...
     ],
     "drones": string,       // ドローンの使用, オプション, デフォルトは "_NotUse"
@@ -175,13 +179,14 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `Mall`  
-    FPの回収と自動購入  
-    最初に `buy_first` にあるものを左から右に押して順番に一度購入し、次に左から右に2回購入して`blacklist` を回避し、FPオーバーフローの場合はブラックリストを無視して、オーバーフローしなくなるまで左から右に3回目に購入します。
+   FPの回収と自動購入  
+   最初に `buy_first` にあるものを左から右に押して順番に一度購入し、次に左から右に2回購入して`blacklist` を回避し、FPオーバーフローの場合はブラックリストを無視して、オーバーフローしなくなるまで左から右に3回目に購入します。
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool,         // このタスクを有効にするかどうか、オプション、デフォルトは true
+    "visit_friends": bool,  // フレンドの基地を訪問してクレジットを獲得するかどうか。任意、デフォルト値は true
     "shopping": bool,       // 購買所から購入するかどうか、オプション、 デフォルトは false。 動作中に変更はできません。
     "buy_first": [          // アイテム購入の優先度、オプション。動作中に変更はできません。
         string,             // アイテム名。例 "招聘许可" (Recruitment Permit/求人票)、"龙门币" (LMD/龍門幣)、その他
@@ -190,16 +195,20 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
     "blacklist": [          // ブラックリスト、オプション。動作中に変更はできません。
         string,             // アイテム名。例 "加急许可" (Expedited Plan/緊急招集票)、"家具零件" (Furniture Part/家具パーツ)、その他
         ...
-    ]
-    "only_buy_discount": bool // 割引対象のアイテムだけを購入するかどうかは。これは2回目の購入の際にのみ適用されます。デフォルトは false。
-    "reserve_max_credit": bool // クレジットポイントが300未満になった場合に購入を停止するかどうかは。これは2回目の購入の際にのみ適用されます。デフォルトは false。
+    ],
+    "force_shopping_if_credit_full": bool,  // クレジットが上限に達した場合、ブラックリストを無視して購入するかどうか。任意、デフォルト値は false
+    "only_buy_discount": bool,              // 割引対象のアイテムだけを購入するかどうかは。これは2回目の購入の際にのみ適用されます。デフォルトは false。
+    "reserve_max_credit": bool,             // クレジットポイントが 300 未満になった場合に購入を停止するかどうかは。これは2回目の購入の際にのみ適用されます。デフォルトは false。
+    "credit_fight": bool,                   // サポートを借りて OF-1 を1回攻略し、翌日により多くのクレジットを獲得するかどうか。任意、デフォルト値は false
+    "formation_index": int                  // OF-1 実行時に使用する編成スロットのインデックス。任意指定可能、デフォルトは 0。
+                                            // 0～4 の整数で、0 は現在の編成を意味し、1～4 はそれぞれ第1～第4編成を表す
 }
 ```
 
 - `Award`  
-    報酬の受け取り  
+   報酬の受け取り
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool          // このタスクを有効にするかどうか、オプション、デフォルトは true
@@ -207,55 +216,116 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `Roguelike`  
-    統合戦略  
+   統合戦略
 
-```json
+```json5
+// 対応するタスクパラメータ
 {
-    "enable": bool,         // このタスクを有効にするかどうか、オプション、デフォルトは true
-    "theme": string,        // テーマの名前、オプション、デフォルトは "Phantom"
-                            // Phantom - ファントムと緋き貴石
-                            // Mizuki  - ミズキと紺碧の樹
-                            // Sami - 探索者の銀の氷の止境（暫定訳、以下サーミ）
-    "mode": int,            // モード、オプション、デフォルトは 0
-                            // 0 - キャンドル収集、安定した戦略で続けられるだけ続ける
-                            // 1 - 源石錐収集、一階層の終わりで終了します
-                            // 2 - 【近日廃止】どちらも行う、源石錐は投資するまで
-                            // 3 - 開発中
-                            // 4 - 開局奨励を取得、3番目のレイヤーに到達したらすぐに終了します
-    "starts_count": int,    // 挑戦回数、オプション、デフォルトは INT_MAX。到達後にタスクを自動停止。
-    "investment_enabled": bool, // 源石錐を投資するかどうか、デフォルトは ON
-    "investments_count": int,
-                            // 源石錐を投資の回数、オプション、デフォルトは INT_MAX。到達後にタスクを自動停止。
-    "stop_when_investment_full": bool,
-                            // 投資額が一杯になったら動作停止、オプション、デフォルトは false
-    "squad": string,        // "突撃戦術分隊" などの分隊指定、オプション、デフォルトは "指揮分隊"
-    "roles": string,        // 召集組合、オプション、 "先手必勝" など、デフォルトでは "前線支援"
-    "core_char": string,     // オペレーター名、オプション。単一のオペレーターの中国語名のみがサポートされています。レベルに応じて自動で選択します。
-    "start_with_elite_two": bool,  // ゲームの始まりにエリート2のオペレーターを取得まで、ゲームを開始する。オプション、デフォルトはfalse
-    "only_start_with_elite_two": bool,  // ゲームの始まりにエリート2のオペレーターを取得まで、戦闘を行わない状態でゲームを開始するかどうか。オプション、デフォルトはfalse、 start_with_elite_twoが true の場合に有効です。
-    "use_support": bool,  // 開始役員("core_char")がサポートであるかどうかは、オプション、デフォルトは false
-    "use_nonfriend_support": bool,  // 非戦友のサポートを使用できるかどうか、オプション、デフォルトの false、 use_support が true の場合に有効です。
-    "refresh_trader_with_dice": bool  // 特別な商品を購入するために店を更新するためにサイコロを使用するかどうかは、現在、ミズキのテーマの"ミチビキリンジュウ"をサポートしています、オプション、デフォルトでは false
+    "enable": bool,  // このタスクを有効にするかどうか、省略可能、デフォルト値 true
+    "theme": string, // テーマ、省略可能、デフォルト値 "Phantom"
+                     //   Phantom   - 傀影と猩紅の血晶
+                     //   Mizuki    - 水月と蒼青の樹
+                     //   Sami      - 探索者の銀霜の果て
+                     //   Sarkaz    - サルカズの無尽の奇譚
+                     //   JieGarden - 界园
+    "mode": int,     // モード、省略可能、デフォルト値 0
+                     //   0 - ポイント稼ぎ、より安定して層数を増やす
+                     //   1 - 源石錠稼ぎ、1層で投資後終了
+                     //   2 - 【廃止済み】モード0と1を兼ね備え、投資後に終了、投資なしで続行
+                     //   3 - 開発中…
+                     //   4 - 開幕リセット、難易度0で3層に到達後リセットし、指定難易度で開幕リセットを狙う。アイテムが「湯沸かしポット」や「希望」以外の場合は難易度0に戻って再挑戦；
+                     //       Phantomテーマでは難易度変更せず、現在の難易度で3層到達後リセット、開幕リセットを試行
+                     //   5 - 崩壊パラダイム稼ぎ；Samiテーマのみ対応；戦闘で敵を漏らすなどして崩壊値を早く溜める。
+                     //       初遭遇の崩壊パラダイムが expected_collapsal_paradigms のリストにあればタスクを停止し、なければリセット
+    "squad": string,                // 開幕部隊名、省略可能、デフォルト値 "指揮部隊"
+    "roles": string,                // 開幕職業グループ、省略可能、デフォルト値 "得意を活かす"
+    "core_char": string,            // 開幕オペレーター名、省略可能；単一のオペレーター**日本語名**のみ対応、サーバー関係なく；空欄または "" に設定した場合はレベルに応じて自動選択
+    "use_support": bool,            // 開幕オペレーターがサポートかどうか、省略可能、デフォルト値 false
+    "use_nonfriend_support": bool,  // フレンド以外のサポートが使用可能かどうか、省略可能、デフォルト値 false；use_support が true の場合にのみ有効
+    "starts_count": int,                // 探索を開始する回数、省略可能、デフォルト値 INT_MAX；到達後自動でタスクを停止
+    "difficulty": int,                  // 難易度を指定、省略可能、デフォルト値 0；**Phantom以外**のテーマにのみ対応；
+                                        // 未解放の場合は、現在解放されている最高難易度を選択
+    "stop_at_final_boss": bool,         // 5層の最終ボスノードでタスクを停止するかどうか、省略可能、デフォルト値 false；**Phantom以外**のテーマにのみ対応
+    "stop_at_max_level": bool,          // ローグライクで最大レベルに達した場合にタスクを停止するかどうか、省略可能、デフォルト値 false
+    "investment_enabled": bool,         // 源石錠を投資するかどうか、省略可能、デフォルト値 true
+    "investments_count": int,           // 源石錠の投資回数、省略可能、デフォルト値 INT_MAX；到達後自動でタスクを停止
+    "stop_when_investment_full": bool,  // 投資上限に達した時自動でタスクを停止するかどうか、省略可能、デフォルト値 false
+    "investment_with_more_score": bool, // 投資後にショッピングを試みるかどうか（選択可能、デフォルト値：false）；モード 1 にのみ適用
+    "start_with_elite_two": bool,       // 開幕リセットと同時にエリート2昇格を狙うか、省略可能、デフォルト値 false；モード4のみ対応
+    "only_start_with_elite_two": bool,  // 開幕エリート2昇格のみ狙い、他の条件を無視するか、省略可能、デフォルト値 false；
+                                        // モードが4で、start_with_elite_two が true の場合にのみ有効
+    "refresh_trader_with_dice": bool,   // サイコロでショップをリフレッシュし、特定のアイテムを購入するか、省略可能、デフォルト値 false；Mizukiテーマのみ対応、指路鱗を狙う
+    "first_floor_foldartal": string,    // 1層の遠見段階で取得を希望する密文、省略可能；Samiテーマにのみ対応、モード問わず；取得成功した場合はタスクを停止
+    "start_foldartal_list": [           // 開幕リセット時に取得を希望する密文リスト、省略可能、デフォルト値 []；Samiテーマでモード4の場合にのみ対応；
+        string,                         // 開幕でリスト内の全ての密文を持っている場合に開幕リセット成功とする；
+        ...                             // 注意、このパラメータは「生活至上部隊」と同時に使用する必要がある。他の部隊では開幕報酬で密文を取得できない；
+    ],
+    "collectible_mode_start_list": {    // 開始時に取得したい報酬。任意項目。デフォルトはすべて false。モード 4 の場合のみ有効
+        "hot_water": bool,              // 魔法瓶（湯）報酬。お湯を沸かす機能のトリガー（共通）
+        "shield": bool,                 // シールド報酬。追加のHP相当（共通）
+        "ingot": bool,                  // 源石錠の報酬（共通）
+        "hope": bool,                   // 希望の報酬（共通。※JieGarden テーマでは無効）
+        "random": bool,                 // ランダム報酬オプション：全ての源石錠を消費してランダムなコレクションを入手（共通）
+        "key": bool,                    // 鍵の報酬。Mizuki テーマでのみ有効
+        "dice": bool,                   // サイコロの報酬。Mizuki テーマでのみ有効
+        "ideas": bool,                  // 2つの構想報酬。Sarkaz テーマでのみ有効
+    },
+    "use_foldartal": bool,                    // 密文を使用するか、モード5ではデフォルト値 false、他のモードではデフォルト値 true；Samiテーマにのみ対応
+    "check_collapsal_paradigms": bool,        // 取得した崩壊パラダイムを検査するか、モード5ではデフォルト値 true、他のモードではデフォルト値 false
+    "double_check_collapsal_paradigms": bool, // 崩壊パラダイムの検査漏れ対策を行うか、モード5ではデフォルト値 true、他のモードではデフォルト値 false；
+                                              // テーマが Sami で、check_collapsal_paradigms が true の場合にのみ有効
+    "expected_collapsal_paradigms": [         // 希望する崩壊パラダイム、デフォルト値 ["少しの無視", "片目を閉じる", "画像が壊れる", "真っ暗"]；
+        string,                               // テーマが Sami でモードが5の場合にのみ対応
+        ...
+    ]
 }
 ```
 
 - `Copilot`  
-    自動戦闘  
+   自動戦闘
 
-```json
+```json5
 {
-    "enable": bool,             // このタスクを有効にするかどうか、オプション、デフォルトは true
-    "filename": string,         // タスクのJSONのファイル名とパス、絶対/相対 パスのサポート。動作中に変更はできません。
-    "formation": bool           // "自動編成" を行うかどうか、オプション、デフォルトは false。動作中に変更はできません。
+    "enable": bool,               // このタスクを有効にするかどうか。任意、デフォルトは true。
+    "filename": string,           // 単一作業の JSON ファイルパス。必須（copilot_list と排他）。相対パス・絶対パスどちらも使用可能。
+    "copilot_list": [             // 作業リスト。必須（filename と排他）。filename と copilot_list が同時に存在する場合、copilot_list は無視されます；このパラメータが有効な場合、set_params は一度だけ実行可能。
+        {
+            "filename": string,   // 作業 JSON ファイルのパス。相対パス・絶対パスどちらも使用可能。
+            "stage_name": string, // ステージ名。[PRTS.Map](https://map.ark-nights.com) を参照。
+            "is_raid": bool,      // 突襲モード（チャレンジモード）に切り替えるかどうか。任意、デフォルトは false。
+            "is_paradox": bool    // パラドックスシミュレーションステージかどうか。任意、デフォルトは false；実験的パラメータ。
+        },
+        ...
+    ],
+    "loop_times": int,            // ループ回数。任意、デフォルトは 1。単一作業モード（filename 指定時）のみ有効；このパラメータが有効な場合、set_params は一度だけ実行可能。
+    "use_sanity_potion": bool,    // 理性が不足した場合に理性回復剤を使用するかどうか。任意、デフォルトは false。
+    "formation": bool,            // 自動編成を行うかどうか。任意、デフォルトは false。
+    "formation_index": int,       // 自動編成で使用する編成スロット番号。任意、デフォルトは 0。
+                                  // 0〜4 の整数。0 は現在の編成、1〜4 はそれぞれ第1〜第4編成を意味します。
+    "user_additional": [          // カスタム追加オペレーターリスト。任意、デフォルトは []。formation が true の場合のみ有効。
+        {
+            "name": string,       // オペレーター名。任意、デフォルトは ""。空の場合は無視されます。
+            "skill": int          // 使用スキル。任意、デフォルトは 1。1〜3 の整数。範囲外の場合はゲーム内のデフォルトを使用。
+        },
+        ...
+    ],
+    "add_trust": bool,            // 自動編成時に信頼値の昇順で空き枠を自動補充するか。任意、デフォルトは false。formation が true の場合のみ有効。
+    "ignore_requirements": bool,  // 自動編成時にオペレーターの属性要件を無視するか。任意、デフォルトは false。formation が true の場合のみ有効。
+    "support_unit_usage": int,    // サポートオペレーターの使用モード。任意、デフォルトは 0。0〜3 の整数。formation が true の場合のみ有効。
+                                  //   0 - サポートオペレーターを使用しない。
+                                  //   1 - 欠員が1人のみの場合サポートで補う。欠員がなければ使用しない。
+                                  //   2 - 欠員が1人の場合サポートで補う。欠員がない場合は指定サポートを使用。
+                                  //   3 - 欠員が1人の場合サポートで補う。欠員がない場合はランダムサポートを使用。
+    "support_unit_name": string   // 指定サポートオペレーター名。任意、デフォルトは ""。support_unit_usage = 2 の場合のみ有効。
 }
 ```
 
 自動操縦JSONの詳細については、[自動戦闘API](./copilot-schema.md)を参照してください
 
 - `SSSCopilot`  
-  保全駐在の自動戦闘  
+  保全駐在の自動戦闘
 
-```json
+```json5
 {
     "enable": bool,             // このタスクを有効にするかどうか、オプション、デフォルトは true
     "filename": string,         // タスクのJSONのファイル名とパス、絶対/相対 パスのサポート。動作中に変更はできません。
@@ -266,9 +336,9 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 保全駐在の自動操縦JSONの詳細については、[保全駐在API](./sss-schema.md)
 
 - `Depot`
-    倉庫アイテム認識
+  倉庫アイテム認識
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool          // このタスクを有効にするかどうか, オプション, デフォルトは true
@@ -276,37 +346,44 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `OperBox`  
-    カドレー識別  
+   カドレー識別
 
-```json
+```json5
 // 対応するタスクのパラメータ
 {
     "enable": bool          // このタスクを有効にするかどうか, オプション, デフォルトは true
 }
 ```
 
-- `ReclamationAlgorithm`  
-    生息演算  
+- `Reclamation`  
+   生息演算
 
-```json
+```json5
 {
     "enable": bool,
-    "theme": int,           // テーマ、オプション、デフォルトは 1
-                            // 0 - *砂中の火*
-                            // 1 - *沙洲遺聞*
-    "mode": int,            // モード、オプション、デフォルトは 0
-                            // 0 - すぐにバトルをやめることでバッジと建設ポイントを周回
-                            // 1 - *砂中の火*：水を買ってから基地で鍛造して粗製純金を周回
-                            //     *沙洲遺聞*：アイテムを自動的に製造してロードして通貨を稼ぐ
-    "product": string       // 自動的に製造されるアイテム、オプション、デフォルトは螢光棒
-                            // サブストリングを入力することをお勧めします
+    "theme": string,            // テーマ、オプション、デフォルトは 1
+                                // Fire  - *砂中の火*
+                                // Tales - *沙洲遺聞*
+    "mode": int,                // モード、オプション、デフォルトは 0
+                                // 0 - すぐにバトルをやめることでバッジと建設ポイントを周回
+                                // 1 - *砂中の火*：水を買ってから基地で鍛造して粗製純金を周回
+                                //     *沙洲遺聞*：アイテムを自動的に製造してロードして通貨を稼ぐ
+    "tools_to_craft": [
+        string,                 // 自動的に製造されるアイテム、オプション、デフォルトは螢光棒
+        ...
+    ]
+                                // サブストリングを入力することをお勧めします
+    "increment_mode": int,      // クリックタイプ、オプション、デフォルトは0
+                                // 0 - 連続クリック
+                                // 1 - 長押し
+    "num_craft_batches": int    // 一度の最大製造バッチ数、オプション、デフォルトは 16
 }
 ```
 
 - `Custom`  
-  カスタム タスク  
+  カスタム タスク
 
-```json
+```json5
 {
     "enable": bool,
     "task_names": [     // 配列内の最初の一致(および次のnextなど)でタスクを実行します。
@@ -318,9 +395,9 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `SingleStep`  
-  シングル ステップ タスク（現在は戦闘でのみ利用可能）  
+  シングル ステップ タスク（現在は戦闘でのみ利用可能）
 
-```json
+```json5
 {
     "enable": bool,
     "type": string,     // 現在、 "copilot" のみがサポートされています
@@ -336,9 +413,9 @@ TaskId ASSTAPI AsstAppendTask(AsstHandle handle, const char* type, const char* p
 ```
 
 - `VideoRecognition`  
-  ビデオ認識、現在は作戦ビデオのみ対応  
+  ビデオ認識、現在は作戦ビデオのみ対応
 
-```json
+```json5
 {
     "enable": bool,
     "filename": string, // ビデオのファイルパス、絶対パス、相対パスのどちらでもかまいません。動作中に変更はできません。
@@ -360,17 +437,17 @@ bool ASSTAPI AsstSetTaskParams(AsstHandle handle, TaskId id, const char* params)
 #### Return Value
 
 - `bool`  
-    パラメータが正常に設定されたかどうか。  
+   パラメータが正常に設定されたかどうか。
 
 #### Parameter Description
 
 - `AsstHandle handle`  
-    Instance handle
+   Instance handle
 - `TaskId task`  
-    Task ID, `AsstAppendTask` の値を返します
+   Task ID, `AsstAppendTask` の値を返します
 - `const char* params`  
-    JSONのタスクパラメーター, `AsstAppendTask` と同じ  
-    "動作中に変更はできません" と記載されていないフィールドはランタイム中に変更することができます. そうでなければ、タスクの実行中にこれらの変更は無視される.
+   JSONのタスクパラメーター, `AsstAppendTask` と同じ  
+   "動作中に変更はできません" と記載されていないフィールドはランタイム中に変更することができます. そうでなければ、タスクの実行中にこれらの変更は無視される.
 
 ### `AsstSetStaticOption`
 
@@ -387,14 +464,14 @@ bool ASSTAPI AsstSetStaticOption(AsstStaticOptionKey key, const char* value);
 #### Return Value
 
 - `bool`  
-    設定が成功したかどうか
+   設定が成功したかどうか
 
 #### Parameter Description
 
 - `AsstStaticOptionKey key`  
-    key
+   key
 - `const char* value`  
-    value
+   value
 
 ##### List of Key and value
 
@@ -415,20 +492,20 @@ bool ASSTAPI AsstSetInstanceOption(AsstHandle handle, AsstInstanceOptionKey key,
 #### Return Value
 
 - `bool`  
-    設定が成功したかどうか
+   設定が成功したかどうか
 
 #### Parameter Description
 
 - `AsstHandle handle`  
-    handle
+   handle
 - `AsstInstanceOptionKey key`  
-    key
+   key
 - `const char* value`  
-    value
+   value
 
 ##### List of Key and value
 
-```json
+```cpp
     enum InstanceOptionKey
     {
         Invalid = 0,

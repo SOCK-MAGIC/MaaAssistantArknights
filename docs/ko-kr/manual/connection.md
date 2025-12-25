@@ -5,6 +5,20 @@ icon: mdi:plug
 
 # 연결 설정
 
+## 자동 감지
+
+MAA는 현재 **실행 중인 단일 에뮬레이터**를 통해 ADB 경로, 연결 주소 및 연결 구성을 자동으로 감지하고 채울 수 있습니다.
+
+MAA v5.22.3까지 지원하는 감지 가능한 에뮬레이터 및 연결 주소는 다음과 같습니다:
+
+- BlueStacks 5: `127.0.0.1:5555/5556/5565/5575/5585/5595/5554`
+- MuMu 에뮬레이터: `127.0.0.1:16384/16416/16448/16480/16512/16544/16576`
+- LDPlayer 9: `emulator-5554/5556/5558/5560`, `127.0.0.1:5555/5557/5559/5561`
+- 逍遥(Xiaoyao): `127.0.0.1:62001/59865`
+- 夜神(Yeshen): `127.0.0.1:21503`
+
+감지에 실패하면 UAC 관리자 권한으로 MAA를 시작하여 다시 감지해보세요. 여전히 실패한다면 아래 수동 설정을 참고하고, 에뮬레이터와 연결 주소가 위 목록에 포함되어 있는지 확인하세요.
+
 ## ADB 경로
 
 :::info 기술적 정보
@@ -38,25 +52,24 @@ MAA 폴더에 직접 압축을 푸는 것을 권장합니다. 그러면 ADB 경�
 
 #### 에뮬레이터 관련 문서 및 참조 포트
 
-- [Bluestacks 5](https://support.bluestacks.com/hc/zh-tw/articles/360061342631-%E5%A6%82%E4%BD%95%E5%B0%87%E6%82%A8%E7%9A%84%E6%87%89%E7%94%A8%E5%BE%9EBlueStacks-4%E8%BD%89%E7%A7%BB%E5%88%B0BlueStacks-5#%E2%80%9C2%E2%80%9D) `5555`
+- [Bluestacks 5](https://support.bluestacks.com/hc/ko/articles/360061342631-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D4-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D5%EB%A1%9C-%EC%95%B1-%EC%A0%84%EC%86%A1%ED%95%98%EA%B8%B0) `5555`
+- [MuMu](https://mumu.163.com/help/20240807/40912_1073151.html?maa) `16384`
 - [MuMu Pro](https://mumu.163.com/mac/function/20240126/40028_1134600.html) `16384`
-- [MuMu 12](https://mumu.163.com/help/20230214/35047_1073151.html) `16384`
-- [MuMu 6](https://mumu.163.com/help/20210531/35047_951108.html) `7555`
+- [LDPlayer 9](https://help.ldmnq.com/docs/LD9adbserver) `emulator-5554`
 - [逍遥(Xiaoyao)](https://bbs.xyaz.cn/forum.php?mod=viewthread&tid=365537) `21503`
 - [夜神(Yeshen)](https://support.yeshen.com/zh-CN/qt/ml) `62001`
 
 기타 에뮬레이터는 [赵青青의 블로그](https://www.cnblogs.com/zhaoqingqing/p/15238464.html)를 참고하세요.
 
-#### 멀티 인스턴스에 관하여
+#### 멀티 인스턴스 포트 확인
 
-- MuMu 12 의 멀티 인스턴스 관리자 오른쪽 상단에서 실행 중인 인스턴스의 포트를 확인할 수 있습니다.
+- MuMu 의 멀티 인스턴스 관리자 오른쪽 상단에서 실행 중인 인스턴스의 포트를 확인할 수 있습니다.
 - Bluestacks 5 에뮬레이터 설정 내에서 현재 멀티 인스턴스 포트를 확인할 수 있습니다.
-- *추가 예정*
+- _추가 예정_
 
 ::: details 대체 방법
 
 - 방법 1: adb 명령어로 에뮬레이터 포트 확인
-
   1. **하나의 에뮬레이터**를 실행하고, 다른 안드로이드 장치가 이 컴퓨터에 연결되어 있지 않은지 확인합니다.
   2. adb 실행 파일이 있는 폴더에서 명령어 창을 엽니다.
   3. 다음 명령어를 실행합니다.
@@ -79,7 +92,6 @@ MAA 폴더에 직접 압축을 푸는 것을 권장합니다. 그러면 ADB 경�
   `127.0.0.1:<포트>` 또는 `emulator-<네 자리 숫자>`를 연결 주소로 사용합니다.
 
 - 방법 2: 기존 adb 연결 찾기
-
   1. 방법 1을 시도합니다.
   2. `윈도우 키 + S`를 눌러 검색 창을 열고, `리소스 모니터`를 입력한 후 실행합니다.
   3. `네트워크` 탭으로 전환하고, 수신 대기 포트의 이름 열에서 에뮬레이터 프로세스명을 찾습니다. 예: `HD-Player.exe`.
@@ -124,9 +136,10 @@ MAA는 이제 레지스트리에서 `bluestacks.conf`의 저장 위치를 읽어
 :::
 
 1. 블루스택 데이터 디렉토리에서 `bluestacks.conf` 파일을 찾습니다.
+   - 글로벌 버전 `C:\ProgramData\BlueStacks_nxt\bluestacks.conf`
+   - 중국 내륙 버전 `C:\ProgramData\BlueStacks_nxt_cn\bluestacks.conf`
 
-    - 글로벌 버전 `C:\ProgramData\BlueStacks_nxt\bluestacks.conf`
-    - 중국 내륙 버전 `C:\ProgramData\BlueStacks_nxt_cn\bluestacks.conf`
+   참고: `C:\ProgramData`는 숨겨진 디렉터리입니다. 필요한 경우, 파일 탐색기의 주소 표시줄에 이 주소를 직접 붙여넣어 접근하세요.
 
 2. 처음 사용하는 경우, MAA를 한 번 실행하여 MAA가 자동으로 구성 파일을 생성하게 합니다.
 
@@ -137,12 +150,12 @@ MAA는 이제 레지스트리에서 `bluestacks.conf`의 저장 위치를 읽어
 
 ```json
 {
-    "Configurations": {
-        "Default": {
-            "Bluestacks.Config.Path": "C:\\ProgramData\\BlueStacks_nxt\\bluestacks.conf"
-            // 다른 구성 필드, 수동으로 입력하지 마세요.
-        }
+  "Configurations": {
+    "Default": {
+      "Bluestacks.Config.Path": "C:\\ProgramData\\BlueStacks_nxt\\bluestacks.conf"
+      // 다른 구성 필드, 수동으로 입력하지 마세요.
     }
+  }
 }
 ```
 
@@ -152,27 +165,27 @@ MAA는 이제 레지스트리에서 `bluestacks.conf`의 저장 위치를 읽어
 
 해당 에뮬레이터의 구성을 선택해야 합니다. 목록에 없으면 일반 구성을 선택하세요. 일반 구성이 작동하지 않으면 다른 사용 가능한 구성을 시도하세요.
 
-자세한 차이점은 [소스 코드](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/dev/resource/config.json#L68)를 참조하세요.
+자세한 차이점은 [소스 코드](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/dev/resource/config.json#L65)를 참조하세요.
 
 ### MuMu 스크린샷 강화 모드
 
-중국 공식판 또는 Ark Edition MuMu 12 V4.0.0 및 이후 버전만 지원하며, MuMu의 백그라운드 유지 기능을 끕니다. 글로벌 에디션은 현재 지원되지 않습니다. <!-- V3.8.13 -->
+공식 또는 Arknights Edition MuMu V4.1.26 이상 버전이 지원됩니다. <!-- V3.8.13 -->
 
-1. 설정 → 연결 설정에서 `MuMu 스크린샷 강화 모드 활성화`를 체크합니다.
+1. 설정 → 연결 설정에서 `MuMu 스크린샷 향상 모드 활성화`를 체크합니다. 체크할 경우 MAA는 레지스트리를 통해 설치 경로를 자동으로 입력하려고 시도합니다.
 
-2. MuMu 에뮬레이터 경로에 `MuMuPlayer-12.0` 또는 `YXArkNights-12.0` 폴더의 경로를 입력합니다. 예: `C:\Program Files\Netease\MuMuPlayer-12.0`.
+2. MuMu 에뮬레이터 경로에 `MuMu Player` 또는 `MuMuPlayerGlobal-12.0` 또는 `YXArkNights-12.0` 폴더의 경로를 입력합니다. 예: `C:\Program Files\Netease\MuMuPlayerGlobal-12.0`.
 
-3. `인스턴스 번호`에 MuMu 멀티플레이어에서 해당 에뮬레이터의 일련 번호를 입력합니다. 예: 주 멀티플레이어의 경우 `0`.
+3. MuMu 네트워크 브리징을 사용 중인 경우 `MuMu 네트워크 브리징 모드`를 선택한 후 MuMu 멀티 인스턴스 관리자에서 해당 에뮬레이터의 일련 번호를 수동으로 입력해야 합니다. 예를 들어, 주 인스턴스는 `0`입니다.
 
-4. `인스턴스 화면`에 `0`을 입력합니다.
+### LD 스크린샷 향상 모드
 
-#### MuMu의 백그라운드 유지 기능에 대하여
+현재 중국판 LD Player 9 V9.1.32 이상 버전만 지원됩니다. 명일방주 에디션은 현재 지원되지 않습니다. <!-- V9.0.78 -->
 
-이 기능을 끄는 것이 좋으며, 이때 인스턴스 화면은 항상 `0`이 됩니다.
+1. 설정 → 연결 설정에서 `LD의 스크린샷 향상 모드 활성화`를 켭니다. 체크할 경우 MAA는 레지스트리를 통해 설치 경로를 자동으로 입력하려고 시도합니다.
 
-기능이 켜져 있을 때 MuMu 에뮬레이터 탭의 순서는 인스턴스 화면의 인덱스 번호가 됩니다. 예: 에뮬레이터 데스크탑의 경우 `0`, 명일방주 클라이언트의 경우 `1`.
+2. `LD 에뮬레이터 실행 경로`에 `LDPlayer9` 폴더의 경로를 입력합니다. 예: `C:\leidian\LDPlayer9\`
 
-백그라운드 유지 기능의 적응도는 매우 불완전하며, 다양한 문제를 유발할 수 있으므로 사용을 권장하지 않습니다.
+3. `인스턴스 번호`에 LD 멀티플레이어에서 해당 에뮬레이터의 일련번호(ID)를 입력합니다. 예: 메인 멀티플레이어의 경우 `0`
 
 ## 터치 모드
 
@@ -194,7 +207,7 @@ MAA가 독립적으로 구현한 ADB 클라이언트로, 원본 ADB와 비교했
 
 ### 멀티 인스턴스 에뮬레이터의 자동 시작
 
-  [BlueStacks의 글로벌 버전](./device/windows.md)을 예로 들어, 여러 에뮬레이터를 시작하는 두 가지 방법을 소개합니다.
+[BlueStacks의 글로벌 버전](./device/windows.md)을 예로 들어, 여러 에뮬레이터를 시작하는 두 가지 방법을 소개합니다.
 
 #### 추가 명령어를 통해 시작
 

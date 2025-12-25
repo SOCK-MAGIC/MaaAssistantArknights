@@ -19,127 +19,86 @@ const shuffleArray = (array) => {
     return array;
 }
 
-const fullySupport = shuffleArray([
-`
-### ✅ [Bluestacks 5](https://www.bluestacks.com/ko/) (권장 👍)
+// Sort by [support for screenshot enhancement → perfect support → less testing].
+const fullySupport = [
+    ...shuffleArray([
+        {
+            name: 'MuMu 에뮬레이터',
+            link: 'https://mumu.163.com/',
+            note: '완전히 호환되며, [스크린샷 향상 모드](../connection.html#mumu-스크린샷-향상-모드)에 대한 추가 지원이 있습니다. Hyper-V와 호환되는 것으로 알려져 있습니다.\n\n- "완료 시 에뮬레이터 종료" 기능이 간혹 비정상적일 수 있습니다. 이런 경우 MuMu 공식 채널에 피드백을 주세요;\n- 둘 이상의 인스턴스를 열 때는 MuMu 다중 실행기의 ADB 버튼을 통해 해당 인스턴스의 포트 정보를 확인하고, MAA `설정` - `연결 설정`에서 연결 주소의 포트 번호를 해당 포트로 변경해야 합니다.\n- `메모리 사용 정책`을 `리소스 사용량 감소`로 설정하지 마십시오.',
+        },
+        {
+            name: 'LDPlayer',
+            link: 'https://kr.ldplayer.net/',
+            note: '완전히 호환되며, [스크린샷 향상 모드](../connection.html#ld-스크린샷-향상-모드)에 대한 추가 지원이 있습니다. Hyper-V와 호환되는 것으로 알려져 있습니다.\n\n- LDPlayer 9 설치 프로그램은 설치 과정 중 자동으로 Hyper-V를 비활성화합니다. 관련 요구 사항이 있다면 주의하세요.',
+        },
+    ]),
+    // keep internal sorting for bluestacks.
+    {
+        name: 'Bluestacks 5',
+        link: 'https://www.bluestacks.com/ko/',
+        note: '완전히 호환됩니다. 에뮬레이터의 `설정` - `고급 설정`에서 `ADB 기능`을 켜야 합니다. Hyper-V와 호환되는 것으로 알려져 있습니다.\n\n- 느리고 번들로 제공되는 설치를 피하기 위해 [오프라인 설치 프로그램](https://support.bluestacks.com/hc/en-us/articles/4402611273485-BlueStacks-5-offline-installer)을 다운로드하는 것이 좋습니다; [Android 11](https://support.bluestacks.com/hc/en-us/articles/4402611273485-BlueStacks-5-offline-installer#:~:text=To%20install%20BlueStacks%205%20Android%2011) 버전 설치를 권장합니다; 제거하려면 공식 [제거 도구](https://support.bluestacks.com/hc/en-us/articles/360057724751-How-to-uninstall-BlueStacks-5-BlueStacks-X-and-BlueStacks-Services-completely-from-your-PC)를 사용하여 잔여물을 제거하세요.\n- adb 포트 번호가 계속 불규칙하게 변경되고 시작할 때마다 다르다면 컴퓨터에 [Hyper-V](https://support.bluestacks.com/hc/en-us/articles/4415238471053-System-requirements-for-BlueStacks-5-on-Hyper-V-enabled-Windows-10-and-11)가 활성화되어 있기 때문일 수 있습니다. MAA는 이제 BlueStacks 에뮬레이터 구성 파일 내에서 포트 번호를 자동으로 읽으려고 시도할 것입니다. 이 방법이 작동하지 않거나 다중 실행/둘 이상의 에뮬레이터 커널이 설치된 경우 [연결 (TODO)](../faq.html#블루스택-에뮬레이터가-매번-시작될-때마다-포트-번호가-다릅니다-hyper-v)을 참조하여 변경하세요. Hyper-V는 관리자로 실행되므로 에뮬레이터 자동 종료, 자동 연결 감지 등 adb와 관련 없는 작업도 MAA를 관리자로 실행해야 합니다.',
+    },
+    ...shuffleArray([
+        {
+            name: 'Nox',
+            link: 'https://kr.bignox.com/',
+            note: '완전히 호환되지만 테스트가 덜 되었습니다. Hyper-V와 호환되는 것으로 알려져 있습니다.',
+        },
+        {
+            name: 'Memu',
+            link: 'https://www.memuplay.com/ko/',
+            note: '완전히 호환되지만 테스트가 덜 되었습니다.',
+        },
+    ]),
+];
 
-완벽히 지원됩니다. \`설정\` - \`고급 설정\`에서 \`ADB 기능\`을 켜야 합니다.
-
-- 번들 및 느린 설치를 피하기 위해 [오프라인 설치 파일](https://support.bluestacks.com/hc/ko/articles/4402611273485-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D-5-%EC%98%A4%ED%94%84%EB%9D%BC%EC%9D%B8-%EC%84%A4%EC%B9%98-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8)을 다운로드하는 것이 좋습니다. [Android 11](https://support.bluestacks.com/hc/ko/articles/4402611273485-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D-5-%EC%98%A4%ED%94%84%EB%9D%BC%EC%9D%B8-%EC%84%A4%EC%B9%98-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8) 버전을 권장합니다. 제거하려면, 남은 파일들을 제거하려면 [제거 도구](https://support.bluestacks.com/hc/ko/articles/360057724751-PC%EC%97%90%EC%84%9C-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D-5-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D-X-%EB%B0%8F-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D-%EC%84%9C%EB%B9%84%EC%8A%A4%EB%A5%BC-%EC%99%84%EC%A0%84%ED%9E%88-%EC%A0%9C%EA%B1%B0%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95)를 사용하세요.
-- adb 포트 번호가 불규칙적으로 변경되고 시작할 때마다 다르면 컴퓨터에 [Hyper-V](https://support.bluestacks.com/hc/ko/articles/4415238471053-Hyper-V-%EC%A7%80%EC%9B%90-%EC%9C%88%EB%8F%84%EC%9A%B0-10-%EB%B0%8F-11%EC%9D%98-%EB%B8%94%EB%A3%A8%EC%8A%A4%ED%83%9D-5%EC%97%90-%EB%8C%80%ED%95%9C-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%9A%94%EA%B5%AC-%EC%82%AC%ED%95%AD)가 활성화되어 있을 수 있습니다. MAA는 이제 블루스택 에뮬레이터 구성 파일 내에서 포트 번호를 자동으로 읽도록 시도할 것입니다. 작동하지 않거나 다중 오픈/다중 에뮬레이터 커널이 필요한 경우 [자주 묻는 질문](../faq.html#블루스택-에뮬레이터가-매번-시작될-때마다-포트-번호가-다릅니다-hyper-v)을 참조하여 변경하세요. Hyper-V가 관리자로 실행되므로 에뮬레이터 자동 종료, 자동 연결 감지 등 adb를 사용하지 않는 작업도 관리자로 실행해야 합니다.
-`,
-`
-### ✅ [MuMu Emulator 12](https://mumu.163.com/)
-
-완벽하게 호환되며, 독점적인 익스트림 컨트롤 모드를 추가로 지원합니다.
-
-- \`완료 후 에뮬레이터 종료\` 기능은 때때로 비정상적일 수 있으며, 그런 경우에는 MuMu 공식으로 문의하세요.
-- MuMu 12 버전 3.5.4 ~ 3.5.7을 사용 중인 경우, MuMu 12 설정 - 기타에서 \`백그라운드에서 활성 상태 유지\` 기능을 비활성화해야 합니다. \(자세한 내용은 [공식 공지사항](https://mumu.163.com/help/20230802/35047_1102450.html) 참고\)
-- 여러 인스턴스를 열 때는 MuMu 12 멀티 인스턴스의 ADB 버튼을 통해 해당 인스턴스의 포트 정보를 확인하고, MAA \`설정\` → \`연결 설정\`에서 연결 주소의 포트 번호를 해당 포트로 변경해야 합니다.
-
-#### MuMu 스크린샷 강화 모드
-
-공식 MuMu 12 3.8.13 이후 버전을 사용해야 하며, 백그라운드 실행을 닫아야 합니다. 아크 에디션 및 국제 에디션은 현재 지원되지 않습니다.
-
-##### 연결 설정
-
-1. \`설정\` → \`연결 설정\`, \`MuMu 스크린샷 강화 모드 사용\` 확인란을 선택합니다.
-
-2. \`MuMu 에뮬레이터 경로\`에는 \`MuMuPlayer-12.0\` 폴더의 경로를 입력합니다. 예: \`C:\\Program Files\\Netease\\MuMuPlayer-12.0\`.
-
-3. \`인스턴스 번호\`에는 MuMu Multiplayer의 해당 에뮬레이터의 일련 번호를 입력합니다. 예: 주요 멀티플레이어의 경우 \`0\`.
-
-4. \`인스턴스 스크린\`에는 \`0\`을 입력합니다.
-
-##### 백그라운드 실행 상태에 대해
-
-꺼놓는 것이 좋습니다. 이때 인스턴스 화면은 항상 \`0\`입니다.
-
-켜져 있으면 MuMu 에뮬레이터 탭의 순서가 인스턴스 화면의 일련 번호여야 합니다. 예: 에뮬레이터 데스크톱은 \`0\`, 명일방주 클라이언트는 \`1\`입니다.
-
-백그라운드 실행에 대한 적용은 매우 불완전하며, 원인 미상의 문제가 항상 발생하므로 권장하지 않습니다.
-`,
-`
-### ✅ [Nox](https://kr.bignox.com/)
-
-완벽히 지원됩니다.
-`,
-`
-### ✅ [Nox Android 9](https://kr.bignox.com/)
-
-완벽히 지원됩니다.
-`,
-`
-### ✅ [Memu](https://www.memuplay.com/ko/)
-
-지원되지만, 테스트 수가 적으며 알려지지 않은 오류가 있을 수 있습니다.
-`,
-`
-### ✅ [Android Virtual Device](https://developer.android.com/studio/run/managing-avds)
-
-지원됩니다.
-`,
-])
-
-const particallySupport = shuffleArray([
-`
-### ⚠️ [Google Play Games Beta](https://developer.android.com/games/playgames/pg-emulator?hl=zh-cn#installing-game-consumer)
-
-호환되지 않습니다. [클라이언트](https://developer.android.com/games/playgames/pg-emulator?hl=zh-cn#installing-game-consumer)의 ADB 포트를 사용할 수 없습니다.
-
-단, KR의 경우 [PlayBridge](https://github.com/ACK72/PlayBridge)를 이용해 사용이 가능하지만, 공식 지원이 아니므로 서비스가 불안정할 수 있습니다.
-`,
-`
-### ⚠️ [MuMu Player](https://www.mumuglobal.com/kr/)
-
-지원됩니다. 단,
-
-- minitouch 또는 maatouch의 효율적인 터치 방식을 사용하려면 adb를 강제 교체해야 합니다.
-- MAA가 adb 경로와 주소를 얻기 위해 관리자 권한으로 실행되어야 합니다. (MuMu가 관리자 권한으로 실행되기 때문입니다)
-- 관리자 권한으로 실행하고 싶지 않다면 adb 경로와 주소를 직접 입력할 수도 있습니다.
-- MAA의 기본 해상도 사용은 권장되지 않습니다. \`1280×720\`, \`1920×1080\`, \`2560×1440\` 등의 일반적인 해상도를 사용해 주세요.
-- MuMu는 여러 개를 열어도 하나의 adb 포트를 사용하므로, 여러 개의 클라이언트를 지원하지는 못합니다.
-`,
-`
-### ⚠️ [LDPlayer](https://kr.ldplayer.net/)
-
-지원됩니다.
-
-- LDPlayer 9는 9.0.37 버전 이상을, LDPlayer 5는 5.0.44 버전 이상을 권장드립니다.
-- minitouch 또는 maatouch의 효율적인 터치 방식을 사용하려면 adb를 강제 교체해야 합니다.
-`,
-`
-### ⚠️ [Windows Subsystem for Android](https://learn.microsoft.com/ko-kr/windows/android/wsa/)
-
-MAA v5.2.0부터 지원이 중단되었으며, 마이크로소프트가 2025년 03월 05일에 서비스를 중단할 예정입니다.
-
-- WSA 2204 이상 (버전 번호는 서브시스템 설정의 'About' 페이지에 있음)의 경우 연결 구성에서 \`일반 구성\`을 선택합니다.
-- WSA 2203 또는 그 이전 버전 (버전 번호는 서브시스템 설정 페이지 상단에 있음)의 경우 연결 구성에서 \`이전 버전 WSA\`를 선택합니다.
-- 이 소프트웨어는 720p 이상의 \`16:9\` 해상도를 지원합니다. 모니터가 16:9인 경우 가능한 한 창 크기를 수동으로 최대한 16:9 비율로 조정하세요. (모니터가 16:9인 경우 전체 화면으로 전환하려면 \`F11\`을 누르세요)
-- 내일의 방주가 화면에 보이고 다른 Android 앱이 동시에 전경에서 실행되지 않도록 최대한 노력하세요. 그렇지 않으면 게임이 일시 중지되거나 작업 인식 오류가 발생할 수 있습니다.
-- WSA의 스크린샷은 종종 백색 화면을 캡처하여 인식의 이상 또는 사용을 권장하지 않습니다.
-`,
-])
+const partiallySupport = shuffleArray([
+{
+        name: 'MuMu 에뮬레이터',
+        link: 'https://www.mumuplayer.com/',
+        note: 'MAA v5.1.0 이후로 지원이 중단되었으며 넷이즈는 2023-08-15에 유지보수를 중단했습니다.\n\n- 더 이상 자동 연결 감지를 지원하지 않으며, 일반 연결 구성을 사용하여 adb 경로와 연결 주소를 수동으로 구성해야 합니다;\n- Minitouch, MaaTouch와 같은 효율적인 터치 모드를 사용하려면 `설정` - `연결`에서 `ADB 강제 교체`를 실행해야 합니다;\n- "완료 시 에뮬레이터 종료" 기능을 사용하려면 관리자 권한으로 MAA를 실행해야 합니다;\n- MuMu 6의 기본 해상도는 지원되지 않으며, `1280x720`, `1920x1080` 등 16:9 비율로 변경해야 합니다;\n- MuMu 6 다중 실행은 동일한 adb 포트를 사용하므로 MuMu 6의 다중 실행을 지원할 수 없습니다.',
+    },
+    {
+        name: 'Windows Subsystem for Android™ (WSA)',
+        link: 'https://learn.microsoft.com/ko-kr/windows/android/wsa/',
+        note: 'MAA v5.2.0 이후로 지원이 중단되었으며 Microsoft는 2025-03-05에 유지 보수를 중단했습니다.\n\n- WSA 2204 이상 (버전 번호는 서브시스템 설정의 `정보` 페이지에 있음), 연결 구성에서 `일반 구성`을 선택하세요;\n- WSA 2203 이하 (버전 번호는 서브시스템 설정 페이지 상단에 있음), 연결 구성에서 `WSA 이전 버전`을 선택하세요;\n- 이 소프트웨어는 720p 이상 `16:9` 해상도만 잘 지원하므로, 창 크기를 수동으로 16:9 비율에 최대한 가깝게 조정해 주세요. (모니터가 16:9인 경우 `F11`을 눌러 전체 화면으로 전환할 수 있습니다);\n- 아크나이츠가 포그라운드에 있고 다른 안드로이드 앱이 동시에 포그라운드에서 실행되지 않도록 해주세요. 그렇지 않으면 게임이 일시 중지되거나 작업 인식 오류가 발생할 수 있습니다;\n- WSA의 스크린샷은 종종 어떤 이유로 하얀 화면을 캡처하여 인식 오류를 일으키므로 사용을 권장하지 않습니다.',
+    },
+    {
+        name: 'AVD',
+        link: 'https://developer.android.com/studio/run/managing-avds',
+        note: '이론적으로 지원됩니다.\n\n- Android 10부터 SELinux가 `Enforcing` 모드일 때 Minitouch를 사용할 수 없으므로 다른 터치 모드로 전환하거나 SELinux를 **임시로** `Permissive` 모드로 전환하세요.\n- AVD는 디버깅을 위해 만들어졌으므로 게임용으로 설계된 다른 에뮬레이터를 사용하는 것이 더 좋습니다.',
+    },
+    {
+        name: 'Google Play Games (개발자용)',
+        link: 'https://developer.android.com/games/playgames/emulator?hl=ko-kr',
+        note: '이론적으로 지원됩니다. Hyper-V가 활성화되어 있어야 하며 Google 계정에 로그인해야 합니다.\n\n- [사용자 정의 연결](../connection.html)을 사용하여 연결해야 하며 ADB 포트는 `6520`입니다.\n- Android 10 이상 버전의 SELinux 정책으로 인해 Minitouch가 제대로 작동하지 않으므로 다른 터치 모드로 전환하세요.\n- 에뮬레이터를 시작한 후 첫 번째 연결은 실패하므로 `연결 실패 후 ADB 프로세스 종료 및 재시작 시도`를 체크해야 합니다.',
+    },
+]);
 
 const notSupport = shuffleArray([
-`
-### 🚫 Tencent Mobile Game Assistant
+    {
+        name: 'Google Play Games',
+        link: 'https://play.google.com/googleplaygames',
+        note: '호환되지 않습니다, [Consumer Client](https://developer.android.com/games/playgames/pg-emulator#installing-game-consumer)\'의 ADB 포트를 사용할 수 없습니다.\n\n단, KR의 경우 [PlayBridge](https://github.com/ACK72/PlayBridge)를 이용해 사용이 가능하지만, 공식 지원이 아니므로 서비스가 불안정할 수 있습니다.',
+    },
+]);
 
-지원되지 않습니다. ADB 포트가 닫혀 있습니다.
-`,
-`
-### 🚫 MuMu Mobile Game Assistant
+const md = new MarkdownIt();
+md.use(MarkdownItAnchor);
 
-지원되지 않습니다. ADB 포트가 닫혀 있습니다.
-`,
-])
-
-const md = (new MarkdownIt()).use(MarkdownItAnchor, { permalink: MarkdownItAnchor.permalink.linkInsideHeader()})
-
-const fullySupportHtml = md.render(fullySupport.join(''))
-const partiallySupportHtml = md.render(particallySupport.join(''))
-const notSupportHtml = md.render(notSupport.join(''))
-
+const fullySupportHtml = md.render(fullySupport.map(simulator => `
+### ✅ ${simulator.link ? `[${simulator.name}](${simulator.link})` : simulator.name}
+${simulator.note}
+`).join(''));
+const partiallySupportHtml = md.render(partiallySupport.map(simulator => `
+### ⚠️ ${simulator.link ? `[${simulator.name}](${simulator.link})` : simulator.name}
+${simulator.note}
+`).join(''));
+const notSupportHtml = md.render(notSupport.map(simulator => `
+### 🚫 ${simulator.link ? `[${simulator.name}](${simulator.link})` : simulator.name}
+${simulator.note}
+`).join(''));
 </script>
 
 ## ✅ 완벽한 지원

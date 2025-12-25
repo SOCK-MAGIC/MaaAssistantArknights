@@ -3,108 +3,165 @@ order: 1
 icon: iconoir:developer
 ---
 
-# 開発を開始
+# 開発ガイド
 
-## Github Pull Request プロセス概要
+::: tip
+本ページは主に PR プロセスおよび MAA のファイルフォーマット要件について説明します。MAA の実行ロジックを変更する具体的な方法については、[プロトコル文書](../protocol/)を参照してください。
+:::
 
-### プログラミングの仕方がわからないので、JSONファイルやドキュメントなどを少し変更したいのですが、どうすればいいですか？
+::: tip
+[DeepWiki に質問して](https://deepwiki.com/MaaAssistantArknights/MaaAssistantArknights)、MAA プロジェクトの全体的なアーキテクチャを概要的に理解することができます。
+:::
+
+## プログラミングの仕方がわからないので、JSONファイルやドキュメントなどを少し変更したいのですが、どうすればいいですか？
 
 [「パラスちゃん」も理解できるGitHubのPull Requestの使用ガイド](./pr-tutorial.md)へようこそ（純WebサイトのPRチュートリアル）
 
-### プログラミングの仕方を知っていますが、GitHub/C++/...... に触れたことがありません、どうすればいいですか？
+## 数行のコードを少しだけ変更したいが、環境設定が面倒。純粋なWeb編集も使いにくい。どうすればよいですか？
 
-1. かなり前にフォークした場合は、まず自分のリポジトリの `Settings` の一番下に移動してそのリポジトリを削除します。
-2. [MAAリポジトリ](https://github.com/MaaAssistantArknights/MaaAssistantArknights)を開いて、 `Fork` をクリックし、引き続き `Create fork` をクリックします。
-3. （自分のアカウントの）リポジトリの `dev` のブランチをローカルに clone をします。
+[GitHub Codespaces](https://github.com/codespaces)オンライン開発環境をご利用ください！
 
-    ```bash
-    git clone --recurse-submodules <リポジトリの git のリンク> -b dev
-    ```
+次のような、異なる開発環境を事前に準備しています：
 
-    Visual Studioなどの `--recurse-submodules` パラメータを含まないGit GUIを使用している場合は、クローン後に `git submodule update --init` を実行して、サブモジュールを取得する必要があります。
+- 空白環境（裸のLinuxコンテナ）（デフォルト）
 
-4. 構築済みのサードパーティライブラリをダウンロードする
+  [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MaaAssistantArknights/MaaAssistantArknights?devcontainer_path=.devcontainer%2Fdevcontainer.json)
 
-    **Python環境が必要ですので、Pythonインストールチュートリアルを自分で検索してください**  
-    _（maadeps-download.py ファイルはプロジェクトのルートにあります）_
+- 軽量環境：ドキュメントサイトのフロントエンド開発に適している
 
-    ```cmd
-    python maadeps-download.py
-    ```
+  [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MaaAssistantArknights/MaaAssistantArknights?devcontainer_path=.devcontainer%2F0%2Fdevcontainer.json)
 
-5. プログラミング環境を構成
+- 完全環境：MAA Core関連の開発に適している（使用は推奨しません。ローカル開発を推奨します。関連環境を完全に設定。次のセクションを参照）
 
-    - `Visual Studio 2022 community` をダウンロードしてインストールします。インストール時に `C++ベースのデスクトップ開発` と `.NETデスクトップ開発` を選択する必要があります。
+  [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MaaAssistantArknights/MaaAssistantArknights?devcontainer_path=.devcontainer%2F1%2Fdevcontainer.json)
 
-6. ダブルクリックして `MAA.sln` ファイルを開きます。 Visual Studioは、プロジェクト全体を自動的に読み込みます。
-7. VS を設定する
+## 完全な環境セットアップ（Windows）
 
-    - VS 上で構成を `RelWithDebInfo` `x64` に選択します （リリースパッケージまたは ARM プラットフォームをコンパイルする場合は、この手順をスキップしてください）
-    - `MaaWpfGui` を右クリックして、 - `プロパティー` - `デバッグ` - `ローカル デバッグを有効にする` （これにより、ブレークポイントを C++ コアにフックできます）
+1. かなり前にフォークした場合は、まず自分のリポジトリの `Settings` の一番下で削除します
+2. [MAA メインリポジトリ](https://github.com/MaaAssistantArknights/MaaAssistantArknights)を開き、`Fork` → `Create fork` をクリック
+3. 自身のリポジトリの dev ブランチをクローン（サブモジュール含む）
 
-8. ここまで楽しくコードを変更できます～
-9. 開発中は、一定量修正するたびに commit を忘れず、コミットメッセージを書くことを忘れないでください。  
-    git を初めて使用する場合は、 `dev` に直接コミットする代わりに、新しいブランチを作成して変更を加えることをお勧めします
+   ```bash
+   git clone --recurse-submodules <リポジトリの git リンク> -b dev
+   ```
 
-    ```bash
-    git branch your_own_branch
-    git checkout your_own_branch
-    ```
+   ::: warning
+   Visual Studio など `--recurse-submodules` パラメータに対応していない Git GUI を使用する場合、クローン後に以下を実行：
 
-    このようにして、コミットは `dev` の更新に邪魔されることなく、新しいブランチで成長できます
+   ```bash
+   git submodule update --init
+   ```
 
-10. 開発が完了したら、ローカルブランチを（自分の）リモートリポジトリにプッシュします。
+   :::
+
+4. 事前ビルド済みサードパーティライブラリのダウンロード
+
+   **Python環境が必要（インストール方法は各自検索）**  
+   _（tools/maadeps-download.py はプロジェクトルートに配置）_
+
+   ```cmd
+   python tools/maadeps-download.py
+   ```
+
+5. 開発環境の設定
+   - `Visual Studio 2026 Community` をインストール時、`C++ によるデスクトップ開発` と `.NET デスクトップ開発` を選択必須
+
+6. `MAA.sln` をダブルクリックで開き、Visual Studio にプロジェクトを自動ロード
+7. VS の設定
+   - 上部設定バーで `RelWithDebInfo` `x64` を選択（Release ビルド/ARM プラットフォームの場合は不要）
+   - `MaaWpfGui` 右クリック → プロパティ → デバッグ → ネイティブデバッグを有効化（C++ Core へのブレークポイント設定可能）
+
+8. これで自由に ~~改造~~ 開発を始められます
+9. 一定量の変更ごにコミット（メッセージ記入必須）  
+   Git 未経験者は dev ブランチ直接変更ではなく新規ブランチ作成推奨：
+
+   ```bash
+   git branch your_own_branch
+   git checkout your_own_branch
+   ```
+
+   これで dev の更新影響を受けずに開発可能
+
+10. 開発完了後、変更をリモートリポジトリへプッシュ：
 
     ```bash
     git push origin dev
     ```
 
-11. [MAAリポジトリ](https://github.com/MaaAssistantArknights/MaaAssistantArknights)を開いて、プルリクエストを送信し、管理者が承認するのを待ちます。 dev ブランチで変更することを忘れないで、 master ブランチにコミットしないでください。
-12. 元のMAAリポジトリに変更がある場合（他のユーザーが行った）、これらの変更を自分のフォークリポジトリに同期する必要があります。
+11. [MAA メインリポジトリ](https://github.com/MaaAssistantArknights/MaaAssistantArknights) で Pull Request を提出（master ではなく dev ブランチを指定）
+12. 上流リポジトリの更新を同期する場合：
+    1. 上流リポジトリを追加：
 
-    1. MAAオリジナル リポジトリーの関連付け
+       ```bash
+       git remote add upstream https://github.com/MaaAssistantArknights/MaaAssistantArknights.git
+       ```
 
-        ```bash
-        git remote add upstream https://github.com/MaaAssistantArknights/MaaAssistantArknights.git
-        ```
+    2. 更新を取得：
 
-    2. MAAのオリジナル リポジトリーから更新をプルします
+       ```bash
+       git fetch upstream
+       ```
 
-        ```bash
-        git fetch upstream
-        ```
+    3. リベース（推奨）またはマージ：
 
-    3. リベース (推奨) またはマージでブランチに統合する
+       ```bash
+       git rebase upstream/dev
+       ```
 
-        ```bash
-        git rebase upstream/dev  # リベース
-        ```
+       または
 
-        または
+       ```bash
+       git merge
+       ```
 
-        ```bash
-        git merge  # マージ
-        ```
-
-    4. 上記の手順7、8、9、10を繰り返します
+    4. ステップ7、8、9、10 を繰り返し
 
 ::: tip
-VS2022を開いた後、gitに関する操作はコマンドラインツールなしで実行でき、VSに付属の「Git変更」を直接使用できます。
+Visual Studio 起動後、Git 操作は「Git 変更」画面からコマンドライン不要で可能
 :::
 
-## Visual Studioでclang-formatを有効にする
+## MAAのファイルフォーマット要件
 
-1. clang-format バージョン17以上をインストールします。
+MAAは、リポジトリ内のコードとリソースファイルが美しく統一されるよう、一連のフォーマットツールを使用してメンテナンスと読み取りを容易にしています。
 
-    ```bash
-    python -m pip install clang-format
-    ```
+提出する前にフォーマットするか、または[Pre-commit Hooksを使用してコードを自動フォーマット](#pre-commit-hooksを使用してコードを自動フォーマット)してください。
+
+現在有効になっているフォーマットツールは次のとおりです：
+
+| ファイルタイプ | フォーマットツール                                              |
+| -------------- | --------------------------------------------------------------- |
+| C++            | [clang-format](https://clang.llvm.org/docs/ClangFormat.html)    |
+| Json/Yaml      | [Prettier](https://prettier.io/)                                |
+| Markdown       | [markdownlint](https://github.com/DavidAnson/markdownlint-cli2) |
+
+### Pre-commit Hooksを使用してコードを自動フォーマット
+
+1. コンピュータにPython環境とNode環境があることを確認してください。
+
+2. プロジェクトのルートディレクトリで次のコマンドを実行します：
+
+   ```bash
+   pip install pre-commit
+   pre-commit install
+   ```
+
+pipインストール後もPre-commitを実行できない場合は、PIPインストールパスがPATHに追加されていることを確認してください。
+
+次に、提出するたびにフォーマットツールが自動的に実行され、コード形式がスタイルガイドに準拠していることを確認します。
+
+### Visual Studioでclang-formatを有効にする
+
+1. clang-format バージョン20.1.0以上をインストールします。
+
+   ```bash
+   python -m pip install clang-format
+   ```
 
 2. 'Everything'などのツールを使用して、clang-format.exeのインストール場所を見つけます。参考までに、Anacondaを使用している場合、clang-format.exeはYourAnacondaPath/Scripts/clang-format.exeにインストールされます。
 3. Visual Studioで、 Tools-Optionsで 'clang-format'を検索します。
 4. `clang-formatサポートを有効にする` をクリックし、下の `カスタムのclang-format.exeファイルを使用する` を選択し、最初取得した `clang-format.exe` を選択します。
 
-![Visual Studioでclang-formatを有効にする](/image/zh-cn/development-enable-vs-clang-format.png)
+![Visual Studioでclang-formatを有効にする](/images/zh-cn/development-enable-vs-clang-format.png)
 
 そうすれば、 Visual Studio は c++20 構文をサポートする clang-format を問題なく使用できます！
 
@@ -113,11 +170,3 @@ VS2022を開いた後、gitに関する操作はコマンドラインツール�
 - `python tools\ClangFormatter\clang-formatter.py --clang-format=PATH\TO\YOUR\clang-format.exe --input=src\MaaCore`
 
 を実行するだけです。
-
-## オンライン開発に GitHub codespace を使用する
-
-GitHub codespace を作成して C++ 開発環境を自動的に構成する
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg?color=green)](https://codespaces.new/MaaAssistantArknights/MaaAssistantArknights)
-
-次に、 vscode または [Linuxチュートリアル](./linux-tutorial.md) のプロンプトに従って、 GCC 12 および CMake プロジェクトを構成します。

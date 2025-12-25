@@ -2,6 +2,7 @@
 order: 5
 icon: ri:earth-fill
 ---
+
 # 外服適配教學
 
 ## 準備工作
@@ -30,19 +31,43 @@ icon: ri:earth-fill
 3. 確保截圖中不包含任何無關內容，例如任務欄、狀態欄、通知欄等。
 4. 確保截圖中包含所有需要辨識的內容。
 
-為了裁剪圖片並獲取文字 / 圖片 `roi`，你需要安裝 `python` 和 `opencv`，並下載 `MaaAssistantArknights/tools/CropRoi/main.py` 檔案。
+為了裁剪圖片並獲取文字 / 圖片 `roi`，你需要使用 `MaaAssistantArknights/tools/ImageCropper` 工具。
 
-然後，按照以下步驟操作：
+**ImageCropper** 是一個強大的截圖工具，支援對預先準備好的截圖或透過 ADB 連接裝置進行 ROI 區域的截取、保存、取色操作。
 
-1. 在 `main.py` 同目錄下新建 `src` 和 `dst` 資料夾。
-2. 將需要修改大小或獲取文字 / 圖片 `roi` 的 **完整截圖** 放入 `src` 資料夾。
-3. 執行 `main.py`。
-4. 使用滑鼠拖動選擇目標範圍，儘量不要包含無關內容。
-5. 確定範圍後，按 `S` 鍵保存，按 `Q` 鍵退出。裁剪後的圖片將被保存在 `dst` 資料夾。
+### 環境設定
+
+需要 `python` 環境，推薦版本為 `3.11`，最低版本為 `3.9` 以上。
+
+### 安裝依賴
+
+Windows 使用者推薦直接執行 `install.bat`，或手動安裝：
+
+```shell
+python -m pip install -r requirements.txt
+```
+
+### 使用步驟
+
+1. 如果有預先準備好的截圖，需保存到 `./src/` 路徑下
+2. 執行 `start.bat` 或 `python main.py [device serial]`（裝置位址為可選）
+   - 工具會自動搜尋已連接的 ADB 裝置，根據提示選擇裝置（按 ENTER 跳過選擇）
+   - 也可以直接使用 `python main.py [device serial]` 連接指定裝置
+3. 在彈窗中左鍵選擇目標區域，滾輪縮放圖片，右鍵移動圖片
+4. 使用快捷鍵操作：
+   - 按 `S` 或 `ENTER` 保存目標區域
+   - 按 `F` 保存全螢幕標準化截圖
+   - 按 `R` 不保存，只輸出 ROI 範圍
+   - 按 `C` 不保存，輸出 ROI 範圍和 ColorMatch 的所需欄位
+   - 按 `Z`、`DELETE` 或 `BACKSPACE` 撤銷
+   - 按 `0` ~ `9` 縮放視窗
+   - 按 `Q` 或 `ESC` 退出
+   - 按任意鍵跳過 / 更新當前截圖
+5. 目標區域截圖保存在 `./dst/` 路徑下
 
 例如完成一次裁剪後的輸出內容為：
 
-``` log
+```log
 src: Screenshot_xxx.png
 dst: Screenshot_xxx.png_426,272,177,201.png
 original roi: 476, 322, 77, 101,
@@ -115,7 +140,7 @@ amplified roi: 426, 272, 177, 201
 
 下面是一段日誌範例：
 
-``` log
+```log
 [2022-12-18 17:43:17.535][INF][Px7ec][Tx15c8] {"taskchain":"Award","details":{"to_be_recognized":["Award@ReturnTo","Award","ReceiveAward","DailyTask","WeeklyTask","Award@CloseAnno","Award@CloseAnnoTexas","Award@TodaysSupplies","Award@FromStageSN"],"cur_retry":10,"retry_times":20},"first":["AwardBegin"],"taskid":2,"class":"asst::ProcessTask","subtask":"ProcessTask","pre_task":"AwardBegin"}
 [2022-12-18 17:43:18.398][INF][Px7ec][Tx15c8] Call ` C:\Program Files\BlueStacks_nxt\.\HD-Adb.exe -s 127.0.0.1:5555 exec-out "screencap | gzip -1" ` ret 0 , cost 862 ms , stdout size: 2074904 , socket size: 0
 [2022-12-18 17:43:18.541][TRC][Px7ec][Tx15c8] OcrPack::recognize | roi: [ 500, 50, 300, 150 ]
@@ -137,6 +162,7 @@ amplified roi: 426, 272, 177, 201
 - `taskid` 是任務的編號。
 - `class` 和 `subtask` 分別代表任務的類別和子任務。
 - `pre_task` 代表前一個任務。
+
 此外，日誌中還會記錄命令的執行情況（如 `Call`）和 `OCR` 的資訊（如 `OcrPack::recognize`）。
 
 在這段日誌中 `"to_be_recognized"`,`"cur_retry":3,"retry_times":20` 表示已經重複辨識了 10 次，最大辨識次數為 20 次，到了最大辨識次數後會跳過該任務並報錯，繼續執行下一個任務。

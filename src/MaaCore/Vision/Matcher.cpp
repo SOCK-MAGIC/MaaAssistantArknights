@@ -1,9 +1,11 @@
 #include "Matcher.h"
 
-#include "Utils/NoWarningCV.h"
+#include "MaaUtils/NoWarningCV.hpp"
 
 #include "Config/TaskData.h"
 #include "Config/TemplResource.h"
+#include "MaaUtils/ImageIo.h"
+#include "Utils/DebugImageHelper.hpp"
 #include "Utils/Logger.hpp"
 #include "Utils/StringMisc.hpp"
 
@@ -21,22 +23,48 @@ Matcher::ResultOpt Matcher::analyze() const
 
         double min_val = 0.0, max_val = 0.0;
         cv::Point min_loc, max_loc;
-        cv::minMaxLoc(matched, &min_val, &max_val, &min_loc, &max_loc);
+        cv::Mat valid_mask;
+        cv::inRange(matched, 0.0f, 1.0f + 1e-5f, valid_mask);
+        cv::minMaxLoc(matched, &min_val, &max_val, &min_loc, &max_loc, valid_mask);
 
         Rect rect(max_loc.x + m_roi.x, max_loc.y + m_roi.y, templ.cols, templ.rows);
-        if (std::isnan(max_val) || std::isinf(max_val)) {
-            max_val = 0;
-        }
 
         double threshold = m_params.templ_thres[i];
         if (m_log_tracing && max_val > 0.5 && max_val > threshold - 0.2) { // 得分太低的肯定不对，没必要打印
             Log.trace("match_templ |", templ_name, "score:", max_val, "rect:", rect, "roi:", m_roi);
-        }
 #ifdef ASST_DEBUG
+            if (!m_params.methods.empty() && m_params.methods[0] == MatchMethod::HSVCount) {
+                const cv::Rect expanded_roi(
+                    std::max(rect.x - 200, 0),
+                    std::max(rect.y - 50, 0),
+                    std::min(rect.width + 400, m_image.cols - std::max(rect.x - 200, 0)),
+                    std::min(rect.height + 100, m_image.rows - std::max(rect.y - 50, 0)));
+                cv::Mat cropped = m_image(expanded_roi).clone();
+                const cv::Rect roi_in_cropped(
+                    rect.x - expanded_roi.x,
+                    rect.y - expanded_roi.y,
+                    rect.width,
+                    rect.height);
+                cv::rectangle(cropped, roi_in_cropped, cv::Scalar(0, 0, 255), 1);
+                const std::string name = std::filesystem::path(templ_name).stem().string();
+                const std::string text = name + " " + std::to_string(max_val);
+                const cv::Size text_size = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, nullptr);
+                const cv::Point text_pos(
+                    std::max(roi_in_cropped.x + roi_in_cropped.width / 2 - text_size.width / 2, 0),
+                    std::max(roi_in_cropped.y - 5, text_size.height));
+                cv::putText(cropped, text, text_pos, cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
+
+                const static std::vector<int> jpeg_params = { cv::IMWRITE_JPEG_QUALITY,
+                                                              95,
+                                                              cv::IMWRITE_JPEG_OPTIMIZE,
+                                                              1 };
+                utils::save_debug_image(cropped, utils::path("debug") / "hsv", true, text, "", "jpeg", jpeg_params);
+            }
+#endif
+        }
         else {
             Log.debug("match_templ |", templ_name, "score:", max_val, "rect:", rect, "roi:", m_roi);
         }
-#endif
         if (max_val < threshold) {
             continue;
         }
@@ -93,8 +121,15 @@ std::vector<Matcher::RawResult> Matcher::preproc_and_match(const cv::Mat& image,
         }
 
         if (templ.cols > image.cols || templ.rows > image.rows) {
-            Log.error("templ size is too large", templ_name, "image size:", image.cols, image.rows,
-                      "templ size:", templ.cols, templ.rows);
+            Log.error(
+                "templ size is too large",
+                templ_name,
+                "image size:",
+                image.cols,
+                image.rows,
+                "templ size:",
+                templ.cols,
+                templ.rows);
             return {};
         }
 
@@ -121,8 +156,7 @@ std::vector<Matcher::RawResult> Matcher::preproc_and_match(const cv::Mat& image,
                              const MatchTaskInfo::Ranges mask_ranges,
                              const cv::Mat& templ,
                              const cv::Mat& templ_gray,
-                             bool with_close)
-            -> std::optional<cv::Mat> {
+                             bool with_close) -> std::optional<cv::Mat> {
             // Union all masks, not intersection
             cv::Mat mask = cv::Mat::zeros(templ_gray.size(), CV_8UC1);
             for (const auto& range : mask_ranges) {
@@ -187,7 +221,12 @@ std::vector<Matcher::RawResult> Matcher::preproc_and_match(const cv::Mat& image,
             fp.convertTo(fp, CV_32S);
             cv::Mat count_result;
             cv::divide(2 * tp, tp + fp + tp_fn, count_result, 1, CV_32F); // 数色结果为 f1_score
-            cv::multiply(matched, count_result, matched);                 // 最终结果是数色和模板匹配的点积
+
+            if (params.pure_color) {
+                matched = 1.0f;
+            }
+
+            cv::multiply(matched, count_result, matched); // 最终结果是数色和模板匹配的点积
         }
         results.emplace_back(RawResult { .matched = matched, .templ = templ, .templ_name = templ_name });
     }

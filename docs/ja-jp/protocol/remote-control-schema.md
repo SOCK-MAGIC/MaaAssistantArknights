@@ -84,11 +84,12 @@ MAA は、エンドポイントを 1 秒間隔で継続的にポーリングし�
 
 ::: note
 
-- LinkStart-[TaskName] タイプのタスクtypeのオプション値は LinkStart-Base，LinkStart-WakeUp，LinkStart-Combat，LinkStart-Recruiting，LinkStart-Mall，LinkStart-Mission，LinkStart-AutoRoguelike，LinkStart-ReclamationAlgorithm
+- LinkStart-[TaskName] タイプのタスクtypeのオプション値は LinkStart-Base，LinkStart-WakeUp，LinkStart-Combat，LinkStart-Recruiting，LinkStart-Mall，LinkStart-Mission，LinkStart-AutoRoguelike，LinkStart-Reclamation
 - Settings-[SettingsName] タイプのタスクtypeのオプション値は Settings-ConnectionAddress, Settings-Stage1
 - Settings シリーズのタスクは、タスクを受け取ったときにすぐに実行するのではなく、前のタスクの後ろに配置されています。
 - すぐに実行される複数のタスクも送信順序で実行されますが、これらのタスクの実行速度は速いため、通常、彼らの順序に注目する必要はありません。
-  :::
+
+:::
 
 ## タスクデータの報告エンドポイント
 

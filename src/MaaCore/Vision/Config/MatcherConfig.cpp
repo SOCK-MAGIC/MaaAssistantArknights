@@ -59,6 +59,11 @@ void MatcherConfig::set_color_scales(MatchTaskInfo::Ranges color_scales, bool co
     m_params.color_close = color_close;
 }
 
+void MatcherConfig::set_pure_color(bool pure_color) noexcept
+{
+    m_params.pure_color = pure_color;
+}
+
 void MatcherConfig::set_method(MatchMethod method) noexcept
 {
     m_params.methods = { method };
@@ -67,11 +72,12 @@ void MatcherConfig::set_method(MatchMethod method) noexcept
 void MatcherConfig::_set_task_info(MatchTaskInfo task_info)
 {
     m_params.templs.clear();
-    ranges::copy(task_info.templ_names, std::back_inserter(m_params.templs));
+    std::ranges::copy(task_info.templ_names, std::back_inserter(m_params.templs));
     m_params.templ_thres = std::move(task_info.templ_thresholds);
     m_params.mask_ranges = std::move(task_info.mask_ranges);
     m_params.color_scales = std::move(task_info.color_scales);
     m_params.color_close = task_info.color_close;
+    m_params.pure_color = task_info.pure_color;
     m_params.methods = std::move(task_info.methods);
 
     _set_roi(task_info.roi);

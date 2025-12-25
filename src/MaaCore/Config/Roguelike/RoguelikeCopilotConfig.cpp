@@ -23,8 +23,7 @@ bool asst::RoguelikeCopilotConfig::load(const std::filesystem::path& path)
     return ret;
 }
 
-std::optional<CombatData>
-    asst::RoguelikeCopilotConfig::get_stage_data(const std::string& stage_name) const
+std::optional<CombatData> asst::RoguelikeCopilotConfig::get_stage_data(const std::string& stage_name) const
 {
     auto it = m_stage_data.find(stage_name);
     if (it == m_stage_data.end()) {
@@ -42,6 +41,7 @@ bool asst::RoguelikeCopilotConfig::parse(const json::value& json)
     std::string stage_name = json.at("stage_name").as_string();
     CombatData data;
     data.stage_name = stage_name;
+    // clang-format off
     static const std::unordered_map<std::string, DeployDirection> DeployDirectionMapping = {
         { "Right", DeployDirection::Right }, { "RIGHT", DeployDirection::Right },
         { "right", DeployDirection::Right }, { "右", DeployDirection::Right },
@@ -57,15 +57,13 @@ bool asst::RoguelikeCopilotConfig::parse(const json::value& json)
 
         { "None", DeployDirection::None },   { "NONE", DeployDirection::None },
         { "none", DeployDirection::None },   { "无", DeployDirection::None },
-    };
+    }; // clang-format on
     if (auto opt = json.find<json::array>("replacement_home")) {
         for (auto& point : opt.value()) {
             ReplacementHome home;
-            home.location =
-                Point(point["location"][0].as_integer(), point["location"][1].as_integer());
+            home.location = Point(point["location"][0].as_integer(), point["location"][1].as_integer());
             const std::string& direction_str = point.get("direction", "none");
-            if (auto iter = DeployDirectionMapping.find(direction_str);
-                iter != DeployDirectionMapping.end()) {
+            if (auto iter = DeployDirectionMapping.find(direction_str); iter != DeployDirectionMapping.end()) {
                 home.direction = iter->second;
             }
             else {
@@ -103,20 +101,20 @@ bool asst::RoguelikeCopilotConfig::parse(const json::value& json)
 
     if (auto opt = json.find<json::array>("role_order")) {
         const auto& raw_roles = opt.value();
-        using views::filter, views::transform;
+        using std::views::filter, std::views::transform;
         std::unordered_set<Role> specified_role;
         std::vector<Role> role_order;
         bool is_legal = true;
-        if (ranges::find_if_not(raw_roles | views::all, std::mem_fn(&json::value::is_string))
-            != raw_roles.end()) {
+        if (std::ranges::find_if_not(raw_roles | std::views::all, std::mem_fn(&json::value::is_string)) !=
+            raw_roles.end()) {
             Log.error("Role should be string");
             return false;
         }
-        auto roles = raw_roles | filter(&json::value::is_string)
-                     | transform(&json::value::as_string) | transform([&](std::string name) {
-                           utils::tolowers(name);
-                           return name;
-                       });
+        auto roles = raw_roles | filter(&json::value::is_string) | transform(&json::value::as_string) |
+                     transform([&](std::string name) {
+                         utils::tolowers(name);
+                         return name;
+                     });
         for (const std::string& role_name : roles) {
             const auto role = get_role_type(role_name);
             if (role == Role::Unknown) [[unlikely]] {
@@ -133,14 +131,14 @@ bool asst::RoguelikeCopilotConfig::parse(const json::value& json)
             role_order.emplace_back(role);
         }
         if (is_legal) [[likely]] {
-            ranges::copy(
+            std::ranges::copy(
                 RoleOrder | filter([&](Role role) { return !specified_role.contains(role); }),
                 std::back_inserter(role_order));
             if (role_order.size() != RoleNumber) [[unlikely]] {
                 Log.error("Unexpected role_order size:", role_order.size());
                 return false;
             }
-            ranges::move(role_order, data.role_order.begin());
+            std::ranges::move(role_order, data.role_order.begin());
         }
         else {
             Log.error("Illegal role_order detected");
@@ -154,11 +152,9 @@ bool asst::RoguelikeCopilotConfig::parse(const json::value& json)
     if (auto opt = json.find<json::array>("force_deploy_direction")) {
         for (auto& point : opt.value()) {
             ForceDeployDirection fd_dir;
-            Point location =
-                Point(point["location"][0].as_integer(), point["location"][1].as_integer());
+            Point location = Point(point["location"][0].as_integer(), point["location"][1].as_integer());
             const std::string& direction_str = point.get("direction", "none");
-            if (auto iter = DeployDirectionMapping.find(direction_str);
-                iter != DeployDirectionMapping.end()) {
+            if (auto iter = DeployDirectionMapping.find(direction_str); iter != DeployDirectionMapping.end()) {
                 fd_dir.direction = iter->second;
             }
             else {
@@ -186,12 +182,9 @@ bool asst::RoguelikeCopilotConfig::parse(const json::value& json)
         int rank = 1;
         for (auto& deploy_info : opt.value()) {
             DeployInfoWithRank info;
-            info.location = Point(
-                deploy_info["location"][0].as_integer(),
-                deploy_info["location"][1].as_integer());
+            info.location = Point(deploy_info["location"][0].as_integer(), deploy_info["location"][1].as_integer());
             const std::string& direction_str = deploy_info.get("direction", "none");
-            if (auto iter = DeployDirectionMapping.find(direction_str);
-                iter != DeployDirectionMapping.end()) {
+            if (auto iter = DeployDirectionMapping.find(direction_str); iter != DeployDirectionMapping.end()) {
                 info.direction = iter->second;
             }
             if (auto condition = deploy_info.find<json::array>("condition")) {
@@ -216,9 +209,7 @@ bool asst::RoguelikeCopilotConfig::parse(const json::value& json)
     if (auto opt = json.find<json::array>("retreat_plan")) {
         for (auto& retreat_info : opt.value()) {
             DeployInfoWithRank info;
-            info.location = Point(
-                retreat_info["location"][0].as_integer(),
-                retreat_info["location"][1].as_integer());
+            info.location = Point(retreat_info["location"][0].as_integer(), retreat_info["location"][1].as_integer());
             if (auto condition = retreat_info.find<json::array>("condition")) {
                 info.kill_lower_bound = condition.value()[0].as_integer();
                 info.kill_upper_bound = condition.value()[1].as_integer();

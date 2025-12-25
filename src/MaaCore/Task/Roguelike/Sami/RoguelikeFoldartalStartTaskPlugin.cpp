@@ -1,8 +1,5 @@
 #include "RoguelikeFoldartalStartTaskPlugin.h"
 
-#include "Config/TaskData.h"
-#include "Status.h"
-#include "Task/ProcessTask.h"
 #include "Utils/Logger.hpp"
 
 bool asst::RoguelikeFoldartalStartTaskPlugin::verify(AsstMsg msg, const json::value& details) const
@@ -11,7 +8,8 @@ bool asst::RoguelikeFoldartalStartTaskPlugin::verify(AsstMsg msg, const json::va
         return false;
     }
 
-    if (m_config->get_theme() != RoguelikeTheme::Sami || m_config->get_difficulty() != INT_MAX || !m_start_foldartal) {
+    // 如果正在烧水就跳过
+    if (m_config->get_run_for_collectible()) {
         return false;
     }
 
@@ -32,12 +30,11 @@ bool asst::RoguelikeFoldartalStartTaskPlugin::verify(AsstMsg msg, const json::va
 
 bool asst::RoguelikeFoldartalStartTaskPlugin::load_params(const json::value& params)
 {
-    if (m_config->get_theme() != RoguelikeTheme::Sami) {
+    // 本插件仅在萨米肉鸽下烧开水模式中检测到 start_foldartal_list 参数且为非空时启用
+    if (m_config->get_theme() != RoguelikeTheme::Sami || m_config->get_mode() != RoguelikeMode::Collectible ||
+        !params.contains("start_foldartal_list")) {
         return false;
     }
-
-    // 是否生活队凹开局板子
-    m_start_foldartal = (params.contains("start_foldartal_list"));
 
     if (auto opt = params.find<json::array>("start_foldartal_list"); opt) {
         std::vector<std::string> list;
@@ -53,10 +50,10 @@ bool asst::RoguelikeFoldartalStartTaskPlugin::load_params(const json::value& par
             return false;
         }
         */
-        m_start_foldartal_list = (std::move(list));
+        m_start_foldartal_list = std::move(list);
     }
 
-    return true;
+    return !m_start_foldartal_list.empty();
 }
 
 bool asst::RoguelikeFoldartalStartTaskPlugin::_run()
@@ -68,16 +65,14 @@ bool asst::RoguelikeFoldartalStartTaskPlugin::_run()
 
     // 没有刷到需要的板子，退出重开
     if (mode == RoguelikeMode::Collectible && !start_foldartal_checked) {
-        m_config->set_difficulty(0);
-        Task.set_task_base("Roguelike@LastReward", "Roguelike@LastReward_restart");
-        Task.set_task_base("Roguelike@LastReward4", "Roguelike@LastReward_restart");
+        m_config->set_run_for_collectible(true); // 重新烧水
     }
     return true;
 }
 
 bool asst::RoguelikeFoldartalStartTaskPlugin::check_foldartals()
 {
-    const auto& all_foldartal = m_config->get_foldartal();
+    const auto& all_foldartal = m_config->status().foldartal_list;
 
     // 查找板子
     for (const auto& foldartal : m_start_foldartal_list) {

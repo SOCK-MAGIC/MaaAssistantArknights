@@ -89,27 +89,33 @@
         {
             "name": "沉睡石像",
             "option_num": 2,
+            "choose": 1,
+            "next_event": "沉睡石像-战斗"
+        },
+        {
+            "name": "沉睡石像-战斗",
+            "option_num": 1,
             "choose": 1
         },
         {
             "name": "受缚之血",
             "option_num": 2,
-            "choose": 1
+            "choose": 2
         },
         {
             "name": "幽影狂言",
             "option_num": 2,
-            "choose": 1
+            "choose": 2
         },
         {
             "name": "艺术与疯狂",
             "option_num": 2,
-            "choose": 1
+            "choose": 2
         },
         {
             "name": "鸭爵主演",
             "option_num": 2,
-            "choose": 1
+            "choose": 2
         },
         {
             "name": "鸭爵的宴会",
@@ -164,7 +170,7 @@
         {
             "name": "疯狂玩偶",
             "option_num": 2,
-            "choose": 1
+            "choose": 2
         },
         {
             "name": "解脱",
@@ -179,16 +185,28 @@
         {
             "name": "追随者集会",
             "option_num": 2,
-            "choose": 1
+            "choose": 2
         },
         {
             "name": "别打扰他们",
             "option_num": 2,
+            "choose": 1,
+            "next_event": "别打扰他们-战斗"
+        },
+        {
+            "name": "别打扰他们-战斗",
+            "option_num": 1,
             "choose": 1
         },
         {
             "name": "复仇剧",
             "option_num": 2,
+            "choose": 1,
+            "next_event": "复仇剧-战斗"
+        },
+        {
+            "name": "复仇剧-战斗",
+            "option_num": 1,
             "choose": 1
         },
         {

@@ -11,31 +11,32 @@ icon: teenyicons:linux-alt-solid
 MAA의 빌드 방법은 여전히 논의 중입니다. 이 튜토리얼의 내용은 오래되었을 수 있으므로 [GitHub workflow file](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/master/.github/workflows/ci.yml#L134)의 스크립트를 참고하세요. 또한 [AUR PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=maa-assistant-arknights) 및 [nixpkgs](https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/by-name/ma/maa-assistant-arknights/package.nix)을 참고할 수 있습니다.
 :::
 
+::: info
+Mac은 `tools/build_macos_universal.zsh` 스크립트를 사용하여 컴파일할 수 있습니다. [MaaAssistantArknights/MaaMacGui](https://github.com/MaaAssistantArknights/MaaMacGui) 프로젝트의 README.md를 참고하는 것을 권장합니다.
+:::
+
 ## 컴파일 과정
 
 1. 컴파일에 필요한 종속성 다운로드
-
    - Ubuntu/Debian
 
    ```bash
-   sudo apt install gcc-12 g++-12 cmake zlib1g-dev
+   sudo apt install gcc-14 g++-14 cmake zlib1g-dev
    ```
 
 2. 서드파티 라이브러리 빌드
 
    사전 빌드된 종속성 라이브러리를 다운로드하거나 직접 빌드할 수 있습니다.
-
    - 사전 빌드된 서드파티 라이브러리 다운로드 (권장됨)
 
      > **Note**
      > 상대적으로 최신의 Linux 배포판 (Ubuntu 22.04)에서 컴파일된 동적 라이브러리가 포함되어 있습니다. 시스템의 libstdc++ 버전이 오래되었을 경우 ABI 호환성 문제가 발생할 수 있습니다.
 
      ```bash
-     python maadeps-download.py
+     python tools/maadeps-download.py
      ```
 
    위의 방법으로 다운로드한 라이브러리가 시스템에서 실행되지 않거나 컨테이너와 같은 대안을 사용하지 않고 싶은 경우 직접 빌드해볼 수도 있습니다.
-
    - 서드파티 라이브러리 직접 빌드 (시간이 오래 걸릴 수 있음)
 
      ```bash
@@ -47,8 +48,7 @@ MAA의 빌드 방법은 여전히 논의 중입니다. 이 튜토리얼의 내�
 3. MAA 컴파일
 
    ```bash
-   CC=gcc-12 CXX=g++-12 cmake -B build \
-       -DINSTALL_THIRD_LIBS=ON \
+   CC=gcc-14 CXX=g++-14 cmake -B build \
        -DINSTALL_RESOURCE=ON \
        -DINSTALL_PYTHON=ON
    cmake --build build
@@ -68,10 +68,12 @@ MAA의 빌드 방법은 여전히 논의 중입니다. 이 튜토리얼의 내�
 
 [Python demo](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/master/src/Python/sample.py)에서 `__main__`의 구현을 참조하세요.
 
-### C
+### C++
 
 [CppSample](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/master/src/Cpp/main.cpp)의 구현을 참조하세요.
 
-### C\#
+### C Sharp
+
+<!-- Do not use C#, MD003/heading-style: Heading style [Expected: atx; Actual: atx_closed] -->
 
 [MaaWpfGui](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/master/src/MaaWpfGui/Main/AsstProxy.cs)의 구현을 참조하세요.

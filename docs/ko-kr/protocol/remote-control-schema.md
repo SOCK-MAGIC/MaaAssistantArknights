@@ -42,7 +42,7 @@ MAA는 이 엔드 포인트를 계속하여 폴링하여 실행해야하는 작�
         // 순차 실행 작업: 아래 작업은 전달된 순서대로 대기열에 들어갑니다
         {
             "id": "b353c469-b902-4357-bd8f-d133199eea31",   //작업의 고유 ID, 문자열 형식입니다. 작업 보고서에 사용됩니다.
-            "type": "CaptureImage",                         //스크린샷 작업입니다. 현재 시뮬레이터의 스크린샷을 캡처하고 작업 보고서의 페이로드에 Base64 문자열로 넣습니다. 이러한 유형의 작업을 발행해야하는 경우 요청하는 엔드 포인트가 수용 할 수 있는 최대 요청 크기에 주의하세요. 스크린샷은 수십 메가바이트가 있으며 일반적인 게이트웨이의 기본 크기 제한을 초과할 수 있습니다.
+            "type": "CaptureImage",                         //스크린샷 작업입니다. 현재 에뮬레이터의 스크린샷을 캡처하고 작업 보고서의 페이로드에 Base64 문자열로 넣습니다. 이러한 유형의 작업을 발행해야하는 경우 요청하는 엔드 포인트가 수용 할 수 있는 최대 요청 크기에 주의하세요. 스크린샷은 수십 메가바이트가 있으며 일반적인 게이트웨이의 기본 크기 제한을 초과할 수 있습니다.
         },
         {
             "id": "15be4725-5bd3-443d-8ae3-0a5ae789254c",   //작업의 고유 ID, 문자열 형식입니다. 작업 보고서에 사용됩니다.
@@ -84,11 +84,12 @@ MAA는 이 엔드 포인트를 계속하여 폴링하여 실행해야하는 작�
 
 ::: note
 
-- LinkStart-[TaskName] 유형의 작업 유형의 LinkStart의 선택 가능한 값은 LinkStart-Base, LinkStart-WakeUp, LinkStart-Combat, LinkStart-Recruiting, LinkStart-Mall, LinkStart-Mission, LinkStart-AutoRoguelike, LinkStart-ReclamationAlgorithm입니다.
+- LinkStart-[TaskName] 유형의 작업 유형의 LinkStart의 선택 가능한 값은 LinkStart-Base, LinkStart-WakeUp, LinkStart-Combat, LinkStart-Recruiting, LinkStart-Mall, LinkStart-Mission, LinkStart-AutoRoguelike, LinkStart-Reclamation입니다.
 - Settings-[SettingsName] 작업 유형의 유형 매개 변수의 선택 가능한 값은 Settings-ConnectionAddress, Settings-Stage1입니다.
 - 설정 시리즈 작업은 여전히 순서대로 실행되며 작업을 받은 즉시 실행되지 않으며 이전 작업 뒤에 배치됩니다.
 - 여러 즉시 실행 작업은 순서대로 실행되지만 이러한 작업은 모두 빠르게 실행되므로 순서에 관심을 두지 않아도됩니다.
-  :::
+
+:::
 
 ## 작업 보고 엔드 포인트
 

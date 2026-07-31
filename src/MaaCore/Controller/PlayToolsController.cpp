@@ -4,6 +4,7 @@
 
 #include "Config/GeneralConfig.h"
 #include "MaaUtils/NoWarningCV.hpp"
+#include "SwipeHelper.hpp"
 
 using boost::asio::ip::tcp;
 namespace socket_ops = boost::asio::detail::socket_ops;
@@ -27,11 +28,20 @@ asst::PlayToolsController::~PlayToolsController()
 bool asst::PlayToolsController::connect(
     const std::string& adb_path [[maybe_unused]],
     const std::string& address,
-    const std::string& config [[maybe_unused]])
+    const std::string& config)
 {
     if (m_address != address) {
         close();
         m_address = address;
+    }
+
+    if (config == "MacBGR") {
+        m_screencap_method = ScreencapMethod::BGR;
+        m_minimal_version = 3;
+    }
+    else if (config == "MacSCK") {
+        m_screencap_method = ScreencapMethod::MacSCK;
+        m_minimal_version = 3;
     }
 
     return open();
@@ -58,10 +68,34 @@ size_t asst::PlayToolsController::get_version() const noexcept
     return size_t();
 }
 
-bool asst::PlayToolsController::screencap(cv::Mat& image_payload, bool allow_reconnect [[maybe_unused]])
+bool asst::PlayToolsController::screencap(cv::Mat& image_payload, bool allow_reconnect)
 {
     LogTraceFunction;
+    switch (m_screencap_method) {
+    case ScreencapMethod::RGBA:
+        return screencap_rgba(image_payload, allow_reconnect);
+    case ScreencapMethod::BGR:
+        return screencap_bgr(image_payload, allow_reconnect);
+    case ScreencapMethod::MacSCK: {
+#if ASST_WITH_MAC_SCK
+        if (!m_sck_helper.capture(m_screencap_buffer)) {
+            return false;
+        }
+        auto mat = cv::Mat(m_screen_size.second, m_screen_size.first, CV_8UC3, m_screencap_buffer.data());
+        mat.copyTo(image_payload);
+        return true;
+#else
+        Log.error("MacSCK is not built, cannot capture screencap with this method");
+        return false;
+#endif // ASST_WITH_MAC_SCK
+    }
+    default:
+        return false;
+    }
+}
 
+bool asst::PlayToolsController::screencap_rgba(cv::Mat& image_payload, bool allow_reconnect [[maybe_unused]])
+{
     open();
     uint32_t image_size = 0;
 
@@ -82,10 +116,48 @@ bool asst::PlayToolsController::screencap(cv::Mat& image_payload, bool allow_rec
     }
 
     try {
-        std::vector<uint8_t> buffer(image_size);
-        boost::asio::read(m_socket, boost::asio::buffer(buffer, image_size));
-        image_payload = cv::Mat(m_screen_size.second, m_screen_size.first, CV_8UC4, buffer.data());
-        cv::cvtColor(image_payload, image_payload, cv::COLOR_RGBA2BGR);
+        m_screencap_buffer.resize(image_size);
+        boost::asio::read(m_socket, boost::asio::buffer(m_screencap_buffer));
+        auto mat = cv::Mat(m_screen_size.second, m_screen_size.first, CV_8UC4, m_screencap_buffer.data());
+        cv::cvtColor(mat, image_payload, cv::COLOR_RGBA2BGR);
+    }
+    catch (const std::exception& e) {
+        Log.error("Cannot get screencap:", e.what());
+        return false;
+    }
+
+    return true;
+}
+
+bool asst::PlayToolsController::screencap_bgr(cv::Mat& image_payload, bool allow_reconnect [[maybe_unused]])
+{
+    open();
+    std::array<uint32_t, 3> header;
+
+    try {
+        constexpr char request[] = { 0, 4, 'B', 'G', 'R', 1 };
+        boost::asio::write(m_socket, boost::asio::buffer(request));
+        boost::asio::read(m_socket, boost::asio::buffer(header));
+    }
+    catch (const std::exception& e) {
+        Log.error("Cannot get screencap:", e.what());
+        return false;
+    }
+
+    uint32_t image_width = socket_ops::network_to_host_long(header[0]);
+    uint32_t image_height = socket_ops::network_to_host_long(header[1]);
+    uint32_t image_size = socket_ops::network_to_host_long(header[2]);
+
+    if (image_size == 0) {
+        Log.error("Cannot get screencap: invalid image size");
+        return false;
+    }
+
+    try {
+        m_screencap_buffer.resize(image_size);
+        boost::asio::read(m_socket, boost::asio::buffer(m_screencap_buffer));
+        auto mat = cv::Mat(image_height, image_width, CV_8UC3, m_screencap_buffer.data());
+        mat.copyTo(image_payload);
     }
     catch (const std::exception& e) {
         Log.error("Cannot get screencap:", e.what());
@@ -153,26 +225,27 @@ bool asst::PlayToolsController::swipe(
 
     toucher_down(p1);
 
-    auto cubic_spline = [](double slope_0, double slope_1, double t) {
-        const double a = slope_0;
-        const double b = -(2 * slope_0 + slope_1 - 3);
-        const double c = -(-slope_0 - slope_1 + 2);
-        return a * t + b * std::pow(t, 2) + c * std::pow(t, 3);
-    }; // TODO: move this to math.hpp
+    auto bounds_check = [width, height](int x, int y) {
+        return x >= 0 && x <= width && y >= 0 && y <= height;
+    };
 
-    const auto progressive_move = [&](int _x1, int _y1, int _x2, int _y2, int _duration) {
-        for (int cur_time = DefaultSwipeDelay; cur_time < _duration; cur_time += DefaultSwipeDelay) {
-            double progress = cubic_spline(slope_in, slope_out, static_cast<double>(cur_time) / duration);
-            int cur_x = static_cast<int>(std::lerp(_x1, _x2, progress));
-            int cur_y = static_cast<int>(std::lerp(_y1, _y2, progress));
-            if (cur_x < 0 || cur_x > width || cur_y < 0 || cur_y > height) {
-                continue;
-            }
-            toucher_move({ cur_x, cur_y });
-        }
-        if (_x2 >= 0 && _x2 <= width && _y2 >= 0 && _y2 <= height) {
-            toucher_move({ _x2, _y2 });
-        }
+    auto move_func = [this](int x, int y) {
+        toucher_move({ x, y });
+        return true;
+    };
+
+    auto progressive_move = [&](int _x1, int _y1, int _x2, int _y2, int _duration) {
+        interpolate_swipe(
+            _x1,
+            _y1,
+            _x2,
+            _y2,
+            _duration,
+            DefaultSwipeDelay,
+            slope_in,
+            slope_out,
+            move_func,
+            bounds_check);
     };
 
     const auto& opt = Config.get_options();
@@ -180,7 +253,7 @@ bool asst::PlayToolsController::swipe(
     progressive_move(x1, y1, x2, y2, duration ? duration : opt.minitouch_swipe_default_duration);
 
     if (extra_swipe && opt.minitouch_extra_swipe_duration > 0) {
-        toucher_wait(opt.minitouch_swipe_extra_end_delay); // 停留终点
+        toucher_wait(opt.minitouch_swipe_extra_end_delay);
         progressive_move(x2, y2, x2, y2 - opt.minitouch_extra_swipe_dist, opt.minitouch_extra_swipe_duration);
     }
 
@@ -277,7 +350,23 @@ bool asst::PlayToolsController::open()
         return false;
     }
 
-    return check_version() && fetch_screen_res();
+    if (!check_version() || !fetch_screen_res()) {
+        return false;
+    }
+
+    if (m_screencap_method == ScreencapMethod::MacSCK) {
+        if (!fetch_frame_rect() || !fetch_bundle_id()) {
+            return false;
+        }
+#if ASST_WITH_MAC_SCK
+        return m_sck_helper.init(m_bundle_id, port, m_screen_size, m_frame_rect);
+#else
+        Log.error("MacSCK is not built, fallback to BGR screencap method");
+        m_screencap_method = ScreencapMethod::BGR;
+#endif // ASST_WITH_MAC_SCK
+    }
+
+    return true;
 }
 
 bool asst::PlayToolsController::check_version()
@@ -295,7 +384,7 @@ bool asst::PlayToolsController::check_version()
     }
 
     version = socket_ops::network_to_host_long(version);
-    if (version < MinimalVersion) {
+    if (version < m_minimal_version) {
         Log.error("Unsupported MaaTools version:", version);
 
         json::value details;
@@ -352,5 +441,58 @@ bool asst::PlayToolsController::toucher_commit(const TouchPhase phase, const Poi
     }
 
     toucher_wait(delay);
+    return true;
+}
+
+bool asst::PlayToolsController::fetch_frame_rect()
+{
+    constexpr char request[] = { 0, 4, 'R', 'E', 'C', 'T' };
+
+    try {
+        boost::asio::write(m_socket, boost::asio::buffer(request));
+        boost::asio::read(m_socket, boost::asio::buffer(m_frame_rect));
+    }
+    catch (const std::exception& e) {
+        Log.error("Cannot get frame rectangle:", e.what());
+        return false;
+    }
+
+    for (auto& val : m_frame_rect) {
+        val = socket_ops::network_to_host_short(val);
+    }
+
+    return true;
+}
+
+bool asst::PlayToolsController::fetch_bundle_id()
+{
+    uint32_t length = 0;
+
+    constexpr char request[] = { 0, 4, 'B', 'N', 'D', 'L' };
+
+    try {
+        boost::asio::write(m_socket, boost::asio::buffer(request));
+        boost::asio::read(m_socket, boost::asio::buffer(&length, sizeof(length)));
+        length = socket_ops::network_to_host_long(length);
+    }
+    catch (const std::exception& e) {
+        Log.error("Cannot get bundle ID length:", e.what());
+        return false;
+    }
+
+    if (length == 0 || length > BUFSIZ) {
+        Log.error("Invalid bundle ID length:", length);
+        return false;
+    }
+
+    try {
+        m_bundle_id.resize(length);
+        boost::asio::read(m_socket, boost::asio::buffer(m_bundle_id.data(), length));
+    }
+    catch (const std::exception& e) {
+        Log.error("Cannot get bundle ID:", e.what());
+        return false;
+    }
+
     return true;
 }

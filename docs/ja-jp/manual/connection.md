@@ -202,11 +202,11 @@ MAA は現在 `bluestacks.conf` の保存場所をレジストリから読み取
 
 対応するエミュレーターの設定を選択してください。リストにない場合は汎用設定を選択してください。汎用設定が利用できない場合は他の利用可能な設定を試し、選択してください。
 
-具体的な違いについては、[ソースコード](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/dev/resource/config.json#L65)をご覧ください。
+具体的な違いについては、[ソースコード](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/dev/resource/config.json#L57)をご覧ください。
 
 ### MuMu スクリーンショット強化モード
 
-公式版 または Arknights Edition MuMu V4.1.26 以降のバージョンに対応しています。<!-- V3.8.13 -->
+**バージョン要件**：公式版/Arknights Edition MuMu V4.1.26 以降、またはグローバル版 MuMu V5.21.3 以降。<!-- V3.8.13 -->
 
 1. `設定` - `接続設定` で `MuMu のスクリーンショット拡張モードを有効にする` をチェックします。MAAは、スイッチをチェックすると、レジストリを通じてインストールパスを自動的に入力しようとします。
 

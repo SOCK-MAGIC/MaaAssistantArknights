@@ -170,6 +170,9 @@ bool asst::InfrastTask::set_params(const json::value& params)
     bool reception_clue_exchange = params.get("reception_clue_exchange", true);
     m_reception_task_ptr->set_enable_clue_exchange(reception_clue_exchange);
 
+    bool reception_send_clue = params.get("reception_send_clue", true);
+    m_reception_task_ptr->set_send_clue(reception_send_clue);
+
     bool replenish = params.get("replenish", false);
     m_replenish_task_ptr->set_enable(replenish);
 
@@ -207,7 +210,7 @@ bool asst::InfrastTask::parse_and_set_custom_config(const std::filesystem::path&
         return false;
     }
 
-    auto custom_json_opt = json::open(path);
+    auto custom_json_opt = json::open(path, true, true);
     if (!custom_json_opt) {
         Log.error("failed to open json file:", path);
         return false;

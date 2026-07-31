@@ -1,5 +1,5 @@
 ---
-order: 3
+order: 4
 icon: mdi:plug
 ---
 
@@ -164,11 +164,11 @@ MAA 可以通过当前**正在运行的单个模拟器**自动检测并填充 AD
 
 需选择对应模拟器的配置，若列表中没有则选择通用配置。若通用配置不可用请尝试并选择其他任一可用的配置。
 
-具体区别可以阅读[源码](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/dev/resource/config.json#L65)。
+具体区别可以阅读[源码](https://github.com/MaaAssistantArknights/MaaAssistantArknights/blob/dev/resource/config.json#L57)。
 
 ### MuMu 截图增强模式
 
-需使用官版或方舟专版 MuMu V4.1.26 及更新版本。<!-- 官版 V3.8.13 支持初版截图增强 -->
+**版本要求**：官版/方舟专版 MuMu V4.1.26 及以上，或国际版 MuMu V5.21.3 及以上。<!-- 官版 V3.8.13 支持初版截图增强 -->
 
 1. `设置` - `连接设置`，勾选 `启用 MuMu 截图增强模式`，MAA 会在勾选开关时自动尝试通过注册表获取安装路径。
 

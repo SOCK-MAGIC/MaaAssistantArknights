@@ -9,16 +9,18 @@ dir:
 
 ::: center
 
-![MAA Logo =256x256](/images/maa-logo_512x512.png)
-
 <!-- markdownlint-restore -->
+
+![MAA Logo =256x256](/images/maa-logo_512x512.png)
 
 # MAA
 
 ![C++](https://img.shields.io/badge/C++-20-%2300599C?logo=cplusplus)  
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-blueviolet)  
 ![license](https://img.shields.io/github/license/MaaAssistantArknights/MaaAssistantArknights) ![commit](https://img.shields.io/github/commit-activity/m/MaaAssistantArknights/MaaAssistantArknights?color=%23ff69b4)  
-![stars](https://img.shields.io/github/stars/MaaAssistantArknights/MaaAssistantArknights?style=social) ![GitHub all releases](https://img.shields.io/github/downloads/MaaAssistantArknights/MaaAssistantArknights/total?style=social)
+![stars](https://img.shields.io/github/stars/MaaAssistantArknights/MaaAssistantArknights?style=social) ![GitHub all releases](https://img.shields.io/github/downloads/MaaAssistantArknights/MaaAssistantArknights/total?style=social)  
+<a href="https://deepwiki.com/MaaAssistantArknights/MaaAssistantArknights"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>  
+<a href="https://trendshift.io/repositories/979" target="_blank"><img src="https://trendshift.io/api/badge/repositories/979" alt="MaaAssistantArknights%2FMaaAssistantArknights | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 MAA 的意思是 MAA Assistant Arknights
 
@@ -36,7 +38,7 @@ MAA 的意思是 MAA Assistant Arknights
 
 ## 亮点功能
 
-- 刷理智，掉落识别及上传 [企鹅物流](https://penguin-stats.cn/)，[一图流](https://ark.yituliu.cn/)
+- 理智作战，掉落识别及上传 [企鹅物流](https://penguin-stats.cn/)，[一图流](https://ark.yituliu.cn/)
 - 智能基建换班，自动计算干员效率，单设施内最优解；同时也支持 [自定义排班](./protocol/base-scheduling-schema.md)
 - 自动公招，可选使用加急许可，一次全部刷完！公招数据自动上传 [企鹅物流](https://penguin-stats.cn/result/stage/recruit/recruit)，[一图流](https://ark.yituliu.cn/survey/maarecruitdata)
 - 支持手动识别公招界面，方便对高星公招做出选择 ~~（你的这个高资回费出的是推王呢还是推王呢）~~

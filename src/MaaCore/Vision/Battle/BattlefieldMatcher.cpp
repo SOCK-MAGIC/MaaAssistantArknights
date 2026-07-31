@@ -103,7 +103,7 @@ std::vector<battle::DeploymentOper> BattlefieldMatcher::deployment_analyze() con
         battle::DeploymentOper oper;
         oper.rect = flag_res.rect.move(click_move);
 
-        Rect role_rect = flag_res.rect.move(role_move);
+        Rect role_rect = correct_rect(flag_res.rect.move(role_move), m_image);
         oper.role = oper_role_analyze(role_rect);
         if (oper.role == battle::Role::Unknown) {
             Log.warn("Unknown role");
@@ -113,10 +113,10 @@ std::vector<battle::DeploymentOper> BattlefieldMatcher::deployment_analyze() con
         if (oper.rect.x + oper.rect.width >= m_image.cols) {
             oper.rect.width = m_image.cols - oper.rect.x;
         }
-        Rect avatar_rect = oper.rect.move(avatar_move);
+        Rect avatar_rect = correct_rect(oper.rect.move(avatar_move), m_image);
         oper.avatar = m_image(make_rect<cv::Rect>(avatar_rect));
 
-        Rect available_rect = flag_res.rect.move(avlb_move);
+        Rect available_rect = correct_rect(flag_res.rect.move(avlb_move), m_image);
         oper.available = oper_available_analyze(available_rect);
 
 #ifdef ASST_DEBUG
@@ -273,18 +273,48 @@ bool BattlefieldMatcher::kills_flag_analyze() const
 
 BattlefieldMatcher::MatchResult<std::pair<int, int>> BattlefieldMatcher::kills_analyze() const
 {
-    if (hit_kills_cache()) {
+    const auto& flag_task = Task.get<MatchTaskInfo>("BattleKillsFlag");
+    cv::Mat template_image = TemplResource::get_instance().get_templ("BattleKillsFlag.png");
+    cv::Mat match_image = make_roi(m_image, flag_task->roi);
+
+    // 对模板图和截图都进行一次模糊，减少yj缩放对文字及细节的影响，提升命中率
+    cv::Mat template_blur, image_blur;
+    cv::GaussianBlur(template_image, template_blur, cv::Size(3, 3), 0);
+    cv::GaussianBlur(match_image, image_blur, cv::Size(3, 3), 0);
+
+    Matcher flag_match(image_blur);
+    flag_match.set_mask_ranges(flag_task->mask_ranges);
+    flag_match.set_roi({ 0, 0, flag_task->roi.width, flag_task->roi.height });
+    flag_match.set_templ(template_blur);
+    flag_match.set_method(MatchMethod::Ccoeff);
+    flag_match.set_threshold(flag_task->templ_thresholds);
+    if (!flag_match.analyze()) {
+        LogWarn << __FUNCTION__ << "kill flag not found";
+        return {};
+    }
+
+    auto flag_rect = flag_match.get_result().rect;
+    flag_rect.x += flag_task->roi.x;
+    flag_rect.y += flag_task->roi.y;
+
+    if (hit_kills_cache(flag_rect)) {
         return { .status = MatchStatus::HitCache };
     }
-    TemplDetOCRer kills_analyzer(m_image);
-    kills_analyzer.set_task_info("BattleKillsFlag", "BattleKills");
-    kills_analyzer.set_replace(Task.get<OcrTaskInfo>("NumberOcrReplace")->replace_map);
-    kills_analyzer.set_ocr_use_raw(true);
-    auto kills_opt = kills_analyzer.analyze();
+
+    const auto& ocr_task = Task.get<OcrTaskInfo>("BattleKills");
+    RegionOCRer flag_analyzer(m_image);
+    flag_analyzer.set_roi(flag_rect.move(ocr_task->roi));
+    flag_analyzer.set_use_char_model(ocr_task->is_ascii);
+    flag_analyzer.set_use_raw(ocr_task->use_raw);
+    flag_analyzer.set_replace(Task.get<OcrTaskInfo>("NumberOcrReplace")->replace_map);
+    auto kills_opt = flag_analyzer.analyze();
     if (!kills_opt) {
         return {};
     }
-    const std::string& kills_text = kills_opt->front().text;
+    const std::string& kills_text = kills_opt->text;
+    if (kills_text.empty()) {
+        return {};
+    }
 
     size_t pos = kills_text.find('/');
     if (pos == std::string::npos) {
@@ -308,6 +338,11 @@ BattlefieldMatcher::MatchResult<std::pair<int, int>> BattlefieldMatcher::kills_a
             Log.trace("pre total kills pos:", pre_pos);
             pos = pre_pos - 1;
         }
+    }
+
+    if (kills_text.length() <= pos + 1) {
+        Log.error("kills_text length is too short: text='{}', length={}, pos={}", kills_text, kills_text.size(), pos);
+        return {};
     }
 
     // 例子中的"0"
@@ -334,22 +369,17 @@ BattlefieldMatcher::MatchResult<std::pair<int, int>> BattlefieldMatcher::kills_a
     return { .value = std::make_pair(kills, total_kills), .status = MatchStatus::Success };
 }
 
-bool asst::BattlefieldMatcher::hit_kills_cache() const
+bool asst::BattlefieldMatcher::hit_kills_cache(Rect flag_rect) const
 {
-    if (m_image_prev.empty() || m_image.cols != m_image_prev.cols || m_image.rows != m_image_prev.rows) {
+    if (m_image_prev.empty() || m_image.size != m_image_prev.size) {
         return false;
     }
-    Matcher flag_match(m_image);
-    flag_match.set_task_info("BattleKillsFlag");
-    if (!flag_match.analyze()) {
-        return false;
-    }
-    const auto& flag_rect = flag_match.get_result().rect;
-    const auto& task = Task.get("BattleKills");
-    const auto& roi = flag_rect.move(task->roi);
 
-    cv::Mat kills_image_cache = make_roi(m_image_prev, roi);
-    cv::Mat kills_image = make_roi(m_image, roi);
+    const auto& ocr_task = Task.get<OcrTaskInfo>("BattleKills");
+    const auto& roi = flag_rect.move(ocr_task->roi);
+
+    cv::Mat kills_image_cache = make_roi(m_image_prev, correct_rect(roi, m_image_prev));
+    cv::Mat kills_image = make_roi(m_image, correct_rect(roi, m_image));
     cv::cvtColor(kills_image_cache, kills_image_cache, cv::COLOR_BGR2GRAY);
     cv::cvtColor(kills_image, kills_image, cv::COLOR_BGR2GRAY);
     cv::Mat match;
@@ -358,7 +388,7 @@ bool asst::BattlefieldMatcher::hit_kills_cache() const
     cv::minMaxLoc(match, nullptr, &mark);
     // 正常在 0.997-1 之间波动, 少有0.995
     // _5->_6 的分数最高, 可达0.94
-    const double threshold = static_cast<double>(task->special_params[0]) / 100;
+    const double threshold = static_cast<double>(ocr_task->special_params[0]) / 100;
     return mark > threshold;
 }
 
@@ -390,7 +420,7 @@ BattlefieldMatcher::MatchResult<int> BattlefieldMatcher::costs_analyze() const
 
 bool asst::BattlefieldMatcher::hit_costs_cache() const
 {
-    if (m_image_prev.empty() || m_image.cols != m_image_prev.cols || m_image.rows != m_image_prev.rows) {
+    if (m_image_prev.empty() || m_image.size != m_image_prev.size) {
         return false;
     }
     const auto& task = Task.get("BattleCostData");

@@ -185,19 +185,26 @@ jobs:
         run: |
           python3 tools/maadeps-download.py ${{ matrix.arch }}-windows
 
-      - name: Config cmake
+      - name: Configure, build and install
         run: |
-          mkdir -p build
-          cmake -B build ${{ matrix.arch == 'arm64' && '-A ARM64' }} -DCMAKE_BUILD_TYPE=RelWithDebInfo -DMAADEPS_TRIPLET='maa-${{ matrix.arch }}-windows' -DINSTALL_RESOURCE=ON -DINSTALL_PYTHON=ON -DMAA_HASH_VERSION='${{ steps.set_tag.outputs.tag }}' -DBUILD_WPF_GUI=OFF
+          cmake -B build --preset ${{ matrix.arch == 'arm64' && 'windows-publish-arm64' || 'windows-publish-x64' }} -DMAA_HASH_VERSION='${{ steps.set_tag.outputs.tag }}'
+          cmake --build --preset ${{ matrix.arch == 'arm64' && 'windows-publish-arm64' || 'windows-publish-x64' }} --parallel $env:NUMBER_OF_PROCESSORS
+          cmake --install build --config RelWithDebInfo
 
-      - name: Build
-        run: |
-          cmake --build build --config RelWithDebInfo --parallel $env:NUMBER_OF_PROCESSORS
+      - name: Download MaaFramework
+        if: matrix.arch == 'x64'
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: MaaXYZ/MaaFramework
+          latest: true
+          fileName: '*win-x86_64*.zip'
+          extract: true
+          out-file-path: MaaFramework-temp
 
-      - name: Install
+      - name: Copy MaaWin32ControlUnit
+        if: matrix.arch == 'x64'
         run: |
-          mkdir -p install
-          cmake --install build --prefix install --config RelWithDebInfo
+          cp MaaFramework-temp/bin/*Win32ControlUnit* install/
 
       - name: Cache .nuke/temp, ~/.nuget/packages
         id: cache-nuget
@@ -242,7 +249,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload PDB files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: MAAComponent-DebugSymbol-win-${{ matrix.arch }}
           path: install/MAAComponent-DebugSymbol-${{ steps.set_tag.outputs.tag }}-win-${{ matrix.arch }}.zip
@@ -258,7 +265,7 @@ jobs:
           cp tools/DependencySetup_依赖库安装.bat install
 
       - name: Upload MAA to GitHub
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: MAA-win-${{ matrix.arch }}
           path: install
@@ -319,7 +326,7 @@ jobs:
           show-progress: false
 
       - name: Download MAA from GitHub
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: MAA-win-${{ matrix.target }}
           path: ${{ format('{0}/{1}', 'build-ota', needs.build-win-nightly.outputs.tag) }}

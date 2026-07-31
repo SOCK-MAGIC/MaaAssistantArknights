@@ -56,7 +56,7 @@ protected:
     bool update_kills(const cv::Mat& image, const cv::Mat& image_prev = cv::Mat());
     bool update_cost(const cv::Mat& image, const cv::Mat& image_prev = cv::Mat());
 
-    cv::Mat get_top_view(const cv::Mat& cam_img, bool side = true);
+    cv::Mat get_top_view(const cv::Mat& cam_img, bool side = true, bool has_multi_stages = false);
 
     bool deploy_oper(const std::string& name, const Point& loc, battle::DeployDirection direction);
     bool retreat_oper(const std::string& name);
@@ -67,7 +67,10 @@ protected:
     bool use_skill(const Point& loc, bool keep_waiting = true);
     bool check_pause_button(const cv::Mat& reusable = cv::Mat());
     bool check_skip_plot_button(const cv::Mat& reusable = cv::Mat());
-    bool check_in_speed_up(const cv::Mat& reusable = cv::Mat());
+    // 检查是否有战斗中带头像的对话框
+    bool check_avatar_dialog(const cv::Mat& reusable = cv::Mat());
+    // 检查是否处于二倍速
+    bool check_in_speedup(const cv::Mat& reusable = cv::Mat());
     virtual bool check_in_battle(const cv::Mat& reusable = cv::Mat(), bool weak = true);
     virtual bool wait_until_start(bool weak = true);
     bool wait_until_end(bool weak = true);
@@ -109,11 +112,13 @@ protected:
     std::unordered_map<Point, TilePack::TileInfo> m_normal_tile_info; // 正常的坐标映射
     Point m_skill_button_pos;
     Point m_retreat_button_pos;
+    bool m_has_multi_stages = false;
     std::unordered_map<std::string, battle::SkillUsage> m_skill_usage;
     std::unordered_map<std::string, int> m_skill_times;
     std::unordered_map<std::string, int> m_skill_error_count;
     std::unordered_map<std::string, std::chrono::steady_clock::time_point> m_last_use_skill_time;
     int m_camera_count = 0;
+    bool m_in_speedup = false; // 是否处于2倍速
     std::pair<double, double> m_camera_shift = { 0., 0. };
 
     /* 实时更新的数据 */

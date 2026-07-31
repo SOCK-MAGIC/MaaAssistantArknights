@@ -1,4 +1,10 @@
 {
+    "BattleQuickFormationModulePage": {
+        "text": ["Branch"]
+    },
+    "BattleQuickFormationSkillPage": {
+        "text": "Skill"
+    },
     "ClickChapter1": {
         "text": ["Hour of An Awakening", "Hour of An"]
     },
@@ -22,6 +28,13 @@
         "roi": [1163, 27, 84, 28],
         "text": ["Movements"]
     },
+    "EnterEpisodeNew": {
+        "baseTask": "#none",
+        "baseTaskDoc": "26.2.10 Add a secondary interface and delete it after subsequent updates",
+        "Doc": "base_task",
+        "template": "empty.png",
+        "action": "ClickSelf"
+    },
     "LevelOfDifficulty": {
         "text": ["Environment", "PRTS"]
     },
@@ -35,7 +48,7 @@
         "Doc": "该任务的 ocrReplace 被所有涉及干员名的英文识别任务复用 This task's ocrReplace is reused by all recognition tasks related to operator names",
         "ocrReplace": [
             [":", ""],
-            ["SilverAsh", "银灰"],
+            ["^SilverAsh$", "银灰"],
             ["^Blaze$", "煌"],
             ["Surtr", "史尔特尔"],
             ["^Ch'en$", "陈"],
@@ -80,12 +93,12 @@
             ["Reserve Operator *-* *M[elee]*", "预备干员-近战"],
             ["Angelina", "安洁莉娜"],
             ["Sora", "空"],
-            ["Ss?k?ad?i? the Co?rru?pt?ing ?[Heart]*", "浊心斯卡蒂"],
+            ["Skadi the Corrupting ?[Heart]*", "浊心斯卡蒂"],
             ["Scene", "稀音"],
             ["Suzuran", "铃兰"],
             ["Mayer", "梅尔"],
             ["Magallan", "麦哲伦"],
-            ["Pramanix", "初雪"],
+            ["^Pramanix$", "初雪"],
             ["Gnosis", "灵知"],
             ["Glaucus", "格劳克斯"],
             ["Shamare", "巫恋"],
@@ -101,7 +114,7 @@
             ["Ansel?", "安赛尔"],
             ["Myrrh", "末药"],
             ["^Gavial$", "嘉维尔"],
-            ["Perfumer", "调香师"],
+            ["^Perfumer$", "调香师"],
             ["Ptilopsis", "白面鸮"],
             ["^Silence$", "赫默"],
             ["Warfarin", "华法琳"],
@@ -238,7 +251,7 @@
             ["Robin", "罗宾"],
             ["Jaye", "孑"],
             ["Weedy", "温蒂"],
-            ["Phantom", "傀影"],
+            ["^Phantom$", "傀影"],
             ["Aak", "阿"],
             ["^Snowsant$", "雪雉"],
             ["Waai Fu", "槐琥"],
@@ -383,8 +396,8 @@
             ["Entitative Program Controller", "实体程式控制"],
             ["Reserve Operator *-* *D[efender]*", "预备干员-重装"],
             ["R-31a Heavy Power Armor", "R-31a重型动力装甲"],
-            ["Astgenne", "星源"],
-            ["(L? *ight *t* *n?[ifGg]?re?v?y *th?n?er?|Greyy the Lightningbe[arer]*)", "承曦格雷伊"],
+            ["^Astgenne$", "星源"],
+            ["(L? *ight *t* *n?[ifGg]?re?v?y *th?n?er?|Gre[vy][vy] the Lightningbe[arer]*)", "承曦格雷伊"],
             ["Dorothy", "多萝西"],
             ["R-31 Heavy Power Armor", "R-31重型动力装甲"],
             ["R-11 Assault Power Armor", "R-11突击动力装甲"],
@@ -465,7 +478,6 @@
             ["Hypnotic Censer", "安眠迷香"],
             ["Modular Computing Station", "模块演算设施"],
             ["Refreshing Potion", "醒神秘药"],
-            ["Bush", "灌木丛"],
             ["Base", "基地"],
             ["Old Isin", "老伊辛"],
             ["Fortification", "防御工事"],
@@ -769,7 +781,6 @@
             ["Shiny Berries", "闪亮果实"],
             ["Glooming Berry", "奇异黑光果实"],
             ["Shiny Brew", "缤纷果酒"],
-            ["'Treasure Chest'", "“宝箱”"],
             ["Vina Victoria", "维娜·维多利亚"],
             ["Catherine", "凯瑟琳"],
             ["Bobbing", "波卜"],
@@ -868,7 +879,7 @@
             ["Scoring Station", "大战记分站"],
             ["Gramophone Pedestal", "“留声机”底座"],
             ["Blaze the Igniting Spark", "烛煌"],
-            ["Yu", "余"],
+            ["^Yu$", "余"],
             ["Surfer", "寻澜"],
             ["Xingzhu", "行箸"],
             ["Stove", "火灶"],
@@ -939,7 +950,67 @@
             ["Dive", "戴乌"],
             ["Raidian", "电弧"],
             ["Cycle", "赛柯"],
-            ["Artifact Center", "遗物中枢"]
+            ["Artifact Center", "遗物中枢"],
+            ["Zero-Stress Helper", "压力归零帮手"],
+            ["Stress-Relief Helper", "压力舒缓帮手"],
+            ["Fate Striker", "天命来袭"],
+            ["Kichisei", "吉星"],
+            ["Matsukiri", "松桐"],
+            ["Haruka", "遥"],
+            ["'Zan'", "“斩”"],
+            ["Hoshiguma the Breacher", "斩业星熊"],
+            ["Life Support Monitor Addon", "维生监测配件"],
+            ["'Moonlight Cocoon'", "“月影之茧”"],
+            ["Microspike Addon", "微型尖刺配件"],
+            ["Mutsumi Wakaba", "若叶睦"],
+            ["Umiri Yahata", "八幡海铃"],
+            ["Sakiko Togawa", "丰川祥子"],
+            ["Counter Armor Set", "反制装甲套组"],
+            ["Uika Misumi", "三角初华"],
+            ["'Unwavering Assistant'", "“绝对助手”"],
+            ["Nyamu Y.?tenji", "祐天寺若麦"],
+            ["Greenhouse Shed", "温室拱棚"],
+            ["Bloodborn Cytoplasm", "血裔胞体"],
+            ["Cursed Bloodground", "噬血诅地"],
+            ["Plug-in Upgrade Depot", "插件强化点"],
+            ["Plug-in Supply Depot", "插件补给点"],
+            ["Hill Village", "山地村落"],
+            ["^Ruins$", "废墟"],
+            ["Warning Outpost", "警戒岗哨"],
+            ["Advance Detector", "先遣侦测器"],
+            ["Great Library", "大图书馆"],
+            ["Improved Witchcraft Altar", "改良巫术祭坛"],
+            ["Archive", "藏书馆"],
+            ["Power Station", "供能基站"],
+            ["Polluted Recycler", "被污染的回收炉"],
+            ["Foundry Car", "冶铸车"],
+            ["Forest", "密林"],
+            ["^Bush$", "草丛"],
+            ["^Bush$", "灌木丛"],
+            ["Loader", "装卸机"],
+            ["Fae Lab", "精怪实验室"],
+            ["Originium Mine", "源石矿场"],
+            ["Hunting Village", "猎户村落"],
+            ["Pasture Village", "牧场村落"],
+            ["Flower Bush", "花丛"],
+            ["Formation Stabilizer", "晶簇稳定器"],
+            ["Wilderness Village", "荒野村落"],
+            ["Woods", "林地"],
+            ["Surveyor", "勘探器"],
+            ["Originium Recycler", "源石回收炉"],
+            ["^Rock$", "岩石"],
+            ["Sensor Hub", "侦测中心"],
+            ["^Outpost$", "岗哨"],
+            ["Witchcraft Village", "巫术村落"],
+            ["Mountain", "山脉"],
+            ["Impact Fence", "冲突围栏"],
+            ["Originium Formation", "源石晶簇"],
+            ["^River$", "河流"],
+            ["Rich Vein", "富集矿区"],
+            ["Arts Outpost", "术法岗哨"],
+            ["Farmland", "田地"],
+            ["Waterside Village", "水产村落"],
+            ["Base Station", "信号基站"]
         ]
     },
     "GameStartCheckResourceOCR": {
@@ -1028,7 +1099,18 @@
         "text": ["Provisional", "Mining", "Permit"]
     },
     "OrundumActivities": {
-        "text": ["Lucky Strips", "Wishing", "Lucky", "Wall", "Bazaar", "Shrine", "Nurtury", "Wish", "Board"],
+        "text": [
+            "Lucky Strips",
+            "Wishing",
+            "Lucky",
+            "Wall",
+            "Bazaar",
+            "Shrine",
+            "Nurtury",
+            "Wish",
+            "Board",
+            "Enmusubi"
+        ],
         "roi": [67, 69, 115, 219]
     },
     "OrundumActivitiesChoose": {
@@ -1494,11 +1576,8 @@
         "text": ["All"]
     },
     "BattleQuickFormationOCR": {
-        "rectMove": [0, 231, 116, 22],
+        "rectMove": [0, 234, 116, 22],
         "specialParams": [105, 2, 7, 0, 3, 10]
-    },
-    "BattleQuickFormationModulePage": {
-        "text": ["Branch"]
     },
     "BattleStartPre": {
         "text": ["Start", "Start Challenge"]
@@ -1518,6 +1597,9 @@
     },
     "SSSBattleOperName": {
         "roi": [0, 105, 300, 31]
+    },
+    "BattleDeployWhenPause": {
+        "specialParams": [0]
     },
     "StageDrops-TimesCheck": {
         "text": ["Continuous", "Auto", "Operation"]
@@ -1551,7 +1633,7 @@
     },
     "OperBoxNameOCR": {
         "rectMove_doc": "for overwidth",
-        "rectMove": [0, 265, 128, 22],
+        "rectMove": [0, 264, 133, 24],
         "specialParams": [160, 4, 0, 0, 3, 10]
     },
     "SSSBegin": {
@@ -1581,7 +1663,6 @@
             ["Arts Resonant Energy Field", "法术调和能量场"],
             ["Security Talent Agreement", "保全人才合作协议"],
             ["Royal Academy of Sciences[ Telescope]*", "皇家科学院望远镜"],
-            ["Security Talent Agreement", "保全人才合作协议"],
             ["Cloudstepper", "攀云机"],
             ["Pinnacle Insights? Port", "尖端研究成果共享终端"],
             ["Lightweight Range[finder]*", "轻型瞄准测距仪"],

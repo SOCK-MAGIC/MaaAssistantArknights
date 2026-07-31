@@ -274,6 +274,31 @@ public class GuiSettingsUserControlModel : PropertyChangedBase
         }
     }
 
+    private bool _useCardLog = ConfigurationHelper.GetValue(ConfigurationKeys.UseCardLog, true);
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to use card log format.
+    /// </summary>
+    public bool UseCardLog
+    {
+        get => _useCardLog;
+        set {
+            SetAndNotify(ref _useCardLog, value);
+            ConfigurationHelper.SetValue(ConfigurationKeys.UseCardLog, value.ToString());
+        }
+    }
+
+    private int _maxNumberOfLogThumbnails = ConfigurationHelper.GetValue(ConfigurationKeys.MaxNumberOfLogThumbnails, 100);
+
+    public int MaxNumberOfLogThumbnails
+    {
+        get => _maxNumberOfLogThumbnails;
+        set {
+            SetAndNotify(ref _maxNumberOfLogThumbnails, value);
+            ConfigurationHelper.SetValue(ConfigurationKeys.MaxNumberOfLogThumbnails, value.ToString());
+        }
+    }
+
     private static readonly Dictionary<string, string> _windowTitleAllShowDict = new()
     {
         { "1", LocalizationHelper.GetString("ConfigurationName") },
@@ -284,11 +309,10 @@ public class GuiSettingsUserControlModel : PropertyChangedBase
 
     public static Dictionary<string, string> WindowTitleAllShowDict { get => _windowTitleAllShowDict; }
 
-    private static object[] _windowTitleSelectShowList = ConfigurationHelper.GetGlobalValue(ConfigurationKeys.WindowTitleSelectShowList, "1 2 3 4")
+    private static object[] _windowTitleSelectShowList = [.. ConfigurationHelper.GetGlobalValue(ConfigurationKeys.WindowTitleSelectShowList, "2 3 4")
         .Split(' ')
         .Where(s => _windowTitleAllShowDict.ContainsKey(s.ToString()))
-        .Select(s => (object)new KeyValuePair<string, string>(s, _windowTitleAllShowDict[s]))
-        .ToArray();
+        .Select(s => (object)new KeyValuePair<string, string>(s, _windowTitleAllShowDict[s]))];
 
     public object[] WindowTitleSelectShowList
     {
@@ -329,8 +353,9 @@ public class GuiSettingsUserControlModel : PropertyChangedBase
             // var backup = _language;
             ConfigurationHelper.SetGlobalValue(ConfigurationKeys.Localization, value);
 
-            var mainWindow = Application.Current.MainWindow;
+            AchievementTrackerHelper.Instance.Unlock(AchievementIds.Linguist);
 
+            var mainWindow = Application.Current.MainWindow;
             if (mainWindow != null)
             {
                 mainWindow.Show();
@@ -454,6 +479,48 @@ public class GuiSettingsUserControlModel : PropertyChangedBase
             }
 
             return _language;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to ignore bad modules and use software rendering.
+    /// </summary>
+    public bool IgnoreBadModulesAndUseSoftwareRendering
+    {
+        get => ConfigFactory.Root.GUI.IgnoreBadModulesAndUseSoftwareRendering;
+        set {
+            ConfigFactory.Root.GUI.IgnoreBadModulesAndUseSoftwareRendering = value;
+            NotifyOfPropertyChange();
+            if (value)
+            {
+                var result = MessageBoxHelper.Show(
+                    LocalizationHelper.GetString("BadModules.ResetWarning"),
+                    LocalizationHelper.GetString("Tip"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            else
+            {
+                var mainWindow = Application.Current.MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.Show();
+                    mainWindow.WindowState = WindowState.Normal;
+                    mainWindow.Activate();
+                }
+
+                var result = MessageBoxHelper.Show(
+                    LocalizationHelper.GetString("BadModules.ResetSuccess"),
+                    LocalizationHelper.GetString("Tip"),
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Information,
+                    ok: LocalizationHelper.GetString("Ok"),
+                    cancel: LocalizationHelper.GetString("ManualRestart"));
+                if (result == MessageBoxResult.OK)
+                {
+                    Bootstrapper.ShutdownAndRestartWithoutArgs();
+                }
+            }
         }
     }
 }

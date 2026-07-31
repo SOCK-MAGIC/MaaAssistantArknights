@@ -24,7 +24,10 @@ using System.Windows;
 using HandyControl.Controls;
 using HandyControl.Data;
 using JetBrains.Annotations;
+using MaaWpfGui.Configuration.Factory;
+using MaaWpfGui.Configuration.Single.MaaTask;
 using MaaWpfGui.Constants;
+using MaaWpfGui.Constants.Enums;
 using MaaWpfGui.Extensions;
 using MaaWpfGui.Helper;
 using MaaWpfGui.Main;
@@ -32,6 +35,7 @@ using MaaWpfGui.Models;
 using MaaWpfGui.Services.HotKeys;
 using MaaWpfGui.States;
 using MaaWpfGui.Utilities.ValueType;
+using MaaWpfGui.ViewModels.Items;
 using MaaWpfGui.ViewModels.UserControl.Settings;
 using Newtonsoft.Json;
 using Serilog;
@@ -155,7 +159,6 @@ public class SettingsViewModel : Screen
     private void Init()
     {
         InitSettings();
-        TaskQueueViewModel.InfrastTask.InitInfrast();
         TaskQueueViewModel.RoguelikeTask.InitRoguelike();
         InitConfiguration();
         InitUiSettings();
@@ -448,7 +451,15 @@ public class SettingsViewModel : Screen
         //     return true;
         // }
         string[] wineList = ["酒", "liquor", "drink", "wine", "beer", "술", "🍷", "🍸", "🍺", "🍻", "🥃", "🍶"];
-        return wineList.Any(TaskQueueViewModel.MallTask.CreditFirstList.Contains);
+        foreach (var task in ConfigFactory.CurrentConfig.TaskQueue.OfType<MallTask>())
+        {
+            if (wineList.Any(task.FirstList.Contains))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #endregion EasterEggs
@@ -497,9 +508,16 @@ public class SettingsViewModel : Screen
     {
         get => _currentConfiguration;
         set {
-            SetAndNotify(ref _currentConfiguration, value);
-            ConfigurationHelper.SwitchConfiguration(value);
+            bool ret = ConfigurationHelper.SwitchConfiguration(value);
+            ret &= ConfigFactory.SwitchConfig(value);
 
+            if (!ret)
+            {
+                ConfigurationHelper.SwitchConfiguration(_currentConfiguration);
+                ConfigFactory.SwitchConfig(_currentConfiguration);
+                return;
+            }
+            SetAndNotify(ref _currentConfiguration, value);
             Bootstrapper.ShutdownAndRestartWithoutArgs();
         }
     }
@@ -521,9 +539,12 @@ public class SettingsViewModel : Screen
             NewConfigurationName = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
         }
 
-        if (ConfigurationHelper.AddConfiguration(NewConfigurationName, CurrentConfiguration))
+        if (ConfigurationHelper.AddConfiguration(NewConfigurationName, CurrentConfiguration) && ConfigFactory.AddConfiguration(NewConfigurationName, CurrentConfiguration))
         {
             ConfigurationList.Add(new CombinedData { Display = NewConfigurationName, Value = NewConfigurationName });
+
+            // 配置数量大于 1 时，标题栏显示配置名
+            UpdateWindowTitle();
 
             var growlInfo = new GrowlInfo {
                 IsCustom = true,
@@ -535,6 +556,8 @@ public class SettingsViewModel : Screen
         }
         else
         {
+            ConfigurationHelper.DeleteConfiguration(NewConfigurationName);
+            ConfigFactory.DeleteConfiguration(NewConfigurationName);
             var growlInfo = new GrowlInfo {
                 IsCustom = true,
                 Message = string.Format(LocalizationHelper.GetString("ConfigExists"), NewConfigurationName),
@@ -549,9 +572,13 @@ public class SettingsViewModel : Screen
     [UsedImplicitly]
     public void DeleteConfiguration(CombinedData delete)
     {
-        if (ConfigurationHelper.DeleteConfiguration(delete.Display))
+        if (ConfigurationHelper.DeleteConfiguration(delete.Display) && ConfigFactory.DeleteConfiguration(delete.Display))
         {
             ConfigurationList.Remove(delete);
+            if (ConfigurationList.Count <= 1)
+            {
+                UpdateWindowTitle();
+            }
         }
     }
 
@@ -559,7 +586,7 @@ public class SettingsViewModel : Screen
 
     #region SettingsGuide
 
-    public static int GuideMaxStep => 6;
+    public static int GuideMaxStep => 7;
 
     private int _guideStepIndex = Convert.ToInt32(ConfigurationHelper.GetValue(ConfigurationKeys.GuideStepIndex, "0"));
 
@@ -768,6 +795,160 @@ public class SettingsViewModel : Screen
 
     #endregion 设置页面列表和滚动视图联动绑定
 
+    #region 折叠框展开状态
+
+    public bool IsSwitchConfigurationExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderSwitchConfiguration;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderSwitchConfiguration = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsScheduleSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderScheduleSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderScheduleSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsPerformanceSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderPerformanceSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderPerformanceSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsGameSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderGameSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderGameSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsConnectionSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderConnectionSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderConnectionSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsStartupSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderStartupSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderStartupSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsRemoteControlSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderRemoteControlSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderRemoteControlSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsUiSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderUiSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderUiSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsBackgroundSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderBackgroundSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderBackgroundSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsExternalNotificationSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderExternalNotificationSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderExternalNotificationSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsHotKeySettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderHotKeySettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderHotKeySettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsAchievementSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderAchievementSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderAchievementSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsUpdateSettingsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderUpdateSettings;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderUpdateSettings = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsIssueReportExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderIssueReport;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderIssueReport = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    public bool IsAboutUsExpanded
+    {
+        get => ConfigFactory.Root.GUI.ExpanderAboutUs;
+        set
+        {
+            ConfigFactory.Root.GUI.ExpanderAboutUs = value;
+            NotifyOfPropertyChange();
+        }
+    }
+
+    #endregion 折叠框展开状态
+
     /// <summary>
     /// Requires the user to restart to apply settings.
     /// </summary>
@@ -823,7 +1004,7 @@ public class SettingsViewModel : Screen
 
         try
         {
-            if (Instances.AnnouncementViewModel.View is System.Windows.Window window)
+            if (Instances.AnnouncementDialogViewModel.View is System.Windows.Window window)
             {
                 if (window.WindowState == WindowState.Minimized)
                 {
@@ -834,10 +1015,10 @@ public class SettingsViewModel : Screen
             }
             else
             {
-                Instances.WindowManager.ShowWindow(Instances.AnnouncementViewModel);
+                Instances.WindowManager.ShowWindow(Instances.AnnouncementDialogViewModel);
             }
 
-            await Instances.AnnouncementViewModel.CheckAndDownloadAnnouncement();
+            await Instances.AnnouncementDialogViewModel.CheckAndDownloadAnnouncement();
         }
         finally
         {
@@ -855,7 +1036,7 @@ public class SettingsViewModel : Screen
         var newVersionFoundInfo = VersionUpdateSettings.NewVersionFoundInfo;
         var uiVersion = VersionUpdateSettingsUserControlModel.UiVersion;
         var startupUpdateCheck = VersionUpdateSettings.StartupUpdateCheck;
-        var isDebug = Instances.VersionUpdateViewModel.IsDebugVersion();
+        var isDebug = Instances.VersionUpdateDialogViewModel.IsDebugVersion();
 
         if (newVersionFoundInfo != uiVersion && !isDebug && !string.IsNullOrEmpty(newVersionFoundInfo) && startupUpdateCheck)
         {
@@ -870,9 +1051,8 @@ public class SettingsViewModel : Screen
             prefix += " - ";
         }
 
-        List<string> windowTitleSelectShowList = GuiSettings.WindowTitleSelectShowList
-            .Cast<KeyValuePair<string, string>>().Select(pair => pair.Key)
-            .ToList();
+        List<string> windowTitleSelectShowList = [.. GuiSettings.WindowTitleSelectShowList
+            .Cast<KeyValuePair<string, string>>().Select(pair => pair.Key)];
 
         string currentConfiguration = string.Empty;
         string connectConfigName = string.Empty;
@@ -884,7 +1064,11 @@ public class SettingsViewModel : Screen
             switch (select)
             {
                 case "1": // 配置名
-                    currentConfiguration = $" ({CurrentConfiguration})";
+                    if (ConfigurationList.Count > 1)
+                    {
+                        currentConfiguration = $" ({CurrentConfiguration})";
+                    }
+
                     break;
 
                 case "2": // 连接模式
@@ -896,7 +1080,7 @@ public class SettingsViewModel : Screen
                     break;
 
                 case "3": // 端口地址
-                    connectAddress = $" ({ConnectSettings.ConnectAddress})";
+                    connectAddress = $" ({ConnectSettings.ConnectAddress})".Replace("127.0.0.1:", string.Empty).Replace("localhost:", string.Empty);
                     break;
 
                 case "4": // 客户端类型
@@ -909,7 +1093,8 @@ public class SettingsViewModel : Screen
             ? $" - {LocalizationHelper.FormatVersion(VersionUpdateSettings.ResourceVersion, VersionUpdateSettings.ResourceDateTime)}"
             : string.Empty;
         string uiVersionDisplay = LocalizationHelper.FormatVersion(uiVersion, VersionUpdateSettingsUserControlModel.BuildDateTime);
-        rvm.WindowTitle = $"{prefix}MAA{currentConfiguration} - {uiVersionDisplay}{resourceVersionDisplay}{connectConfigName}{connectAddress}{clientName}";
+        string adminTag = Bootstrapper.IsAdministratorWithUac() ? $" ({LocalizationHelper.GetString("Administrator")})" : string.Empty;
+        rvm.WindowTitle = $"{prefix}MAA{adminTag}{currentConfiguration} - {uiVersionDisplay}{resourceVersionDisplay}{connectConfigName}{connectAddress}{clientName}";
     }
 
     /// <summary>
@@ -929,13 +1114,12 @@ public class SettingsViewModel : Screen
 
     private static readonly Dictionary<string, string> _serverMapping = new()
     {
-        { string.Empty, "CN" },
-        { "Official", "CN" },
-        { "Bilibili", "CN" },
-        { "YoStarEN", "US" },
-        { "YoStarJP", "JP" },
-        { "YoStarKR", "KR" },
-        { "txwy", "ZH_TW" },
+        { ClientType.Official, "CN" },
+        { ClientType.Bilibili, "CN" },
+        { ClientType.EN, "US" },
+        { ClientType.JP, "JP" },
+        { ClientType.KR, "KR" },
+        { ClientType.Txwy, "ZH_TW" },
     };
 
     /// <summary>

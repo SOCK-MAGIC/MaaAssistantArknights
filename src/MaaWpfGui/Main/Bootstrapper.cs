@@ -41,7 +41,7 @@ using MaaWpfGui.States;
 using MaaWpfGui.Utilities;
 using MaaWpfGui.ViewModels.UI;
 using MaaWpfGui.ViewModels.UserControl.Settings;
-using MaaWpfGui.Views.UI;
+using MaaWpfGui.Views.Dialogs;
 using MaaWpfGui.WineCompat;
 using Microsoft.Win32;
 using Serilog;
@@ -49,7 +49,6 @@ using Serilog.Core;
 using Serilog.Events;
 using Stylet;
 using StyletIoC;
-using static MaaWpfGui.States.RunningState;
 
 namespace MaaWpfGui.Main;
 
@@ -142,6 +141,49 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
         }
     }
 
+    public static bool IsRunningInTempDirectory()
+    {
+        try
+        {
+            var currentPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            var tempPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                Path.GetFullPath(Path.GetTempPath()),
+            };
+
+            var envVars = new[] { "TEMP", "TMP", "TMPDIR" };
+            foreach (var envVar in envVars)
+            {
+                var envValue = Environment.GetEnvironmentVariable(envVar);
+                if (!string.IsNullOrEmpty(envValue))
+                {
+                    try
+                    {
+                        tempPaths.Add(Path.GetFullPath(envValue));
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            foreach (var tempPath in tempPaths)
+            {
+                if (currentPath.StartsWith(tempPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public static void ParseCrashLog()
     {
         var crashFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "crash.log");
@@ -152,6 +194,38 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
 
         try
         {
+            var localAppData = Environment.GetEnvironmentVariable("LocalAppData");
+            if (localAppData is not null && Directory.Exists($"{localAppData}/CrashDumps"))
+            {
+                var crashDumpsSource = Path.Combine(localAppData, "CrashDumps");
+                var dumpDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug", "dumps");
+                if (Directory.Exists(dumpDir))
+                {
+                    Directory.Delete(dumpDir, true);
+                }
+                Directory.CreateDirectory(dumpDir);
+
+                var time = File.GetLastWriteTime(crashFile);
+                bool foundDump = false;
+                foreach (var file in new DirectoryInfo(crashDumpsSource).EnumerateFiles("MAA.exe.*.dmp"))
+                {
+                    if (file.LastWriteTime >= time.AddMinutes(-10) && file.LastWriteTime <= time.AddMinutes(10))
+                    {
+                        _logger.Information("Found crash dump file: {CrashDumpFile}", file.FullName);
+                        File.Copy(file.FullName, Path.Combine(dumpDir, file.Name), true);
+                        foundDump = true;
+                    }
+                }
+                if (foundDump)
+                {
+                    _logger.Information("Crash dumps are copied to {DumpDir}", dumpDir);
+                }
+            }
+            else
+            {
+                _logger.Information("%LocalAppData%/CrashDumps not found");
+            }
+
             string[] lines = File.ReadAllLines(crashFile, Encoding.UTF8);
 
             StringBuilder message = new StringBuilder();
@@ -202,15 +276,15 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
                     LocalizationHelper.GetString("ErrorCrashDialogTitle"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
+            }
 
-                try
-                {
-                    File.Delete(crashFile);
-                }
-                catch
-                {
-                    // ignored
-                }
+            try
+            {
+                File.Delete(crashFile);
+            }
+            catch
+            {
+                // ignored
             }
         }
         catch
@@ -251,7 +325,7 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
             .Enrich.WithThreadName();
 
         var uiVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "0.0.1";
-        uiVersion = uiVersion == "0.0.1" ? "DEBUG VERSION" : uiVersion;
+        uiVersion = uiVersion == "0.0.1" ? "DEBUG_VERSION" : uiVersion;
         var builtDate = Assembly.GetExecutingAssembly().GetCustomAttribute<BuildDateTimeAttribute>()?.BuildDateTime ?? DateTime.MinValue;
         var maaEnv = Environment.GetEnvironmentVariable("MAA_ENVIRONMENT") == "Debug"
             ? "Debug"
@@ -298,8 +372,15 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
         _logger.Information("===================================");
 
         ConfigurationHelper.Load();
+        ConfigConverter.ConvertConfig();
         LocalizationHelper.Load();
         ETagCache.Load();
+
+        if (ConfigFactory.Root.GUI.IgnoreBadModulesAndUseSoftwareRendering)
+        {
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+            _logger.Information("Using software rendering mode due to user preference (bad modules detected)");
+        }
 
         // 检查 MaaCore.dll 是否存在
         if (!File.Exists("MaaCore.dll"))
@@ -350,6 +431,17 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
                 Process.Start(startInfo);
             }
 
+            Shutdown();
+            return;
+        }
+
+        if (IsRunningInTempDirectory())
+        {
+            MessageBoxHelper.Show(
+                LocalizationHelper.GetString("RunningInTempDirectoryError"),
+                LocalizationHelper.GetString("Error"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
             Shutdown();
             return;
         }
@@ -499,13 +591,13 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
             return;
         }
 
-        bool wasFirstBoot = Instances.VersionUpdateViewModel.IsFirstBootAfterUpdate;
+        bool wasFirstBoot = Instances.VersionUpdateDialogViewModel.IsFirstBootAfterUpdate;
 
         Instances.WindowManager.ShowWindow(rootViewModel);
         Instances.InstantiateOnRootViewDisplayed(Container);
 
         // 如果 IsFirstBootAfterUpdate 从 false 变为 true，说明这次启动只是解压更新包，不用执行后续逻辑
-        if (!wasFirstBoot && Instances.VersionUpdateViewModel.IsFirstBootAfterUpdate)
+        if (!wasFirstBoot && Instances.VersionUpdateDialogViewModel.IsFirstBootAfterUpdate)
         {
             return;
         }
@@ -528,7 +620,7 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
         // MessageBox.Show("O(∩_∩)O 拜拜");
         try
         {
-            Instances.TaskQueueViewModel.ResetAllTemporaryVariable();
+            Instances.TaskQueueViewModel.ResetAllTemporaryVariable(false);
         }
         catch
         {
@@ -576,6 +668,12 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
             }
         }
 
+        if (_restartStartInfo is not null)
+        {
+            Process.Start(_restartStartInfo);
+            return;
+        }
+
         if (!_isRestartingWithoutArgs)
         {
             return;
@@ -614,6 +712,7 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
     }
 
     private static bool _isRestartingWithoutArgs;
+    private static ProcessStartInfo _restartStartInfo;
 
     /// <summary>
     /// 重启，不带参数
@@ -623,6 +722,18 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
     {
         _isRestartingWithoutArgs = true;
         _logger.Information("Shutdown and restart without Args, call by `{Caller}`", caller);
+        Execute.OnUIThread(Application.Current.Shutdown);
+    }
+
+    /// <summary>
+    /// 重启，使用自定义启动参数
+    /// </summary>
+    /// <param name="startInfo">新进程的启动参数。</param>
+    /// <param name="caller">Caller Member Name</param>
+    public static void ShutdownAndRestartWith(ProcessStartInfo startInfo, [CallerMemberName] string caller = "")
+    {
+        _restartStartInfo = startInfo;
+        _logger.Information("Shutdown and restart with custom StartInfo, call by `{Caller}`", caller);
         Execute.OnUIThread(Application.Current.Shutdown);
     }
 
@@ -638,6 +749,24 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
     {
         _logger.Information("Shutdown called by `{Caller}`", caller);
         Execute.OnUIThread(Application.Current.Shutdown);
+    }
+
+    /// <summary>
+    /// 以管理员权限重启应用，UAC 弹窗在退出时触发。
+    /// </summary>
+    public static void RestartAsAdmin()
+    {
+        if (Environment.ProcessPath is null)
+        {
+            return;
+        }
+
+        ShutdownAndRestartWith(new ProcessStartInfo
+        {
+            FileName = Environment.ProcessPath,
+            UseShellExecute = true,
+            Verb = "runas",
+        });
     }
 
     private static bool _isWaitingToRestart;
@@ -680,7 +809,7 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
 
             var shouldExit = !isDragDropException;
 
-            var errorView = new ErrorView(exception, shouldExit);
+            var errorView = new ErrorDialogView(exception, shouldExit);
             errorView.ShowDialog();
         });
     }
@@ -740,6 +869,6 @@ public class Bootstrapper : Bootstrapper<RootViewModel>
     {
         // 配置名可能就包在引号中，需要转义符，如 \"a\"
         string currentConfig = ConfigurationHelper.GetCurrentConfiguration();
-        return currentConfig != desiredConfig && ConfigurationHelper.SwitchConfiguration(desiredConfig);
+        return currentConfig != desiredConfig && ConfigurationHelper.SwitchConfiguration(desiredConfig) && ConfigFactory.SwitchConfig(desiredConfig);
     }
 }

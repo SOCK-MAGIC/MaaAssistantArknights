@@ -56,6 +56,41 @@ enum class TouchMode
     MacPlayTools = 3,
 };
 
+#ifdef _WIN32
+
+// Win32 截图方式，与 MaaFramework 的 MaaWin32ScreencapMethod 保持一致
+using Win32ScreencapMethod = uint64_t;
+
+namespace Win32Screencap
+{
+constexpr Win32ScreencapMethod None = 0ULL;
+constexpr Win32ScreencapMethod GDI = 1ULL;
+constexpr Win32ScreencapMethod FramePool = 1ULL << 1;
+constexpr Win32ScreencapMethod DXGI_DesktopDup = 1ULL << 2;
+constexpr Win32ScreencapMethod DXGI_DesktopDup_Window = 1ULL << 3;
+constexpr Win32ScreencapMethod PrintWindow = 1ULL << 4;
+constexpr Win32ScreencapMethod ScreenDC = 1ULL << 5;
+} // namespace Win32Screencap
+
+// Win32 输入方式，与 MaaFramework 的 MaaWin32InputMethod 保持一致
+using Win32InputMethod = uint64_t;
+
+namespace Win32Input
+{
+constexpr Win32InputMethod None = 0ULL;
+constexpr Win32InputMethod Seize = 1ULL;
+constexpr Win32InputMethod SendMessage = 1ULL << 1;
+constexpr Win32InputMethod PostMessage = 1ULL << 2;
+constexpr Win32InputMethod LegacyEvent = 1ULL << 3;
+constexpr Win32InputMethod PostThreadMessage = 1ULL << 4;
+constexpr Win32InputMethod SendMessageWithCursorPos = 1ULL << 5;
+constexpr Win32InputMethod PostMessageWithCursorPos = 1ULL << 6;
+constexpr Win32InputMethod SendMessageWithWindowPos = 1ULL << 7;
+constexpr Win32InputMethod PostMessageWithWindowPos = 1ULL << 8;
+} // namespace Win32Input
+
+#endif // _WIN32
+
 namespace ControlFeat
 {
 using Feat = int64_t;
@@ -287,7 +322,7 @@ struct TextRect : public AnalyzerResult
 
     std::string to_string() const override
     {
-        return std::format("{{ rect: {}, score: {}, text: {} }}", rect.to_string(), score, text);
+        return std::format("{{ text: {}, rect: {}, score: {:.6f} }}", text, rect.to_string(), score);
     }
 
     json::object to_json() const override
@@ -315,7 +350,7 @@ struct MatchRect : public AnalyzerResult
 
     std::string to_string() const override
     {
-        return std::format("{{ rect: {}, score: {}, template: {} }}", rect.to_string(), score, templ_name);
+        return std::format("{{ template: {}, rect: {}, score: {:.6f} }}", templ_name, rect.to_string(), score);
     }
 
     json::object to_json() const override
@@ -593,7 +628,7 @@ struct TaskPipelineInfo
     TaskList sub;                // 子任务（列表）
     TaskList on_error_next;      // 任务出错之后要去执行什么
     TaskList exceeded_next;      // 达到最多次数了之后，下一个可能的任务（列表）
-    TaskList reduce_other_times; // 执行了该任务后，需要减少别的任务的执行次数。例如执行了吃理智药，
+    TaskList reduce_other_times; // 执行了该任务后，需要减少别的任务的执行次数。例如执行了使用理智药，
                                  // 则说明上一次点击蓝色开始行动按钮没生效，所以蓝色开始行动要-1
 };
 

@@ -1,14 +1,20 @@
 #include "DebugTask.h"
 
+#include "MaaUtils/Encoding.h"
+#include <boost/regex.hpp>
 #include <filesystem>
+#include <shared_mutex>
 
 #include "Common/AsstTypes.h"
 #include "Config/TaskData.h"
+#include "Config/TemplResource.h"
 #include "MaaUtils/ImageIo.h"
 #include "MaaUtils/NoWarningCV.hpp"
 #include "Utils/Logger.hpp"
 #include "Vision/Battle/BattlefieldClassifier.h"
 #include "Vision/Battle/BattlefieldMatcher.h"
+#include "Vision/BestMatcher.h"
+#include "Vision/FeatureMatcher.h"
 #include "Vision/Matcher.h"
 #include "Vision/Miscellaneous/DepotImageAnalyzer.h"
 #include "Vision/Miscellaneous/StageDropsImageAnalyzer.h"
@@ -159,7 +165,7 @@ void asst::DebugTask::test_match_template()
     //     "Sarkaz@Roguelike@StageWindAndRain");
 
     // for (int i = 1; i <= 15; ++i) {
-    //     test_task("../../test/dist/" + std::to_string(i) + ".png", "Sarkaz@Roguelike@StageCombatDps");
+    //     test_task("../../test/dist/" + std::to_string(i) + ".png", "Sarkaz@Roguelike@StageCombatOps");
     //     test_task("../../test/dist/" + std::to_string(i) + ".png", "Sarkaz@Roguelike@StageBoskyPassage");
     //     test_task("../../test/dist/" + std::to_string(i) + ".png", "Sarkaz@Roguelike@StageEmergencyTransportation");
     //     test_task("../../test/dist/" + std::to_string(i) + ".png", "Sarkaz@Roguelike@StageWindAndRain");

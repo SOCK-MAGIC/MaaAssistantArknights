@@ -13,17 +13,15 @@
 
 #nullable enable
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using MaaWpfGui.Constants;
+using MaaWpfGui.Configuration.Single.MaaTask;
 using MaaWpfGui.Helper;
 using MaaWpfGui.Models.AsstTasks;
-using MaaWpfGui.Services;
-using Newtonsoft.Json.Linq;
+using static MaaWpfGui.Main.AsstProxy;
 
 namespace MaaWpfGui.ViewModels.UserControl.TaskQueue;
 
-public class CustomSettingsUserControlModel : TaskViewModel
+public class CustomSettingsUserControlModel : TaskSettingsViewModel, CustomSettingsUserControlModel.ISerialize
 {
     static CustomSettingsUserControlModel()
     {
@@ -32,13 +30,13 @@ public class CustomSettingsUserControlModel : TaskViewModel
 
     public static CustomSettingsUserControlModel Instance { get; }
 
-    private string _taskName = ConfigurationHelper.GetGlobalValue(ConfigurationKeys.DebugTaskName, string.Empty);
+    private string _taskName = string.Empty;
 
     public string TaskName
     {
         get => _taskName;
         set {
-            value = value.Replace("，", ",").Replace("；", ";");
+            value = value.Replace("，", ",");
             SetAndNotify(ref _taskName, value);
             OnPropertyChanged(nameof(FormattedTaskNames));
         }
@@ -46,7 +44,7 @@ public class CustomSettingsUserControlModel : TaskViewModel
 
     public void SaveTaskName()
     {
-        ConfigurationHelper.SetGlobalValue(ConfigurationKeys.DebugTaskName, TaskName);
+        SetTaskConfig<CustomTask>(t => t.CustomTaskName == TaskName, t => t.CustomTaskName = TaskName);
     }
 
     public string FormattedTaskNames
@@ -57,46 +55,40 @@ public class CustomSettingsUserControlModel : TaskViewModel
                 return string.Empty;
             }
 
-            var taskGroups = TaskName.Split(';', StringSplitOptions.RemoveEmptyEntries)
-                .Select(group =>
-                    "[" + string.Join(", ",
-                        group.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                            .Select(t => $"\"{t.Trim()}\"")) + "]");
+            var taskGroups = "[" + string.Join(", ", TaskName.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => $"\"{t.Trim()}\"")) + "]";
 
             return string.Join("," + Environment.NewLine, taskGroups);
         }
     }
 
-    public override (AsstTaskType Type, JObject Params) Serialize()
+    public override void RefreshUI(BaseTask baseTask)
     {
-        var task = new AsstCustomTask() {
-            CustomTasks = TaskName.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Select(task => task.Trim())
-                .ToList(),
-        };
-        return task.Serialize();
+        if (baseTask is CustomTask custom)
+        {
+            _taskName = custom.CustomTaskName;
+            Refresh();
+        }
     }
 
-    public List<(AsstTaskType Type, JObject Params)> SerializeMultiTasks()
+    public override bool? SerializeTask(BaseTask? baseTask, int? taskId = null) => (this as ISerialize).Serialize(baseTask, taskId);
+
+    private interface ISerialize : ITaskQueueModelSerialize
     {
-        if (string.IsNullOrWhiteSpace(TaskName))
+        bool? ITaskQueueModelSerialize.Serialize(BaseTask? baseTask, int? taskId)
         {
-            return [];
+            if (baseTask is not CustomTask custom)
+            {
+                return null;
+            }
+
+            var task = new AsstCustomTask() {
+                CustomTasks = [.. custom.CustomTaskName.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(task => task.Trim())],
+            };
+            return taskId switch {
+                int id when id > 0 => Instances.AsstProxy.AsstSetTaskParamsEncoded(id, task),
+                null => Instances.AsstProxy.AsstAppendTaskWithEncoding(TaskType.Custom, task),
+                _ => null,
+            };
         }
-
-        if (!TaskName.Contains(';'))
-        {
-            return [Serialize()];
-        }
-
-        var taskGroups = TaskName.Split(';', StringSplitOptions.RemoveEmptyEntries);
-
-        return taskGroups.Select(group => new AsstCustomTask() {
-            CustomTasks = group.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(task => task.Trim())
-                    .ToList(),
-        })
-            .Select(task => task.Serialize())
-            .ToList();
     }
 }

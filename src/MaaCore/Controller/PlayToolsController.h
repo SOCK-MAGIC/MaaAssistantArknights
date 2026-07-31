@@ -10,6 +10,7 @@
 
 #include "Common/AsstMsg.h"
 #include "InstHelper.h"
+#include "MacSCKHelper.h"
 
 namespace asst
 {
@@ -67,8 +68,17 @@ protected:
     boost::asio::io_context m_context;
     boost::asio::ip::tcp::socket m_socket;
 
+    std::vector<uint8_t> m_screencap_buffer;
+
     std::string m_address;
     std::pair<int, int> m_screen_size = { 0, 0 };
+
+    enum class ScreencapMethod
+    {
+        RGBA,
+        BGR,
+        MacSCK,
+    } m_screencap_method = ScreencapMethod::RGBA;
 
     enum class TouchPhase
     {
@@ -87,11 +97,24 @@ protected:
     void toucher_wait(const int delay);
 
 private:
-    static constexpr int MinimalVersion = 2;
+    unsigned m_minimal_version = 2;
+    std::string m_bundle_id;
+    std::array<int16_t, 8> m_frame_rect = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
     void close();
     bool open();
     bool check_version();
     bool fetch_screen_res();
     bool toucher_commit(const TouchPhase phase, const Point& p, const int delay);
+
+    bool screencap_rgba(cv::Mat& image_payload, bool allow_reconnect);
+    bool screencap_bgr(cv::Mat& image_payload, bool allow_reconnect);
+
+    bool fetch_frame_rect();
+    bool fetch_bundle_id();
+
+#if ASST_WITH_MAC_SCK
+    MacSCKHelper m_sck_helper;
+#endif // ASST_WITH_MAC_SCK
 };
 } // namespace asst

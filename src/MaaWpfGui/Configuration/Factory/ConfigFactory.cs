@@ -17,13 +17,17 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
+using MaaWpfGui.Configuration.Converter;
 using MaaWpfGui.Configuration.Single;
+using MaaWpfGui.Configuration.Single.MaaTask;
 using MaaWpfGui.Helper;
 using ObservableCollections;
 using Serilog;
@@ -42,7 +46,13 @@ public static class ConfigFactory
 
     private static readonly ILogger _logger = Log.ForContext<ConfigurationHelper>();
 
-    private static readonly object _lock = new();
+    private static readonly Lock _lock = new();
+    private static Task? _saveTask;
+    private const int PendingDelayMs = 200;
+
+    private static bool _isReleasing = false;
+
+    private static readonly Timer _debounceTimer = new(CreateSaveTask, null, Timeout.Infinite, Timeout.Infinite);
 
     private static readonly SemaphoreSlim _semaphore = new(1, 1);
 
@@ -51,7 +61,7 @@ public static class ConfigFactory
     // ReSharper disable once EventNeverSubscribedTo.Global
     public static event ConfigurationUpdateEventHandler? ConfigurationUpdateEvent;
 
-    private static readonly JsonSerializerOptions _options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() }, Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs, UnicodeRanges.CjkSymbolsandPunctuation, UnicodeRanges.HalfwidthandFullwidthForms), DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+    private static readonly JsonSerializerOptions _options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter(), new FightTaskStageResetModeInvalidToIgnoreConverter(), new FightTaskStageResetModeConverter() }, Encoder = JavaScriptEncoder.Create(UnicodeRanges.All), DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 
     // TODO: 参考 ConfigurationHelper ，拆几个函数出来
     private static readonly Lazy<Root> _rootConfig = new(() => {
@@ -136,7 +146,7 @@ public static class ConfigFactory
                         throw new ArgumentOutOfRangeException();
                 }
 
-                OnPropertyChanged("Root.Configurations", null, null);
+                OnPropertyChanged("Root.Configurations." + args.NewItem.Key, args.OldItem.Value, args.NewItem.Value);
             };
 
             parsed.Timers.CollectionChanged += OnCollectionChangedFactory<int, Global.Timer>("Root.Timers.");
@@ -158,37 +168,59 @@ public static class ConfigFactory
                 _logger.Warning("{File} save failed", _configBakFile);
             }
 
+            if (ParseJsonFile(ConfigurationHelper.ConfigFile) is JsonObject oldConfigJson && oldConfigJson["Configurations"] is JsonObject configurationsObj)
+            {
+                if (oldConfigJson["Current"]?.GetValue<string>() is string oldCurrent && parsed.Current != oldCurrent)
+                {
+                    _logger.Warning("Current configuration in old configuration is {OldCurrent}, but in new configuration is {NewCurrent}, switching to old current", oldCurrent, parsed.Current);
+                    parsed.Current = oldCurrent;
+                }
+                var configNames = configurationsObj.Select(i => i.Key);
+                foreach (var name in parsed.Configurations.Select(i => i.Key).Except(configNames))
+                {
+                    parsed.Configurations.Remove(name);
+                    _logger.Information("Configuration {ConfigName} does not exist in old configuration, remove it", name);
+                }
+            }
+
+            if (parsed.Configurations.All(i => i.Key != parsed.Current))
+            {
+                parsed.Configurations.Add(parsed.Current, new SpecificConfig());
+            }
+
             return parsed;
 
             void SpecificConfigBind(string name, SpecificConfig config)
             {
                 var key = "Root.Configurations." + name + ".";
+                config.PropertyChanged += OnPropertyChangedFactory(key);
                 config.DragItemIsChecked.CollectionChanged += OnCollectionChangedFactory<string, bool>(key + nameof(SpecificConfig.DragItemIsChecked) + ".");
                 config.InfrastOrder.CollectionChanged += OnCollectionChangedFactory<string, int>(key + nameof(SpecificConfig.InfrastOrder) + ".");
-                config.TaskQueueOrder.CollectionChanged += OnCollectionChangedFactory<string, int>(key + nameof(SpecificConfig.TaskQueueOrder) + ".");
-                /*
-                config.TaskQueue.CollectionChanged += (in NotifyCollectionChangedEventArgs<BaseTask> args) =>
-                {
+
+                config.TaskQueue.CollectionChanged += (in NotifyCollectionChangedEventArgs<BaseTask> args) => {
                     switch (args.Action)
                     {
                         case NotifyCollectionChangedAction.Add:
                         case NotifyCollectionChangedAction.Replace:
                             if (args.IsSingleItem)
                             {
-                                args.NewItem.PropertyChanged += OnPropertyChangedFactory(key + args.NewItem.GetType().Name + ".");
+                                args.NewItem.PropertyChanged += TaskQueueItemOnPropertyChangedFactory(config.TaskQueue, key);
                             }
                             else
                             {
                                 foreach (var value in args.NewItems)
                                 {
-                                    value.PropertyChanged += OnPropertyChangedFactory(key + value.GetType().Name + ".");
+                                    value.PropertyChanged += TaskQueueItemOnPropertyChangedFactory(config.TaskQueue, key);
                                 }
                             }
-
+                            OnPropertyChanged($"({args.Action}){key}TaskQueue[{args.NewStartingIndex}]", args.OldItem, args.NewItem);
+                            break;
+                        case NotifyCollectionChangedAction.Move:
+                            OnPropertyChanged($"({args.Action}){key}TaskQueue[{args.OldStartingIndex}]->[{args.NewStartingIndex}]", args.OldItem, args.NewItem);
                             break;
                         case NotifyCollectionChangedAction.Remove:
-                        case NotifyCollectionChangedAction.Move:
                         case NotifyCollectionChangedAction.Reset:
+                            OnPropertyChanged($"({args.Action}){key}TaskQueue[{args.NewStartingIndex}]", args.OldItem, args.NewItem);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -196,9 +228,29 @@ public static class ConfigFactory
                 };
                 foreach (var task in config.TaskQueue)
                 {
-                    // TODO 改名
-                    task.PropertyChanged += OnPropertyChangedFactory(key + ".zdjd.");
-                }*/
+                    task.PropertyChanged += TaskQueueItemOnPropertyChangedFactory(config.TaskQueue, key);
+                }
+            }
+
+            JsonObject? ParseJsonFile(string filePath)
+            {
+                if (File.Exists(filePath) is false)
+                {
+                    return null;
+                }
+
+                var str = File.ReadAllText(filePath);
+                try
+                {
+                    var obj = JsonSerializer.Deserialize<JsonObject>(str);
+                    return obj ?? throw new Exception("Failed to parse json file");
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Failed to deserialize json file: {FilePath}", filePath);
+                }
+
+                return null;
             }
         }
     });
@@ -219,20 +271,44 @@ public static class ConfigFactory
     private static PropertyChangedEventHandler OnPropertyChangedFactory(string key = "")
     {
         return (o, args) => {
-            object? after = null;
+            object? oldValue = null;
+            object? newValue = null;
             if (args is PropertyChangedEventDetailArgs detailArgs)
             {
-                after = detailArgs.NewValue;
+                oldValue = detailArgs.OldValue;
+                newValue = detailArgs.NewValue;
             }
 
-            OnPropertyChanged(key + o?.GetType().Name + "." + args.PropertyName, null, after);
+            OnPropertyChanged(key + o?.GetType().Name + "." + args.PropertyName, oldValue, newValue);
+        };
+    }
+
+    private static PropertyChangedEventHandler TaskQueueItemOnPropertyChangedFactory(ObservableList<BaseTask> taskQueue, string key = "")
+    {
+        return (o, args) => {
+            object? oldValue = null;
+            object? newValue = null;
+            if (args is PropertyChangedEventDetailArgs detailArgs)
+            {
+                oldValue = detailArgs.OldValue;
+                newValue = detailArgs.NewValue;
+            }
+
+            int index = -1;
+            var taskName = string.Empty;
+            if (o is BaseTask task)
+            {
+                index = taskQueue.IndexOf(task);
+                taskName = task.Name;
+            }
+            OnPropertyChanged($"{key}[{index}]{taskName}({o?.GetType().Name})." + args.PropertyName, oldValue, newValue);
         };
     }
 
     private static NotifyCollectionChangedEventHandler<KeyValuePair<T1, T2>> OnCollectionChangedFactory<T1, T2>(string key)
     {
         return (in NotifyCollectionChangedEventArgs<KeyValuePair<T1, T2>> args) => {
-            OnPropertyChanged(key + args.NewItem.Key, null, args.NewItem.Value);
+            OnPropertyChanged(key + args.NewItem.Key, args.OldItem.Value, args.NewItem.Value);
         };
     }
 
@@ -241,25 +317,37 @@ public static class ConfigFactory
 
     public static SpecificConfig CurrentConfig => Root.CurrentConfig;
 
-    private static async void OnPropertyChanged(string key, object? oldValue, object? newValue)
+    private static void OnPropertyChanged(string key, object? oldValue, object? newValue)
     {
-        try
+        _debounceTimer.Change(PendingDelayMs, Timeout.Infinite);
+
+        ConfigurationUpdateEvent?.Invoke(key, oldValue, newValue);
+        _logger.Debug("Configuration {Key} has been set: `{OldValue}` -> `{NewValue}`, save scheduled", key, oldValue, newValue);
+    }
+
+    private static void CreateSaveTask(object? state)
+    {
+        if (_isReleasing)
         {
-            var result = await SaveAsync();
-            if (result)
-            {
-                ConfigurationUpdateEvent?.Invoke(key, oldValue, newValue);
-                _logger.Debug("Configuration {Key} has been set to `{NewValue}`", key, newValue);
-            }
-            else
-            {
-                _logger.Warning("Failed to save configuration {Key} to `{NewValue}`", key, newValue);
-            }
+            _logger.Error("Application is releasing, skip create save task");
+            return;
         }
-        catch (Exception e)
-        {
-            _logger.Error(e, "Failed to save configuration {Key} to {NewValue}, Exception: {Message}", key, newValue, e.Message);
-        }
+
+        // 创建保存任务（只在 Timer 触发时才创建）
+        _saveTask = Task.Run(async () => {
+            try
+            {
+                var result = await SaveAsync();
+                if (result)
+                {
+                    _logger.Debug("Configuration saved");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to save configuration");
+            }
+        });
     }
 
     private static bool Save(string? file = null, Root? root = null)
@@ -303,6 +391,12 @@ public static class ConfigFactory
 
     public static void Release()
     {
+        _isReleasing = true;
+        if (_saveTask is not null)
+        {
+            _logger.Information("Waiting for save task to complete");
+            _saveTask.Wait();
+        }
         lock (_lock)
         {
             if (Save())

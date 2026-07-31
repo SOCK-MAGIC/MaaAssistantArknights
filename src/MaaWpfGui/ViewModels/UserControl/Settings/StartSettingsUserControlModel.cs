@@ -71,6 +71,7 @@ public class StartSettingsUserControlModel : PropertyChangedBase
             }
 
             SetAndNotify(ref _startSelf, value);
+            AchievementTrackerHelper.Instance.Unlock(AchievementIds.StartupBoot);
         }
     }
 
@@ -399,8 +400,8 @@ public class StartSettingsUserControlModel : PropertyChangedBase
         };
 
         process.Start();
-        process.StandardInput.WriteLine($"{adbPath} kill-server");
-        process.StandardInput.WriteLine($"{adbPath} start-server");
+        process.StandardInput.WriteLine($"\"{adbPath}\" kill-server");
+        process.StandardInput.WriteLine($"\"{adbPath}\" start-server");
         process.StandardInput.WriteLine("exit");
         process.WaitForExit();
     }
@@ -429,7 +430,7 @@ public class StartSettingsUserControlModel : PropertyChangedBase
         Process process = new Process { StartInfo = processStartInfo, };
 
         process.Start();
-        process.StandardInput.WriteLine($"{adbPath} disconnect {address}");
+        process.StandardInput.WriteLine($"\"{adbPath}\" disconnect {address}");
         process.StandardInput.WriteLine("exit");
         process.WaitForExit();
     }
